@@ -1,0 +1,33 @@
+{# EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig'...................... #}
+  {% extends "AppBundle:Layouts:layout.html.twig"%}
+{# ......................EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig' #}
+{% block nav %}{% endblock %}
+{% block content %}
+  <body class="login">
+    <div>
+    <a class="hiddenanchor" id="signup"></a>
+    <a class="hiddenanchor" id="signin"></a>
+    <div class="login_wrapper">
+      <div class="animate form login_form">
+        <section class="login_content">
+          <form action="{{path('login_check')}}" method="POST">
+            <h1>Registro de primer Usuario</h1>
+            <div> {{form_widget(form.userName)}} </div>
+            <div> {{form_widget(form.password)}} </div>
+            <div> {{form_widget(form.email)}} </div>
+            <div> {{form_widget(form.idUser)}} </div>
+            <div> {{form_widget(form.idTypeGender)}} </div>
+            <div> {{form_widget(form.image)}} </div>            
+            <div>
+              <input type="submit" value="Entrar" class="btn btn-default submit" />
+              {# Mediante el input Type="hidden" definimos el nombre del "target_path" al que nos
+              queremos dirigir después de enviar el formulario #}
+              <input type="hidden" name="_target_path" value="{{ path('homepage') }}" />
+            </div>
+          </form>
+        </section>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block footer %}{% endblock %}

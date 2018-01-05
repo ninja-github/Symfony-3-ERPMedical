@@ -1,0 +1,670 @@
+{#{% set medicalHistoryPatient = medicalHistoryPatient[0] %}#}
+{# EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig'...................... #}
+	{% extends "AppBundle:Layouts:layout.html.twig"%}
+{# ......................EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig' #}
+{% block stylesheets %}
+	{# la función parent() carga todo el contenido del bloque anterior #}
+	{{ parent() }}
+	<!-- Datatables -->
+	<link href="{{ asset ('assets/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
+	<link href="{{ asset ('assets/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
+	<link href="{{ asset ('assets/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}" rel="stylesheet">
+	<link href="{{ asset ('assets/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
+	<link href="{{ asset ('assets/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
+	<!-- Font Awesome EXTRA-->
+	<link href="{{ asset ('assets/vendors/ionicons.com/2.0.1/css/ionicons.min.css') }}" rel="stylesheet">
+	<!-- bootstrap-progressbar -->
+	<link href="{{ asset ('assets/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css') }}" rel="stylesheet">
+	<!-- bootstrap-lightbox -->
+	<link href="{{ asset ('assets/vendors/lightbox/dist/ekko-lightbox.css') }}" rel="stylesheet">
+		<style>
+			.pdfobject-container { height: 500px;}
+			.pdfobject { border: 1px solid #666; }
+		</style>
+{% endblock %}
+{% block content %}
+	<!-- page content -->
+		<div class="right_col" role="main">
+			<div class="clearfix"></div>
+			<div class="row">
+				<!-- Bloque -->
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<div class="x_panel" >
+							<!-- Título del Bloque -->
+								<div class="x_title">
+									<h3 style="display:inline-block;">Historia Clínica</h3>
+									<div style="display:block;margin-top:4px;" class="pull-right">
+										<a class="btn btn-success" href="{{ path("medical_history_list", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">
+											<i class="fa fa-mail-reply-all m-right-xs"></i>
+											Listado
+										</a>
+										<a class="btn btn-success" href="{{ path("medical_history_pdf", {clinicNameUrl:medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory} ) }}">
+											<i class="fa fa-file-pdf-o m-right-xs"></i>
+										</a>										
+										{% if medicalHistory.numberMedicalHistory != medicalHistoryData.min %}
+											<a class="btn btn-success" href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory-1} ) }}">
+												<i class="fa fa-backward m-right-xs"></i>
+											</a>
+										{% endif %}
+										{% if medicalHistory.numberMedicalHistory  != medicalHistoryData.max %}
+											<a class="btn btn-success" href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory+1} ) }}">
+												<i class="fa fa-forward m-right-xs"></i>
+											</a>
+										{% endif %}
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							<!-- /título del Bloque -->
+							<!-- Contenido del Bloque -->
+								<div class="x_content row">
+									<!-- Datos Paciente + Estudios Ortopodológicos-->
+										<div class="col-md-3 col-sm-12 col-xs-12 profile_left" style="padding-right:0px;">
+											<!-- Datos Paciente-->
+												{% if medicalHistory.surname != NULL or  medicalHistory.name != NULL %}
+													<h3>{{medicalHistory.surname | upper}},<br/>{{medicalHistory.name | upper}} </h3>
+												{% endif %}
+												<ul class="list-unstyled user_data">
+													<li>
+														<i class="fa fa-file-text user-profile-icon"></i> Número de Historia: {{medicalHistory.numberMedicalHistory}}
+													</li>
+													{% if medicalHistory.dni != NULL %}
+														<li>
+															<i class="fa fa-book user-profile-icon"></i>
+															{{medicalHistory.dni}}
+														</li>
+													{% endif %}
+													{% if medicalHistory.phoneHome != NULL or medicalHistory.phoneMobile != NULL %}
+														<li>
+															<i class="fa fa-phone user-profile-icon"></i>
+															{{medicalHistory.phoneHome}}
+															{% if medicalHistory.phoneHome != NULL and medicalHistory.phoneMobile != NULL %}
+																,
+															{% endif %}
+															{{medicalHistory.phoneMobile}}
+														</li>
+													{% endif %}
+													{% if medicalHistory.address != NULL %}
+														<li>
+															<i class="fa fa-map-marker user-profile-icon"></i>
+															{{medicalHistory.address | title}}, <br/>
+															{% if medicalHistory.city != NULL %}
+																{{medicalHistory.city.cp | title}}, {{medicalHistory.city.city | title}}, <br/>
+																{{medicalHistory.city.province}}
+																<br/>
+															{% endif %}
+														</li>
+													{% endif %}
+													{% if medicalHistory.birthday != NULL %}
+														<li>
+															<i class="fa fa-calendar-o user-profile-icon"></i>
+															{{medicalHistory.birthday.date | date("d/m/Y")}}<br/>
+														</li>
+													{% endif %}
+													<li>
+														{% if medicalHistory.gender == "Hombre" %}
+															<i class="ionicons ion-male"></i>
+															{{medicalHistory.gender}}<br/>
+														{% elseif medicalHistory.gender == "Mujer" %}
+															<i class="ionicons ion-female" ></i>
+															{{medicalHistory.gender}}<br/>
+														{% endif %}
+													</li>
+													{% if medicalHistory.email != NULL %}
+														<li class="m-top-xs">
+															<i class="fa fa-external-link user-profile-icon"></i><a href="mailto:{{medicalHistory.email | lower}}">{{medicalHistory.email | lower}}</a><br/>
+														</li>
+													{% endif %}
+												</ul>
+											<!-- /datos Paciente-->
+											<!-- Estudios Ortopodológicos -->
+												{% if medicalHistory.orthopodologyHistoryList is not empty %}
+													<div class="accordion" id="accordion" role="tablist" aria-multiselectable="true">
+														<div class="panel">
+															<a class="panel-heading collapsed" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+																<h4 class="panel-title">Estudios Ortopodológicos</h4>
+															</a>
+															<div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+																<div class="panel-body">
+																	{% for orthopodologyHistory in medicalHistory.orthopodologyHistoryList %}
+																		<a class="btn btn-success"
+																		href="{{ path("orthopodology_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory, 'registrationDate' : orthopodologyHistory.registrationDate.date | date("Y_m_d") } ) }}">
+																			<i class="fa fa-eye m-right-xs"></i>
+																				{{orthopodologyHistory.registrationDate.date | date("d/m/Y")}}
+																		</a>
+																	{% endfor %}
+																</div>
+															</div>
+														</div>
+													</div>
+												{% endif %}
+											<!-- /estudios Ortopodológicos -->
+										</div>
+										<br />
+									<!-- /datos Paciente + Estudios Ortopodológicos-->
+									<!-- Historia Médica -->
+										<div class="col-md-9 col-sm-12 col-xs-12" style="padding-right:0px;">
+											<div class="message_wrapper">
+												{% if medicalHistory.patientRisk != NULL %}
+													<div>
+														{{ medicalHistory.patientRisk | GenerateTags(medicalHistory.patientRisk) }}
+													</div>
+													<div class="clearfix"></div>
+												{% endif %}
+												<h4 class="heading">RAZÓN DE LA CONSULTA:</h4>
+												<blockquote class="message">{{medicalHistory.reasonConsultation}}</blockquote>
+												<h4 class="heading">ANTECEDENTES:</h4>
+												<blockquote class="message">{{medicalHistory.background}}</blockquote>
+												<h4 class="heading">ALERGIAS:</h4>
+												<blockquote class="message">{{medicalHistory.allergicDiseases}}</blockquote>
+												<h4 class="heading">TRATAMIENTO / ENFERMEDADES:</h4>
+												<blockquote class="message">{{medicalHistory.treatmentDiseases}}</blockquote>
+												<h4 class="heading">PATOLOGÍAS:</h4>
+												<blockquote class="message">{{medicalHistory.patologies}}</blockquote>
+												<h4 class="heading">PRUEBAS SUPLEMENTARIAS:</h4>
+												<blockquote class="message">{{medicalHistory.supplementaryTest}}</blockquote>
+												<h4 class="heading">DIAGNÓSTICO:</h4>
+												<blockquote class="message">{{medicalHistory.diagnostic}}</blockquote>
+												<h4 class="heading">TRATAMIENTO:</h4>
+												<blockquote class="message">{{medicalHistory.treatment}}</blockquote>
+											</div>
+										</div>
+									<!-- /historia Médica -->
+									<!-- Seguimiento -->
+										{% if tracingMedicalHistoryList is not empty %}
+											<div class="col-md-12 col-sm-12 col-xs-12" style="padding-right:0px;">
+												<div class="accordion" id="accordion_tracing" role="tablist" aria-multiselectable="true">
+													<div class="panel">
+														<a class="panel-heading collapsed" role="tab" id="heading_tracing" data-toggle="collapse" data-parent="#accordion_tracing" href="#collapse_tracing" aria-expanded="false" aria-controls="collapse_tracing">
+															<h4 class="panel-title">Seguimiento</h4>
+														</a>
+														<div id="collapse_tracing" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+															<!-- start recent activity -->
+															<ul class="messages">
+																{% for tracingDay in tracingMedicalHistoryList  %}
+																	{#																
+																	{% if tracingDay.typeTracing.type == 'medical_history' %}
+																	#}
+																		<li id="tracing_{{tracingDay.id}}">
+																			<div style ="width:60px; display:inline;position:relative;top:-40px;left:15px;">
+																				{# IMAGEN DE USUARIO SI EXISTIESE O NO UN REGISTRO........... #}
+																					{% if tracingDay.user.image == null %}
+																						<img src="{{ asset ('assets/images/default_profile.png') }}" class="avatar" alt="Avatar" style="position:relative;left:10px;"/>
+																					{% else %}
+																						<img src="{{ asset ('uploads/users/'~tracingDay.user.id~'/'~tracingDay.user.image) }}" class="avatar" alt="Avatar" style="position:relative;left:10px;"/>
+																					{% endif %}
+																				{# ...........IMAGEN DE USUARIO SI EXISTIESE O NO UN REGISTRO #}
+																				{# LOGO TIPO DE TRACING ...........#}
+																					{% if tracingDay.typeTracing.type == 'medical_history' %}
+																						<img src="{{ asset ('assets/images/medicalHistory.png') }}" class="avatar" style="position: relative; top: 23px; right: 10px; padding:0px; height: 25px; width: 25px;"/>
+																					{% elseif tracingDay.typeTracing.type == 'orthopodology_history' %}
+																						<img src="{{ asset ('assets/images/orthopodologyHistory.png') }}" class="avatar" style="position: relative; top: 23px; right: 10px; padding:0px; height: 32px; width: 32px;"/>
+																					{% endif %}
+																				{# ...........LOGO TIPO DE TRACING #}
+																			</div>
+																			<div style="display:inline-block;width:calc(100% - 80px);">
+																				<h4 class="heading" style="display:inline;">{{tracingDay.date | date("d/m/Y")}} - {{tracingDay.user.name}} {{tracingDay.user.surnames}}</h4>
+																				<!-- Modificar Seguimiento -->
+																					<a data-toggle="modal" data-target="#tracingEdit_{{tracingDay.id}}" style="cursor: pointer; cursor: hand; margin:5px;" class="pull-right"><i class="fa fa-pencil fa-2x"></i></a>
+																				<!-- /modificar Seguimiento -->
+																				{# ....................Añadir Servicios #}
+																					{% if tracingDay.tracingServiceList is empty %}
+																						<i class="pull-right fa fa-user-md fa-2x" onclick="frist_tracing_service({{tracingDay.id}});" style="cursor: pointer; cursor: hand; margin:5px;"></i>
+																					{% endif %}
+																				{# Añadir Servicios.................... #}
+																				<blockquote class="message" style="margin-bottom:10px;">{{tracingDay.tracing}}</blockquote>
+																				{% if tracingDay.tracingServiceList is not empty %}
+																					<table class="table table-striped jambo_table bulk_action" style="margin-bottom: 0px;">
+																						<thead>
+																							<tr class="headings">
+																								<th class="column-title" style="display: table-cell; table-layout: fixed;">Servicio</th>
+																								<th class="column-title" style="display: table-cell;">Descripción</th>
+																								<th class="column-title" style="display: table-cell; width: 75px;">Precio</th>
+																								<th class="column-title" style="display: table-cell; width:60px;">
+																									<i class="fa fa-minus-square m-right-xs"></i> / <i class="fa fa-plus-square m-right-xs" onclick="add_line_tracing_service({{tracingDay.id}});" style="cursor: pointer; cursor: hand; margin:5px;"></i>
+																								</th>
+																							</tr>
+																						</thead>
+																						<tbody id="add_line_tracing_service({{tracingDay.id}})">
+																							{% for tracingService in tracingDay.tracingServiceList  %}
+																								<tr class="even pointer" >
+																									<td class=" ">
+																										{% if tracingService.Service is not null %}
+																											{{tracingService.Service.Service}}
+																										{% endif %}
+																									</td>
+																									<td class=" ">{{tracingService.Description}}</td>
+																									<td class=" ">{{tracingService.Price}}</td>
+																									<td class=" " style="text-align: center;" id="remove_tracing_service_{{tracingService.id}}">
+																											<i class="fa fa-minus-square m-right-xs" onclick="remove_line_tracing_service({{tracingService.id}});" style="cursor: pointer; cursor: hand; margin:5px;"></i>
+																									</td>
+																								</tr>
+																							{% endfor %}
+																						</tbody>
+																					</table>
+																				{% endif %}
+																			</div>
+																		</li>
+																	{#	
+																	{% endif %}
+																	#}
+																{% endfor %}
+															</ul>
+															<!-- end recent activity -->
+														</div>
+													</div>
+												</div>
+											</div>
+										{% endif %}
+									<!-- /seguimiento -->
+									<!-- Documentos -->
+										{% if medicalHistory.docList is not empty %}
+											<div class="col-md-12 col-sm-12 col-xs-12" style="padding-right:0px;">
+												<div class="accordion" id="accordion_tracing" role="tablist" aria-multiselectable="true">
+													<div class="panel">
+														<a class="panel-heading collapsed" role="tab" id="heading_doc" data-toggle="collapse" data-parent="#accordion_doc" href="#collapse_doc" aria-expanded="false" aria-controls="collapse_doc">
+															<h4 class="panel-title">Documentos</h4>
+														</a>
+														<div id="collapse_doc" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+															<div class="row">
+																<div class="col-md-12">
+																	<!-- Listado de documentos -->
+																		{% for medicalHistoryDoc in medicalHistory.docList %}
+																			<div class="col-md-55">
+																				<div class="thumbnail">
+																					<!-- Imagen del documento -->
+																						<div class="image view view-first">
+																							<!-- Para imágenes -->
+																								{% if medicalHistoryDoc.typeDoc.type == "image" %}
+																									<a href="{{ asset ('uploads/clinics/'~medicalHistory.clinic.nameUrl~'/medicalHistory/'~medicalHistory.numberMedicalHistory~'/'~medicalHistoryDoc.doc
+																									) }}" data-toggle="lightbox" data-gallery="example-gallery" >
+																										<img src="{{ asset ('uploads/clinics/'~medicalHistory.clinic.nameUrl~'/medicalHistory/'~medicalHistory.numberMedicalHistory~'/'~medicalHistoryDoc.doc ) }}" class="img-fluid">
+																									</a>
+																								{% endif %}
+																							<!-- /para imágenes -->
+																							<!-- Para pdf -->
+																								{% if medicalHistoryDoc.TypeDoc.Type == "pdf" %}
+																									<a data-toggle="modal" data-target="#viewPdf_{{medicalHistoryDoc.id}}">
+																										<img src="{{ asset ('/assets/images/pdf_document.png' ) }}" class="img-fluid" style="width: 80%; cursor: pointer; cursor: hand; top: 30px;">
+																									</a>
+																								{% endif %}
+																							<!-- /para pdf -->
+																							<!-- Máscara opciones de documento -->
+																								<div class="mask">
+																									<div class="tools tools-bottom">
+																										<!-- Modificar Documento -->
+																											<a data-toggle="modal" data-target="#viewDocEdit_{{medicalHistoryDoc.id}}" style="cursor: pointer; cursor: hand;"><i class="fa fa-pencil"></i></a>
+																										<!-- /modificar Documento -->
+																										<!-- Eliminar Documento -->
+																											<a href="{{ path("medical_history_doc_remove", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory, 'idDoc':medicalHistoryDoc.id} ) }}"><i class="fa fa-times"></i></a>
+																										<!-- /eliminar Documento -->
+																									</div>
+																								</div>
+																							<!-- /máscara opciones de documento -->
+																						</div>
+																					<!-- /imagen del documento -->
+																					<!-- Título del documento -->
+																						<div class="caption col-md-12" style="width: 100%;height: 59px;">
+																							<p class="col-md-12" style="dispaly:block;">{{medicalHistoryDoc.title}}</p>
+																						</div>
+																					<!-- /título del documento -->
+																				</div>
+																			</div>
+																		{% endfor %}
+																	<!-- /listado de documentos -->
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										{% endif %}
+									<!-- /documentos -->
+									<div class="clearfix"></div>
+									<div class="divider-dashed"></div>
+									<!-- Sección final Bloque (operativa) -->
+										<div class="col-md-12 col-sm-12 col-xs-12" style="padding-right:0px;">
+											<!-- Editar Historia -->
+												<div class="pull-left">
+													<a class="btn btn-success"
+														href="{{ path("medical_history_edit", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory} ) }}">
+														<i class="fa fa-edit m-right-xs"></i>
+														Editar Historia
+													</a>
+												</div>
+											<!-- /editar Historia -->
+											<div class="pull-right">
+												<!-- Nuevo Estudio -->
+													<a class="btn btn-success"
+														href="{{ path("orthopodology_history_create", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory} ) }}">
+														<i class="fa fa-plus-square m-right-xs"></i>
+														<i class="fa fa-book m-right-xs"  data-toggle="tooltip" data-placement="top" title="Nuevo Estudio"></i>
+													</a>
+												<!-- /nuevo Estudio -->
+												<!-- Activa Modal - nuevo Informe -->
+													<button class="btn btn-success" data-toggle="modal" data-target="#createReport">
+														<i class="fa fa-plus-square m-right-xs"></i>
+														<i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="Nuevo Informe"></i>
+													</button>
+												<!-- /activa Modal - nuevo Informe -->												
+												<!-- Activa Modal - Nuevo Seguimiento -->
+													<button class="btn btn-success" data-toggle="modal" data-target="#createTracing">
+														<i class="fa fa-plus-square m-right-xs"></i>
+														<i class="fa fa-history m-right-xs" data-toggle="tooltip" data-placement="top" title="Nuevo Seguimiento"></i>
+													</button>
+												<!-- /activa Modal - nuevo Seguimiento -->
+												<!-- Activa Modal - Nuevo Documento -->
+													<button class="btn btn-success" data-toggle="modal" data-target="#uploadDocuments">
+														<i class="fa fa-plus-square m-right-xs"></i>
+														<i class="fa fa-paperclip  m-right-xs" data-toggle="tooltip" data-placement="top" title="Nuevo Documento"></i>
+													</button>
+												<!-- /activa Modal - Nuevo Documento -->
+											</div>
+										</div>
+									<!-- /sección final Bloque (operativa) -->
+								</div>
+							<!-- /contenido del Bloque -->
+						</div>
+					</div>
+					<br />
+				<!-- /bloque -->
+			</div>
+		</div>
+	<!-- /page content -->
+	<!-- Modal - Nuevo Seguimiento -->
+		<div class="modal fade" id="createTracing" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<!-- Modal Header -->
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">&times;</span>
+								<span class="sr-only">Close</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">Nuevo Seguimiento</h4>
+						</div>
+					<!-- Modal Header -->
+					<!-- Modal Body -->
+						<div class="modal-body">
+							<div class="row control-label form-horizontal form-label-left">
+								{{ form_start(form_medicalHistoryTracing, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
+									<div class="col-md-12 col-sm-12 col-xs-12 pull-left">
+										<div class="form-group">
+											<!-- Fecha -->
+												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12">Fecha de Seguimiento</label>
+												<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+													<div class='input-group date' id='datetimepicker_newTracing'>
+														{{form_widget(form_medicalHistoryTracing.date)}}
+														<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+														</span>
+													</div>
+												</div>
+												<div class="clearfix"></div>
+											<!-- /fecha -->
+											<!-- Seguimiento -->
+												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12" >Seguimiento<span class="required">*</span>
+												</label>
+												<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form_medicalHistoryTracing.tracing)}}</div>
+												<div class="clearfix"></div>
+												<div class="divider-dashed"></div>
+											<!-- /seguimiento -->
+											<!-- Enviar Nuevo Seguimiento -->
+												{{ form_row(form_medicalHistoryTracing.submit, { 'label': 'Añadir Seguimiento' }) }}
+											<!-- /enviar Nuevo Seguimiento -->
+										</div>
+									</div>
+								{{ form_end(form_medicalHistoryTracing) }}
+		            		</div>
+		            	</div>
+					<!-- Modal Body -->
+					{#
+					<!-- Modal Footer -->
+						<div class="modal-footer"></div>
+					<!-- Modal Footer -->
+					#}
+				</div>
+			</div>
+		</div>
+	<!-- /modal - Nuevo Seguimiento -->
+	<!-- Modal - Editar Seguimientos -->
+		{% for tracingDay in medicalHistory.tracingList %}
+				{# Renombro la variable ...#}
+					{% set form_medicalHistoryTracing  = form_tracingMedicalHistoryList[tracingDay.id] %}
+				{# ...Renombro la variable #}
+				<div class="modal fade" id="tracingEdit_{{tracingDay.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<!-- Modal Header -->
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">
+										<span aria-hidden="true">&times;</span>
+										<span class="sr-only">Close</span>
+									</button>
+									<h4 class="modal-title" id="myModalLabel">Editar Seguimiento</h4>
+								</div>
+							<!-- Modal Header -->
+							<!-- Modal Body -->
+								<div class="modal-body">
+									<div class="row control-label form-horizontal form-label-left">
+										{{ form_start(form_medicalHistoryTracing, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
+											<div class="col-md-12 col-sm-12 col-xs-12 pull-left">
+												<div class="form-group">
+													<!-- Fecha -->
+														<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12">Fecha de Seguimiento</label>
+														<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+															<div class='input-group date' id='datetimepicker_editTracing'>
+																{{form_widget(form_medicalHistoryTracing.date)}}
+																<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+																</span>
+															</div>
+														</div>
+														<div class="clearfix"></div>
+													<!-- /fecha -->
+													<!-- Seguimiento -->
+														<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12" >Seguimiento<span class="required">*</span>
+														</label>
+														<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form_medicalHistoryTracing.tracing)}}</div>
+													<!-- /seguimiento -->
+													<!-- Id Oculto -->
+														{{form_widget(form_medicalHistoryTracing.id)}}
+													<!-- /id Oculto -->
+													<!-- Editar Seguimiento -->
+														{{ form_row(form_medicalHistoryTracing.submit, { 'label': 'Editar Seguimiento' }) }}
+													<!-- /editar Seguimiento -->
+												</div>
+											</div>
+										{{ form_end(form_medicalHistoryTracing) }}
+				            		</div>
+				            	</div>
+							<!-- Modal Body -->
+							{#
+							<!-- Modal Footer -->
+								<div class="modal-footer"></div>
+							<!-- Modal Footer -->
+							#}
+						</div>
+					</div>
+				</div>
+		{% endfor %}
+	<!-- /modal - Editar Seguimientos -->
+	<!-- Modal - Nuevo Documento -->
+		<div class="modal fade" id="uploadDocuments" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<!-- Modal Header -->
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">&times;</span>
+								<span class="sr-only">Close</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">Subir documento</h4>
+						</div>
+					<!-- Modal Header -->
+					<!-- Modal Body -->
+						<div class="modal-body">
+							<div class="row control-label form-horizontal form-label-left">
+								{{ form_start(form_medicalHistoryDoc, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
+									<div class="col-md-12 col-sm-12 col-xs-12 pull-left">
+										<div class="form-group">
+											<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-2" >Título<span class="required"></span></label>
+											<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">{{form_widget(form_medicalHistoryDoc.title)}}</div>
+											<div class="clearfix"></div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-2" >Título<span class="required"></span></label>
+											<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">{{form_widget(form_medicalHistoryDoc.doc)}}</div>
+											<div class="clearfix"></div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-2" >Descripción<span class="required"></span></label>
+											<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">{{form_widget(form_medicalHistoryDoc.description)}}</div>
+											<div class="clearfix"></div>
+										</div>
+										{{form_widget(form_medicalHistoryDoc.add, { 'label': 'Añadir Documento' }) }}
+									</div>
+								{{ form_end(form_medicalHistoryDoc)}}
+		            		</div>
+		            	</div>
+					<!-- Modal Body -->
+					<!-- Modal Footer -->
+						<div class="modal-footer"></div>
+					<!-- Modal Footer -->
+				</div>
+			</div>
+		</div>
+	<!-- /modal - Nuevo Documento -->
+	<!-- Modal - Ver Pdf -->
+		{% for medicalHistoryDoc in medicalHistory.docList %}
+			{% if medicalHistoryDoc.typeDoc.type == "pdf" %}
+				<div class="modal fade" id="viewPdf_{{medicalHistoryDoc.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<!-- Modal Header -->
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">
+										<span aria-hidden="true">&times;</span>
+										<span class="sr-only">Close</span>
+									</button>
+									<h4 class="modal-title" id="myModalLabel">Visualizador pdf</h4>
+								</div>
+							<!-- Modal Header -->
+							<!-- Modal Body -->
+								<div class="modal-body">
+									<div class="row control-label form-horizontal form-label-left">
+										<div class="col-md-12 col-sm-12 col-xs-12 pull-left">
+											<div id="viewerPdf_{{medicalHistoryDoc.id}}">
+											<!-- Modal Body -->
+											</div>
+										</div>
+									</div>
+								</div>
+							<!-- Modal Body -->
+							<!-- Modal Footer -->
+								<div class="modal-footer"></div>
+							<!-- Modal Footer -->
+						</div>
+					</div>
+				</div>
+			{% endif %}
+		{% endfor %}
+	<!-- /modal - Ver Pdf -->
+	<!-- Modal - Ver Editar Documento -->
+		{% for medicalHistoryDoc in medicalHistory.docList %}
+			{% if medicalHistoryDoc.typeDoc.type == "pdf" %}
+				<div class="modal fade" id="viewDocEdit_{{medicalHistoryDoc.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<!-- Modal Header -->
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">
+										<span aria-hidden="true">&times;</span>
+										<span class="sr-only">Close</span>
+									</button>
+									<h4 class="modal-title" id="myModalLabel">Visualizador pdf</h4>
+								</div>
+							<!-- Modal Header -->
+							<!-- Modal Body -->
+								<div class="modal-body">
+									<div class="row control-label form-horizontal form-label-left">
+										<div class="col-md-12 col-sm-12 col-xs-12 pull-left">
+											<div id="viewerPdf_{{medicalHistoryDoc.id}}">
+											<!-- Modal Body -->
+											</div>
+										</div>
+									</div>
+								</div>
+							<!-- Modal Body -->
+							<!-- Modal Footer -->
+								<div class="modal-footer"></div>
+							<!-- Modal Footer -->
+						</div>
+					</div>
+				</div>
+			{% endif %}
+		{% endfor %}
+	<!-- /modal - Ver Editar Documento -->
+{% endblock %}
+{% block javascriptsFinal %}
+	{# la función parent() carga todo el contenido del bloque anterior #}
+	{{ parent() }}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.3/js/bootstrap-datetimepicker.min.js"></script>
+	<!-- dateTimePickerCustom -->
+	<script src="{{ asset ('assets/js/custom/dateTimePicker.js') }}"></script>
+	<!-- bootstrap-progressbar -->
+	<script src="{{ asset ('assets/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js') }}"></script>
+	<!-- tether.io -->
+	<script src="{{ asset ('assets/vendors/tether.io/dist/js/tether.min.js') }}"></script>
+<!-- ------------------------------------------- PRUEBA PDF ------------------- -->
+		<!-- pdfObject -->
+		<script src="{{ asset ('assets/vendors/pdfObject/pdfobject.js') }}"></script>
+		<script>
+			// https://pdfobject.com/
+			{% for medicalHistoryDoc in medicalHistory.docList %}
+				{% if medicalHistoryDoc.typeDoc.type == "pdf" %}
+					PDFObject.embed("{{ asset ('uploads/clinics/'~medicalHistory.clinic.nameUrl~'/medicalHistory/'~medicalHistory.numberMedicalHistory~'/'~medicalHistoryDoc.doc ) }}", "#viewerPdf_{{medicalHistoryDoc.id}}");
+				{% endif %}
+			{% endfor %}
+		</script>
+<!-- ------------------------------------------- PRUEBA PDF ------------------- -->
+
+<!-- ------------------------------------------- TRACING SERVICE FORM ------------------- -->
+		<!-- Service Tracing Form -->
+			<script>
+				var room = 1;
+				function new_tracing_service() {
+					room++;
+					var objTo = document.getElementById('new_tracing_service')
+					var divtest = document.createElement("div");
+					divtest.setAttribute("class", "form-group removeclass"+room);
+					var rdiv = 'removeclass'+room;
+					divtest.innerHTML =
+						'<div class="col-sm-3 nopadding">'
+					+		'<div class="form-group">'
+					+			'<input type="text" class="form-control" id="Schoolname" name="Schoolname[]" value="" placeholder="School name">'
+					+		'</div>'
+					+	'</div>'
+					+	'<div class="col-sm-3 nopadding"><div class="form-group"> <input type="text" class="form-control" id="Major" name="Major[]" value="" placeholder="Major"></div></div><div class="col-sm-3 nopadding"><div class="form-group"> <input type="text" class="form-control" id="Degree" name="Degree[]" value="" placeholder="Degree"></div></div><div class="col-sm-3 nopadding"><div class="form-group"><div class="input-group"> <select class="form-control" id="educationDate" name="educationDate[]"><option value="">Date</option><option value="2015">2015</option><option value="2016">2016</option><option value="2017">2017</option><option value="2018">2018</option> </select><div class="input-group-btn"> <button class="btn btn-danger" type="button" onclick="remove_education_fields('+ room +');"> <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> </button></div></div></div></div><div class="clear"></div>';
+				    objTo.appendChild(divtest)
+					}
+					function remove_tracing_service(rid) {
+						$('.removeclass'+rid).remove();
+					}
+
+
+			</script>
+		<!-- /service Tracing Form -->
+
+
+
+		<!-- RemoveTracingService -->
+		<script src="{{ asset ('assets/js/custom/tracingService.js') }}"></script>
+		<!-- /removeTracingService -->
+<!-- ------------------------------------------- TRACING SERVICE FORM ------------------- -->
+		<!-- anchor-js -->
+		<script src="{{ asset ('assets/vendors/anchor-js/anchor.min.js') }}"></script>
+		<!-- lightbox -->
+		<script src="{{ asset ('assets/vendors/lightbox/dist/ekko-lightbox.js') }}"></script>
+		<script src="{{ asset ('assets/js/custom/custom-lightbox.js') }}"></script>
+		<!-- Popper.js - Tooltip.js-->
+		<script src="{{ asset ('assets/vendors/popper.js/packages/tooltip/tests/functional/tooltip.js') }}"></script>	
+{% endblock %}

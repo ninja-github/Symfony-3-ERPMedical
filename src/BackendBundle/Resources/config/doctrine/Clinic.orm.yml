@@ -1,0 +1,112 @@
+BackendBundle\Entity\Clinic:
+    type: entity
+    repositoryClass: BackendBundle\Repository\ClinicRepository    
+    table: clinic
+    indexes:
+        city:
+            columns:
+                - city
+        user_registerer:
+            columns:
+                - user_registerer
+        user_modifier:
+            columns:
+                - user_modifier
+    uniqueConstraints:
+        clinic_name:
+            columns:
+                - name
+        name_url:
+            columns:
+                - name_url
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 150
+            options:
+                fixed: false
+        nameUrl:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: name_url
+        image:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+        email:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false                            
+        phone:
+            type: string
+            nullable: true
+            length: 9
+            options:
+                fixed: false
+        address:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+        registrationDate:
+            type: datetime
+            nullable: false
+            column: registration_date
+        modificationDate:
+            type: datetime
+            nullable: true
+            column: modification_date
+    manyToOne:
+        city:
+            targetEntity: AddressCity
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                city:
+                    referencedColumnName: id
+            orphanRemoval: false
+        userRegisterer:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user_registerer:
+                    referencedColumnName: id
+            orphanRemoval: false
+        userModifier:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user_modifier:
+                    referencedColumnName: id
+            orphanRemoval: false
+    oneToMany:
+        servicesList:
+            targetEntity: Service
+            mappedBy: clinic         
+    lifecycleCallbacks: {  }

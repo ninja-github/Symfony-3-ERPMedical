@@ -1,0 +1,4 @@
+# ROUTING PARA HOME
+homepage:
+    path: /home
+    defaults: { _controller: AppBundle:Home:index }

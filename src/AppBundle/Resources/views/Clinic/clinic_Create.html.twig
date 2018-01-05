@@ -1,0 +1,31 @@
+{# EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig'...................... #}
+	{% extends "AppBundle:Layouts:layout.html.twig"%}
+{# ......................EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig' #}
+{# INCLUIMOS EL JAVASCRIPT QUE VERIFICA SI EL NICK EXISTE............................ #}
+	{% block javascripts %}
+		{# la función parent() carga todo el contenido del bloque anterior #}
+		{{ parent() }}
+		<!-- Datatables -->
+		<link href="{{ asset ('assets/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
+		<link href="{{ asset ('assets/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
+		<link href="{{ asset ('assets/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}" rel="stylesheet">
+		<link href="{{ asset ('assets/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
+		<link href="{{ asset ('assets/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
+	{% endblock %}
+{% block content %}
+							<!-- page content -->
+							<div class="right_col" role="main">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="x_panel">
+										<div class="x_title">
+											<h2>Nueva Clínica<small></small></h2>
+											<div class="clearfix"></div>
+										</div>
+										<div class="x_content">
+											{{ form_start(form, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
+											
+											{{ form_end(form) }}
+											<br />
+										</div>
+        					<!-- /page content -->											
+{% endblock %}

@@ -1,0 +1,77 @@
+BackendBundle\Entity\ClinicUser:
+    type: entity
+    table: clinic_user
+    repositoryClass: BackendBundle\Repository\ClinicUserRepository    
+    indexes:
+        clinic:
+            columns:
+                - clinic
+        user_modifier:
+            columns:
+                - user_modifier
+        user_registered:
+            columns:
+                - user_registerer
+        user:
+            columns:
+                - user
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        registrationDate:
+            type: datetime
+            nullable: true
+            column: registration_date
+        modificationDate:
+            type: datetime
+            nullable: true
+            column: modification_date
+    manyToOne:
+        clinic:
+            targetEntity: Clinic
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                clinic:
+                    referencedColumnName: id
+            orphanRemoval: false
+        user:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: clinicList
+            joinColumns:
+                user:
+                    referencedColumnName: id
+            orphanRemoval: false
+        userRegisterer:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user_registerer:
+                    referencedColumnName: id
+            orphanRemoval: false
+        userModifier:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user_modifier:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,121 @@
+{#{% set medicalHistoryPatient = medicalHistoryPatient[0] %}#}
+{# EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig'...................... #}
+	{% extends "AppBundle:Layouts:layout.html.twig"%}
+{# ......................EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig' #}
+{% block content %}
+			<!-- page content -->
+				<div class="right_col" role="main">
+					<div class="clearfix"></div>
+					<div class="row">
+						<!-- start ADD NEW TRACING -->
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<div class="x_panel" >
+								<div class="x_title">
+									<h3 style="display:inline-block;">Seguimiento</h3>
+									<div style="display:block;margin-top:4px;" class="pull-right">
+										<a class="btn btn-success" href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber} ) }}">
+											<i class="fa fa-mail-reply-all m-right-xs"></i>
+											Historia
+										</a>
+									</div>
+								</div>
+								<div class="x_content row">
+									<div class="col-md-12 col-sm-12 col-xs-12" style="padding-right:0px;">
+										{{ form_start(form, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
+											<div class="form-group">
+												<div class="col-lg-2 col-md-4 col-sm-4 col-xs-12 pull-right">
+													{{ form_row(form.submit, { 'label': 'Añadir' }) }}
+												</div>
+												<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">Fecha de Seguimiento
+												</label>
+												<div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+													<div class='input-group date' id='datetimepicker1'>
+														{{form_widget(form.date)}}
+														<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+														</span>
+													</div>
+												</div>
+												<div class="clearfix"></div>
+												<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12" >Seguimiento<span class="required">*</span>
+												</label>
+												<div class="col-lg-11 col-md-10 col-sm-10 col-xs-12">{{form_widget(form.tracing)}}</div>
+												<div class="clearfix"></div>
+												<div class="divider-dashed"></div>
+											</div>
+										{{ form_end(form) }}
+									</div>
+									{% if tracingMedicalHistory is not empty %}
+										<div class="col-md-12 col-sm-12 col-xs-12" style="padding-right:0px;">
+											<!-- start recent activity -->
+												<ul class="messages">
+													{% for tracingDay in tracingMedicalHistory  %}
+														<li>
+															<div>
+																{# IMAGEN DE USUARIO SI EXISTIESE O NO UN REGISTRO........... #}
+																	{% if tracingDay.image == null %}
+																		<img src="{{ asset ('assets/images/default_profile.png') }}" class="avatar" alt="Avatar"/>
+																	{% else %}
+																		<img src="{{ asset ('uploads/users/'~tracingDay.image) }}" class="avatar" alt="Avatar"/>
+																	{% endif %}
+																{# ...........IMAGEN DE USUARIO SI EXISTIESE O NO UN REGISTRO #}
+																{# LOGO TIPO DE TRACING ...........#}
+																	{% if tracingDay.typeTracing == 'medical_history' %}
+																		<img src="{{ asset ('assets/images/medicalHistory.png') }}" style="position: relative; top: 25px; right: 21px; padding:0px; height: 25px; width: 25px;"/>
+																	{% elseif tracingDay.typeTracing == 'orthopodology_history' %}
+																		<img src="{{ asset ('assets/images/orthopodologyHistory.png') }}" style="position: relative; top: 25px; right: 21px; padding:0px; height: 32px; width: 32px;"/>
+																	{% endif %}
+																{# ...........LOGO TIPO DE TRACING #}
+															</div>
+															<div class="message_wrapper" style="position: relative; top: -25px;">
+																<h4 class="heading">{{tracingDay.date | date("d/m/Y")}} - {{tracingDay.name}} {{tracingDay.surnames}}</h4>
+																<blockquote class="message">{{tracingDay.tracing}}</blockquote>
+															</div>
+															{% if tracingDay.services is not empty %}
+																<table class="table table-hover">
+																	<thead>
+																		<tr>
+																			<th>Servicio</th>
+																			<th>Descripción</th>
+																			<th>Precio</th>
+																			<th>Paga</th>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		{% for services in tracingDay.services %}
+	                        												<tr>
+																				<th>{{services.title}}</th>
+																				<th>{{services.description}}</th>
+																				<th>{{services.price}}</th>
+																				<th>Paga</th>
+																			</tr>
+																		{% endfor %}
+																	</tbody>
+																</table>
+															{% endif %}
+														</li>
+													</br>
+													{% endfor %}
+												</ul>
+											<!-- end recent activity -->
+										</div>
+										<div class="clearfix"></div>
+										<div class="divider-dashed"></div>
+										<div class="col-md-12 col-sm-12 col-xs-12" style="padding-right:0px;">
+											<div class="pull-left">
+												<a class="btn btn-success" href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber} ) }}">
+													<i class="fa fa-mail-reply-all m-right-xs"></i>
+													Historia
+												</a>
+											</div>
+										</div>
+									{% endif %}
+									<div class="clearfix"></div>
+									<div class="divider-dashed"></div>
+								</div>
+							</div>
+						</div>
+						<br />
+					</div>
+				</div>
+			<!-- /page content -->
+{% endblock %}

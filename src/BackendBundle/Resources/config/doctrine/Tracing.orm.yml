@@ -1,0 +1,94 @@
+BackendBundle\Entity\Tracing:
+    type: entity
+    repositoryClass: BackendBundle\Repository\TracingRepository
+    table: tracing
+    indexes:
+        user:
+            columns:
+                - user
+        medical_history:
+            columns:
+                - medical_history
+        orthopodology_history:
+            columns:
+                - orthopodology_history
+        type_tracing:
+            columns:
+                - type_tracing
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+# fields ##############################################################
+    fields:
+        date:
+            type: datetime
+            nullable: true
+        tracing:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+# /fields #############################################################
+# manyToOne ###########################################################
+    manyToOne:
+        user:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user:
+                    referencedColumnName: id
+            orphanRemoval: false
+        typeTracing:
+            targetEntity: TypeTracing
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                type_tracing:
+                    referencedColumnName: id
+            orphanRemoval: false
+        # referencia ManyToOne de la Entidad # OrthopodologyHistory #  
+        orthopodologyHistory:
+            targetEntity: OrthopodologyHistory
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            # inversedBy # hace referencia si a la relación OneToMany de la entidad # MedicalHistory #   
+            inversedBy: tracingList # hace referencia al campo
+            joinColumns:
+                orthopodology_history:
+                    referencedColumnName: id
+            orphanRemoval: false
+        # referencia ManyToOne de la Entidad # MedicalHistory #    
+        medicalHistory:
+            targetEntity: MedicalHistory
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            # inversedBy # hace referencia si a la relación OneToMany de la entidad # MedicalHistory #       
+            inversedBy: tracingList  # hace referencia al campo
+            joinColumns:
+                medical_history:
+                    referencedColumnName: id
+            orphanRemoval: false
+# /manyToOne ##########################################################
+# oneToMany ###########################################################           
+    oneToMany:
+        # docList # no se encuentra dentro de la BD, pero se define en la entidad para listar los elementos
+        tracingServiceList:
+            targetEntity: TracingService
+            # mappedBy # hace referencia a la columna de la tabla # TracingService # dentro de la BD relacionada con la tabla # tracing #
+            mappedBy: tracing
+# /oneToMany ##########################################################          
+    lifecycleCallbacks: {  }

@@ -1,0 +1,99 @@
+{# EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig'...................... #}
+	{% extends "AppBundle:Layouts:layout.html.twig"%}
+{# ......................EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig' #}
+{# INCLUIMOS EL JAVASCRIPT QUE VERIFICA SI EL NICK EXISTE............................ #}
+	{% block javascripts %}
+		{# la función parent() carga todo el contenido del bloque anterior #}
+		{{ parent() }}
+		<!-- Datatables -->
+		<link href="{{ asset ('assets/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
+		<link href="{{ asset ('assets/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
+		<link href="{{ asset ('assets/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}" rel="stylesheet">
+		<link href="{{ asset ('assets/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
+		<link href="{{ asset ('assets/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
+	{% endblock %}
+{% block content %}
+		<div class="right_col" role="main">
+			<div class="">
+				<div class="clearfix"></div>
+					<div class="row">
+						<div class="col-md-6 col-sm-6 col-xs-12">
+							<div class="x_panel">
+								<div class="x_title">
+									<h2>Clínicas</h2>
+									{% if permissionLoggedUser.clinicCreate == true %}
+										<a class="btn btn-success pull-right"
+											href="{{ path("clinic_create") }}">
+											<i class="fa fa-edit m-right-xs"></i>
+											Nueva Clínica
+										</a>
+									{% endif %}
+									<div class="clearfix"></div>
+								</div>
+								<div class="x_content">
+									<table class="table table-hover">
+										<thead>
+											<tr>
+												<th>Nombre</th>
+												<th>Ciudad</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for clinic in clinics_list %}
+												<tr>
+													<td><a href="{{ path ("clinic_view", {clinicNameUrl:clinic.nameUrl})}}">{{clinic.name}}</a></td>
+													<td>
+														<a href="">
+															{% if clinic.city != NULL %}
+															{{clinic.city}}
+															{#}	{{clinic.city | AddressCityAllInformation (clinic.city)}}#}
+															{% endif %}
+														</a>
+													</td>
+												</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 col-sm-6 col-xs-12">
+							<div class="x_panel">
+								<div class="x_title">
+									<h2>Usuarios</h2>
+									{% if permissionLoggedUser.userCreate == true %}
+										<a class="btn btn-success pull-right"
+											href="{{ path("admin_user_create", {clinicNameUrl:ClinicsUser.nameUrl}) }}">
+											<i class="fa fa-edit m-right-xs"></i>
+											Nuevo Usuario
+										</a>
+									{% endif %}
+									<div class="clearfix"></div>
+								</div>
+								<div class="x_content">
+									<table class="table table-hover">
+										<thead>
+											<tr>
+												<th>Nick</th>
+												<th>Nombre</th>
+												<th>Apellidos</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for user in users_list %}
+												<tr>
+													<td><a href="{{ path("admin_user_edit", {userName: user.userName}) }}">{{user.userName}}</a></td>
+													<td><a href="{{ path("admin_user_edit", {userName: user.userName}) }}">{{user.name}}</a></td>
+													<td><a href="{{ path("admin_user_edit", {userName: user.userName}) }}">{{user.surnames}}</a></td>
+												</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+{% endblock %}

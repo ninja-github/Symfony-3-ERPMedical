@@ -1,0 +1,4 @@
+# ROUTING PARA EL SCHEDULE
+schedule_home:
+    path: /schedule
+    defaults: { _controller: AppBundle:Schedule:home }

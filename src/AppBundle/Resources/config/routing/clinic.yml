@@ -1,0 +1,8 @@
+# ROUTING CREAR UNA NUEVA CLÍNICA
+clinic_create:
+    path: /clinic/create
+    defaults: { _controller: AppBundle:Clinic:clinicCreate }
+# ROUTING VER DATOS CLÍNICA
+clinic_view:
+    path: /clinic/{clinicNameUrl}
+    defaults: { _controller: AppBundle:Clinic:clinicView }

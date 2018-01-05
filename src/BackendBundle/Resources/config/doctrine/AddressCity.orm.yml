@@ -1,0 +1,41 @@
+BackendBundle\Entity\AddressCity:
+    type: entity
+    repositoryClass: BackendBundle\Repository\AddressCityRepository
+    table: address_city
+    indexes:
+        province:
+            columns:
+                - province
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        cp:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+        city:
+            type: string
+            nullable: true
+            length: 500
+            options:
+                fixed: false
+    manyToOne:
+        province:
+            targetEntity: AddressProvince
+#            cascade: {  }
+#            fetch: LAZY
+#            mappedBy: null
+#            inversedBy: null
+            joinColumns:
+                province:
+                    referencedColumnName: id
+#            orphanRemoval: false
+    lifecycleCallbacks: {  }

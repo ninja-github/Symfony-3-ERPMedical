@@ -1,0 +1,309 @@
+{# EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig'...................... #}
+  {% extends "AppBundle:Layouts:layout.html.twig"%}
+{# ......................EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig' #}
+{% block content %}
+				<!-- page content -->
+					<div class="right_col" role="main">
+						<div class="clearfix"></div>
+						<div class="row">
+							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+								<div class="x_panel" >
+									{{ form_start(form, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
+									<div class="x_title">
+										<h3 style="display:inline-block;">Estudio Ortopodológico 
+											<small>
+												Historia Clínica{% if medicalHistoryNumber == 'without_MedicalHistoryNumber' %}<div class="col-lg-6 col-md-8 col-sm-8 col-xs-12 pull-right">{{form_widget(form.idMedicalHistory)}}</div>
+												{% else %}
+													{{medicalHistoryNumber}}
+												{% endif %}
+											</small>
+										</h3>
+										{% if medicalHistoryNumber != "without_MedicalHistoryNumber" %}
+											<div style="display:block;margin-top:4px;" class="pull-right">
+												<a class="btn btn-success" href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber} ) }}">
+													<i class="fa fa-mail-reply-all m-right-xs"></i>
+													Volver al Perfil
+												</a>
+											</div>
+										{% endif %}
+										<div class="clearfix"></div>
+									</div>
+									<div class="x_content">
+											<div class="form-group">
+												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12" >Razón de Consulta</label>
+												<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form.reasonConsultation)}}</div>
+												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12" >Antecedentes</label>
+												<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form.background)}}</div>
+											</div>
+											<div class="clearfix"></div>
+											<table id="datatable-responsive"
+												class="table table-striped table-bordered dt-responsive nowrap"
+												cellspacing="0" style="width:calc(100% - 17px);margin-left:10px;margin-right:10px;" >
+												<thead>
+													<tr>
+														<th style="text-align: center;">Izquierdo</th>
+														<th style="text-align: center;">EXPLORACIÓN ARTICULAR</th>
+														<th style="text-align: center;">Derecho</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td style="text-align: center; padding: 8px 0px;">
+															{{form_widget(form.articularExplorationRotaryPatternExternalLeft)}}
+															/
+															{{form_widget(form.articularExplorationRotaryPatternInternalLeft)}}</td>
+														<td style="text-align: center;">PATRON ROTADOR (ext / int)</td>
+														<td style="text-align: center; padding: 8px 0px;">
+															{{form_widget(form.articularExplorationRotaryPatternExternalRight)}}
+															/
+															{{form_widget(form.articularExplorationRotaryPatternInternalRight)}}</td>
+													</tr>
+													<tr>
+														<td style="text-align: center;">
+															{{form_widget(form.articularExplorationHipLeft)}}
+														</td>
+														<td style="text-align: center;">CADERA</td>
+														<td style="text-align: center;">
+															{{form_widget(form.articularExplorationHipRight)}}
+														</td>
+													</tr>
+													<tr>
+														<td style="text-align: center;">
+															{{form_widget(form.articularExplorationKneeLeft)}}</td>
+														<td style="text-align: center;">RODILLA</td>
+														<td style="text-align: center;">
+															{{form_widget(form.articularExplorationKneeRight)}}
+														</td>
+													</tr>
+													<tr>
+														<td style="text-align: center;">
+															{{form_widget(form.articularExplorationAnkleLeft)}}</td>
+														<td style="text-align: center;">TOBILLO</td>
+														<td style="text-align: center;">
+															{{form_widget(form.articularExplorationAnkleRight)}}
+														</td>
+													</tr>
+													<tr>
+														<td style="text-align: center;">
+															{{form_widget(form.articularExplorationRetroPieLeft)}}</td>
+														<td style="text-align: center;">RETROPIÉ</td>
+														<td style="text-align: center;">
+															{{form_widget(form.articularExplorationRetroPieRight)}}
+														</td>
+													</tr>
+													<tr>
+														<td style="text-align: center;">
+															{{form_widget(form.articularExplorationBeforeFootLeft)}}</td>
+														<td style="text-align: center;">ANTEPIÉ</td>
+														<td style="text-align: center;">
+															{{form_widget(form.articularExplorationBeforeFootRight)}}
+														</td>
+													</tr>
+													<tr>
+														<td style="text-align: center;">
+															{{form_widget(form.articularExplorationFirstRadioLeft)}}</td>
+														<td style="text-align: center;">I.RADIO</td>
+														<td style="text-align: center;">
+															{{form_widget(form.articularExplorationFirstRadioRight)}}
+														</td>
+													</tr>
+													<tr>
+														<td style="text-align: center;">
+															{{form_widget(form.articularExplorationFifthRadioLeft)}}</td>
+														<td style="text-align: center;">V.RADIO</td>
+														<td style="text-align: center;">
+															{{form_widget(form.articularExplorationFifthRadioRight)}}
+														</td>
+													</tr>
+													</tr>
+													<tr>
+														<td style="text-align: center;">
+															{{form_widget(form.articularExplorationCentralRadiosLeft)}}</td>
+														<td style="text-align: center;">R.CENTRALES</td>
+														<td style="text-align: center;">
+															{{form_widget(form.articularExplorationCentralRadiosRight)}}
+														</td>
+													</tr>
+													<tr>
+														<td style="text-align: center;">
+															{{form_widget(form.articularExplorationFirstFingerLeft)}}</td>
+														<td style="text-align: center;">1ºDEDO</td>
+														<td style="text-align: center;">
+															{{form_widget(form.articularExplorationFirstFingerRight)}}
+														</td>
+													</tr>
+													<tr>
+														<td style="text-align: center;">
+															{{form_widget(form.articularExplorationSmallerFingersLeft)}}</td>
+														<td style="text-align: center;">D.MENORES</td>
+														<td style="text-align: center;">
+															{{form_widget(form.articularExplorationSmallerFingersRight)}}
+														</td>
+													</tr>
+												</tbody>
+											</table>
+											<div class="clearfix"></div>
+											<label class="control-label col-lg-1 col-md-3 col-sm-3 col-xs-12" >Torsiones</label>
+											<table id="datatable-responsive"
+												class="table table-striped table-bordered dt-responsive nowrap"
+												cellspacing="0" style="width:calc(100% - 17px);margin-left:10px;margin-right:10px;" >
+												<tbody>
+													<tr>
+														<td style="text-align: center;">
+															{{form_widget(form.torsionsFemoralLeft)}}</td>
+														<td style="text-align: center;">FEMORAL</td>
+														<td style="text-align: center;">
+															{{form_widget(form.torsionsFemoralRight)}}
+														</td>
+													</tr>
+													<tr>
+														<td style="text-align: center;">
+															{{form_widget(form.torsionsGenusLeft)}}</td>
+														<td style="text-align: center;">GENUS</td>
+														<td style="text-align: center;">
+															{{form_widget(form.torsionsGenusRight)}}
+														</td>
+													</tr>
+													<tr>
+														<td style="text-align: center;">
+															{{form_widget(form.torsionsAngleQLeft)}}</td>
+														<td style="text-align: center;">ÁNGULO Q</td>
+														<td style="text-align: center;">
+															{{form_widget(form.torsionsAngleQRight)}}
+														</td>
+													</tr>
+													<tr>
+														<td style="text-align: center;">
+															{{form_widget(form.torsionsTibialLeft)}}</td>
+														<td style="text-align: center;">TIBIAL</td>
+														<td style="text-align: center;">
+															{{form_widget(form.torsionsTibialRight)}}
+														</td>
+													</tr>
+													<tr>
+														<td style="text-align: center;">
+															{{form_widget(form.torsionsHelbingLeft)}}</td>
+														<td style="text-align: center;">HELBING</td>
+														<td style="text-align: center;">
+															{{form_widget(form.torsionsHelbingRight)}}
+														</td>
+													</tr>
+												</tbody>
+											</table>
+											<div class="clearfix"></div>
+											<div class="form-group">
+												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12" >Disimetría</label>
+												<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form.dissimmetry)}}</div>
+											</div>
+											<div class="clearfix"></div>
+											<label class="control-label col-lg-12 col-md-12 col-sm-12 col-xs-12" >Exploración Muscular</label>
+											<table id="datatable-responsive"
+												class="table table-striped table-bordered dt-responsive nowrap"
+												cellspacing="0" style="width:calc(100% - 17px);margin-left:10px;margin-right:10px;" >
+												<tbody>
+													<tr>
+														<td style="text-align: center;">
+															{{form_widget(form.muscularExplorationDorsalFlexionLeft)}}</td>
+														<td style="text-align: center;">FLEXIÓN DORSAL</td>
+														<td style="text-align: center;">
+															{{form_widget(form.muscularExplorationDorsalFlexionRight)}}
+														</td>
+													</tr>
+													<tr>
+														<td style="text-align: center;">
+															{{form_widget(form.muscularExplorationPlantarFlexionLeft)}}</td>
+														<td style="text-align: center;">FLEXIÓN PLANTAR</td>
+														<td style="text-align: center;">
+															{{form_widget(form.muscularExplorationPlantarFlexionRight)}}
+														</td>
+													</tr>
+													<tr>
+														<td style="text-align: center;">
+															{{form_widget(form.muscularExplorationEversionLeft)}}</td>
+														<td style="text-align: center;">EVERSIÓN</td>
+														<td style="text-align: center;">
+															{{form_widget(form.muscularExplorationEversionRight)}}
+														</td>
+													</tr>
+													<tr>
+														<td style="text-align: center;">
+															{{form_widget(form.muscularExplorationReversalLeft)}}</td>
+														<td style="text-align: center;">INVERSIÓN</td>
+														<td style="text-align: center;">
+															{{form_widget(form.muscularExplorationReversalRight)}}
+														</td>
+													</tr>
+												</tbody>
+											</table>
+											<div class="clearfix"></div>
+											<div class="form-group">
+												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12" >Exploración Dinámica</label>
+												<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form.dinamicExploration)}}</div>
+												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12" >Signos de Huella</label>
+												<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form.signsFootprint)}}</div>
+												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12" >Pruebas Complementarias</label>
+												<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form.suplementaryTest)}}</div>
+												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12" >Diagnóstico</label>
+												<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form.diagnostic)}}</div>
+												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12" >Tratamiento</label>
+												<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form.treatment)}}</div>
+											</div>
+											<div class="clearfix"></div>
+											{% if permissionLoggedUser.orthopodologyHistoryUserRegistererEdit == true %}
+												<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12" >		Usuario Registrador
+												</label>
+												<div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">{{form_widget(form.userRegisterer)}}</div>
+											{% endif %}
+											{% if permissionLoggedUser.orthopodologyHistoryRegistrationDateEdit == true %}
+												<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">
+													Fecha de Registro
+												</label>
+												<div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+													<div class='input-group date' id='datetimepicker1'>
+														{{form_widget(form.registrationDate)}}
+														<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+														</span>
+													</div>
+												</div>
+											{% endif %}
+											{% if permissionLoggedUser.orthopodologyHistoryUserModifierEdit == true %}
+												<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12" >Usuario Modificador
+												</label>
+												<div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">{{form_widget(form.userModifier)}}</div>
+											{% endif %}
+											{% if permissionLoggedUser.orthopodologyHistoryModificationDateEdit == true %}
+												<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">
+													Fecha de Modificación
+												</label>
+												<div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+													<div class='input-group date' id='datetimepicker1'>
+														{{form_widget(form.modificationDate)}}
+														<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+														</span>
+													</div>
+												</div>
+											{% endif %}
+											<div class="clearfix"></div><br/>
+											{{form_widget(form.submit, {'label':'Crear Estudio'})}}											
+										{{ form_end(form) }}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				<!-- /page content -->
+{% endblock %}
+{% block javascriptsFinal %}
+	{{ parent() }}
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.3/js/bootstrap-datetimepicker.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.3/js/bootstrap-datetimepicker.min.js"></script>
+		<!-- dateTimePickerCustom -->
+		<script src="{{ asset ('assets/js/custom/dateTimePicker.js') }}"></script>
+		<!-- bootstrap-daterangepicker -->
+		<script src="{{ asset ('assets/vendors/moment/min/moment.min.js') }}"></script>
+		<script src="{{ asset ('assets/vendors/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+		<!-- bootstrap-datetimepicker -->
+		<script src="{{ asset ('assets/vendors/bootstrap-datetimepicker/js/bootstrap-datepicker.js') }}"></script>
+		<script src="{{ asset ('assets/vendors/bootstrap-datetimepicker/js/locales/bootstrap-datepicker.es.js') }}"></script>
+{% endblock %}

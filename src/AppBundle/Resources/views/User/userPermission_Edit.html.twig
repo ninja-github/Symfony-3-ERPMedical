@@ -1,0 +1,166 @@
+{# EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig'...................... #}
+{% extends "AppBundle:Layouts:layout.html.twig"%}
+{# ......................EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig' #}
+{% block stylesheets %}
+	{# la función parent() carga todo el contenido del bloque anterior #}
+	{{ parent() }}	
+	<!-- switchery Checkbox -->
+	<link href="{{ asset ('assets/vendors/switchery/dist/switchery.min.css') }}" rel="stylesheet"> 
+{% endblock %}
+{% block content %}
+				<!-- page content -->
+					<div class="right_col" role="main">
+						<div class="clearfix"></div>
+						<div class="row">
+							{% if pathInfo  %}
+								<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+									<div class="x_panel" >
+										<div class="x_title">
+											<h3 style="display:inline-block;">Permisos Usuario</h3>
+											<div style="display:block;margin-top:4px;" class="pull-right">
+											</div>
+											<div class="clearfix"></div>
+										</div>
+										<div class="x_content">
+											{{ form_start(formUserPermission, { 'attr':{'class': 'form-horizontal form-label-left' ,'novalidate':''}})}}
+												<!-- Usuarios -->
+												<h4 style="display:inline-block;">Usuarios</h4>
+												<div class="clearfix"></div>
+												<div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+													<label>
+														{% if userPermission['userDumpView'] == true %}
+															{{form_widget (formUserPermission.userDumpView, {'attr': {'checked style' : 'display:none','value' : 1}} ) }} 
+														{% else %} 
+															{{form_widget (formUserPermission.userDumpView, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+														{% endif %}
+														Activar Dump
+													</label>
+												</div>
+												<div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+													<label>
+														{% if userPermission['userPermission'] == true %}
+															{{form_widget (formUserPermission.userPermission, {'attr': {'checked style' : 'display:none','value' : 1}} ) }} 
+														{% else %} 
+															{{form_widget (formUserPermission.userPermission, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+														{% endif %}
+														Editar Permisos
+													</label>
+												</div>
+												<div class="clearfix"></div>
+												<div class="divider-dashed"></div>
+												<!-- Historias Médicas -->
+												<h4 style="display:inline-block;">Historias Médicas</h4>
+												<div class="clearfix"></div>
+												<div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+													<label>
+														{% if userPermission['medicalHistoryRegistrationDateEdit'] == true %}
+															{{form_widget (formUserPermission.medicalHistoryRegistrationDateEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }} 
+														{% else %} 
+															{{form_widget (formUserPermission.medicalHistoryRegistrationDateEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+														{% endif %}
+														Editar Fecha Registro
+													</label>
+												</div>
+												<div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+													<label>
+														{% if userPermission['medicalHistoryIdUserRegistererEdit'] == true %}
+															{{form_widget (formUserPermission.medicalHistoryIdUserRegistererEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }} 
+														{% else %} 
+															{{form_widget (formUserPermission.medicalHistoryIdUserRegistererEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+														{% endif %}
+														Editar Usuario Registro
+													</label>
+												</div>											
+												<div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+													<label>
+														{% if userPermission['medicalHistoryModificationDateEdit'] == true %}
+															{{form_widget (formUserPermission.medicalHistoryModificationDateEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }} 
+														{% else %} 
+															{{form_widget (formUserPermission.medicalHistoryModificationDateEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+														{% endif %}
+														Editar Fecha Modificación
+													</label>
+												</div>	
+												<div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+													<label>
+														{% if userPermission['medicalHistoryIdUserModifierEdit'] == true %}
+															{{form_widget (formUserPermission.medicalHistoryIdUserModifierEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }} 
+														{% else %} 
+															{{form_widget (formUserPermission.medicalHistoryIdUserModifierEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+														{% endif %}
+														Editar Usuario Modificación
+													</label>
+												</div>															
+												<div class="clearfix"></div>
+												<div class="divider-dashed"></div>
+												<!-- Historias Médicas -->	
+												<h4 style="display:inline-block;">Estudios Ortopodológicos</h4>
+												<div class="clearfix"></div>
+												<div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+													<label>
+														{% if userPermission['orthopodologyHistoryRegistrationDateEdit'] == true %}
+															{{form_widget (formUserPermission.orthopodologyHistoryRegistrationDateEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }} 
+														{% else %} 
+															{{form_widget (formUserPermission.orthopodologyHistoryRegistrationDateEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+														{% endif %}
+														Editar Fecha Registro
+													</label>
+												</div>
+												<div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+													<label>
+														{% if userPermission['orthopodologyHistoryIdUserRegistererEdit'] == true %}
+															{{form_widget (formUserPermission.orthopodologyHistoryIdUserRegistererEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }} 
+														{% else %} 
+															{{form_widget (formUserPermission.orthopodologyHistoryIdUserRegistererEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+														{% endif %}
+														Editar Usuario Registro
+													</label>
+												</div>											
+												<div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+													<label>
+														{% if userPermission['orthopodologyHistoryModificationDateEdit'] == true %}
+															{{form_widget (formUserPermission.orthopodologyHistoryModificationDateEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }} 
+														{% else %} 
+															{{form_widget (formUserPermission.orthopodologyHistoryModificationDateEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+														{% endif %}
+														Editar Fecha Modificación
+													</label>
+												</div>	
+												<div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+													<label>
+														{% if userPermission['orthopodologyHistoryIdUserModifierEdit'] == true %}
+															{{form_widget (formUserPermission.orthopodologyHistoryIdUserModifierEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }} 
+														{% else %} 
+															{{form_widget (formUserPermission.orthopodologyHistoryIdUserModifierEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+														{% endif %}
+														Editar Usuario Modificación
+													</label>
+												</div>															
+												<div class="clearfix"></div>
+												<div class="divider-dashed"></div>				
+												<div>
+													{{form_widget(formUserPermission.Editar)}}
+													<div class="pull-right">
+														<a class="btn btn-success"
+															href="{{ path("admin_user_edit", {'userName': user.userName} ) }}">
+															<i class="fa fa-mail-reply-all m-right-xs"></i>
+															Volver al Perfil
+														</a>
+													</div>
+												</div>															
+											{{ form_end(formUserPermission) }}
+										</div>
+									</div>
+								</div>   
+							{% endif %}								           
+						</div>
+					</div>
+				<!-- /page content -->
+{% endblock %}
+{% block javascriptsFinal %}
+	{{ parent() }}
+	<!-- switchery Checkbox -->
+	<script src="{{ asset ('assets/vendors/switchery/dist/switchery.min.js') }}"></script>
+	<!-- switchery Checkbox Custom Input-->	
+	<script src="{{ asset ('assets/js/custom/switchery_input_checkbox.js') }}"></script>
+{% endblock %}

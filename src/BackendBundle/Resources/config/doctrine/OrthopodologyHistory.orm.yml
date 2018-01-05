@@ -1,0 +1,425 @@
+BackendBundle\Entity\OrthopodologyHistory:
+    type: entity
+    repositoryClass: BackendBundle\Repository\OrthopodologyHistoryRepository
+    table: orthopodology_history
+# indexes #############################################################
+    indexes:
+        user:
+            columns:
+                - user_registerer
+        user_modifier:
+            columns:
+                - user_modifier
+        orthopodology_history:
+            columns:
+                - medical_history
+# /indexes ############################################################                
+# id ################################################################## 
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+# /id #################################################################
+# fields ##############################################################
+    fields:
+        reasonConsultation:
+            type: string
+            nullable: true
+            length: 512
+            options:
+                fixed: false
+            column: reason_consultation
+        background:
+            type: string
+            nullable: true
+            length: 512
+            options:
+                fixed: false
+        articularExplorationRotaryPatternExternalLeft:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+            column: articular_exploration_rotary_pattern_external_left
+        articularExplorationRotaryPatternExternalRight:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+            column: articular_exploration_rotary_pattern_external_right
+        articularExplorationRotaryPatternInternalLeft:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+            column: articular_exploration_rotary_pattern_internal_left
+        articularExplorationRotaryPatternInternalRight:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+            column: articular_exploration_rotary_pattern_internal_right
+        articularExplorationHipLeft:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+            column: articular_exploration_hip_left
+        articularExplorationHipRight:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+            column: articular_exploration_hip_right
+        articularExplorationKneeLeft:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: articular_exploration_knee_left
+        articularExplorationKneeRight:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: articular_exploration_knee_right
+        articularExplorationAnkleLeft:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: articular_exploration_ankle_left
+        articularExplorationAnkleRight:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: articular_exploration_ankle_right
+        articularExplorationRetroPieLeft:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: articular_exploration_retro_pie_left
+        articularExplorationRetroPieRight:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: articular_exploration_retro_pie_right
+        articularExplorationBeforeFootLeft:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: articular_exploration_before_foot_left
+        articularExplorationBeforeFootRight:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: articular_exploration_before_foot_right
+        articularExplorationFirstRadioLeft:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: articular_exploration_first_radio_left
+        articularExplorationFirstRadioRight:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: articular_exploration_first_radio_right
+        articularExplorationFifthRadioLeft:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: articular_exploration_fifth_radio_left
+        articularExplorationFifthRadioRight:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: articular_exploration_fifth_radio_right
+        articularExplorationCentralRadiosLeft:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: articular_exploration_central_radios_left
+        articularExplorationCentralRadiosRight:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: articular_exploration_central_radios_right
+        articularExplorationFirstFingerLeft:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: articular_exploration_first_finger_left
+        articularExplorationFirstFingerRight:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: articular_exploration_first_finger_right
+        articularExplorationSmallerFingersLeft:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: articular_exploration_smaller_fingers_left
+        articularExplorationSmallerFingersRight:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: articular_exploration_smaller_fingers_right
+        torsionsFemoralLeft:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: torsions_femoral_left
+        torsionsFemoralRight:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: torsions_femoral_right
+        torsionsGenusLeft:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: torsions_genus_left
+        torsionsGenusRight:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: torsions_genus_right
+        torsionsAngleQLeft:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: torsions_angle_q_left
+        torsionsAngleQRight:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: torsions_angle_q_right
+        torsionsTibialLeft:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: torsions_tibial_left
+        torsionsTibialRight:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: torsions_tibial_right
+        torsionsHelbingLeft:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: torsions_helbing_left
+        torsionsHelbingRight:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: torsions_helbing_right
+        dissimmetry:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+        muscularExplorationDorsalFlexionLeft:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: muscular_exploration_dorsal_flexion_left
+        muscularExplorationDorsalFlexionRight:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: muscular_exploration_dorsal_flexion_right
+        muscularExplorationPlantarFlexionLeft:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: muscular_exploration_plantar_flexion_left
+        muscularExplorationPlantarFlexionRight:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: muscular_exploration_plantar_flexion_right
+        muscularExplorationEversionLeft:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: muscular_exploration_eversion_left
+        muscularExplorationEversionRight:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: muscular_exploration_eversion_right
+        muscularExplorationReversalLeft:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: muscular_exploration_reversal_left
+        muscularExplorationReversalRight:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: muscular_exploration_reversal_right
+        dinamicExploration:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+            column: dinamic_exploration
+        signsFootprint:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+            column: signs_footprint
+        suplementaryTest:
+            type: string
+            nullable: true
+            length: 512
+            options:
+                fixed: false
+            column: suplementary_test
+        diagnostic:
+            type: string
+            nullable: true
+            length: 512
+            options:
+                fixed: false
+        treatment:
+            type: string
+            nullable: true
+            length: 512
+            options:
+                fixed: false
+        registrationDate:
+            type: datetime
+            nullable: false
+            column: registration_date
+        modificationDate:
+            type: datetime
+            nullable: true
+            column: modification_date
+# /fields #############################################################
+# manyToOne ###########################################################
+    manyToOne:
+        medicalHistory:
+            targetEntity: MedicalHistory
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: orthopodologyHistoryList
+            joinColumns:
+                medical_history:
+                    referencedColumnName: id
+            orphanRemoval: false
+        userRegisterer:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user_registerer:
+                    referencedColumnName: id
+            orphanRemoval: false
+        userModifier:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user_modifier:
+                    referencedColumnName: id
+            orphanRemoval: false
+# /manyToOne ##########################################################
+# oneToMany ###########################################################           
+    oneToMany:
+        # docList # no se encuentra dentro de la BD, pero se define en la entidad para listar los elementos
+        docList:
+            targetEntity: OrthopodologyHistoryDoc
+            # mappedBy # hace referencia a la columna de la tabla # OrthopodologyHistoryDoc # dentro de la BD relacionada con la tabla # OrthopodologyHistory #
+            mappedBy: orthopodologyHistory
+        # tracingList # no se encuentra dentro de la BD, pero se define en la entidad para listar los elementos
+        tracingList:
+            targetEntity: Tracing
+            # mappedBy # hace referencia a la columna de la tabla # Tracing # dentro de la BD relacionada con la tabla # OrthopodologyHistory #
+            mappedBy: orthopodologyHistory
+# /oneToMany ##########################################################   
+    lifecycleCallbacks: {  }

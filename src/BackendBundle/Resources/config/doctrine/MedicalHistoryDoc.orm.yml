@@ -1,0 +1,94 @@
+BackendBundle\Entity\MedicalHistoryDoc:
+    type: entity
+    table: medical_history_doc
+    indexes:
+        medical_history:
+            columns:
+                - medical_history
+        user_registerer:
+            columns:
+                - user_registerer
+        iuser_modifier:
+            columns:
+                - user_modifier
+        type_doc:
+            columns:
+                - type_doc
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        doc:
+            type: string
+            nullable: false
+            length: 150
+            options:
+                fixed: false
+        title:
+            type: string
+            nullable: false
+            length: 150
+            options:
+                fixed: false
+        description:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+        registrationDate:
+            type: datetime
+            nullable: false
+            column: registration_date
+        modificationDate:
+            type: datetime
+            nullable: false
+            column: modification_date
+    manyToOne:
+        typeDoc:
+            targetEntity: TypeDoc
+#            cascade: {  }
+#            fetch: LAZY
+#            mappedBy: null
+#            inversedBy: null
+            joinColumns:
+                type_doc:
+                    referencedColumnName: id
+#            orphanRemoval: false
+        userModifier:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user_modifier:
+                    referencedColumnName: id
+            orphanRemoval: false
+        userRegisterer:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user_registerer:
+                    referencedColumnName: id
+            orphanRemoval: false
+        medicalHistory:
+            targetEntity: MedicalHistory
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: docList
+            joinColumns:
+                medical_history:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

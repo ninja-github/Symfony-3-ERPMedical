@@ -1,0 +1,19 @@
+# ROUTING PARA EL LOGIN
+login:
+    path: /login
+    defaults: { _controller: AppBundle:Security:login }
+# ROUTING PARA EL CHEQUEAR EL LOGIN
+login_check:
+    path: /login_check
+# ROUTING PARA SALIR
+logout:
+    path: /logout
+# ROUTING PARA PRIMER USUARIO
+frist_user:
+    path: /register
+    defaults: { _controller: AppBundle:Security:register }
+
+# ROUTING RAIZ
+raiz_page:
+    path: /
+    defaults: { _controller: AppBundle:Security:index }    

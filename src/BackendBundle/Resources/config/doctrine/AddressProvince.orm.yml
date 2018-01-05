@@ -1,0 +1,35 @@
+BackendBundle\Entity\AddressProvince:
+    type: entity
+    table: address_province
+    indexes:
+        ccaa:
+            columns:
+                - id_address_ccaa
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        province:
+            type: string
+            nullable: true
+            length: 45
+            options:
+                fixed: false
+    manyToOne:
+        ccaa:
+            targetEntity: AddressCcaa
+#            cascade: {  }
+#            fetch: LAZY
+#            mappedBy: null
+#            inversedBy: null
+            joinColumns:
+                ccaa:
+                    referencedColumnName: id
+#            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,49 @@
+# Para definir el ROUTING GENERAL lo hemos definido en app/config/routing.yml
+# GESTOR ROUTING SISTEMA DE ACCESO A LA APP
+app_access:
+    resource: '@AppBundle/Resources/config/routing/security.yml'
+    prefix:   /
+# GESTOR ROUTING HOME
+app_homepage:
+    resource: '@AppBundle/Resources/config/routing/home.yml'
+    prefix:   /
+# GESTOR ROUTING ADMIN
+app_admin:
+    resource: '@AppBundle/Resources/config/routing/admin.yml'
+    prefix:   /admin
+# GESTOR ROUTING USER
+app_user:
+    resource: '@AppBundle/Resources/config/routing/user.yml'
+    prefix:   /
+# GESTOR ROUTING HISTORIAS MÉDICAS
+app_medical_history:
+    resource: '@AppBundle/Resources/config/routing/medicalHistory.yml'
+    prefix:   /
+# GESTOR ROUTING CIUDADES
+app_address_city:
+    resource: '@AppBundle/Resources/config/routing/addressCity.yml'
+    prefix:   /
+# GESTOR ROUTING SERVICIOS SEGUIMIENTOS
+app_tracing_service:
+    resource: '@AppBundle/Resources/config/routing/tracingService.yml'
+    prefix:   /    
+# GESTOR ROUTING CLINICAS
+app_clinic:
+    resource: '@AppBundle/Resources/config/routing/clinic.yml'
+    prefix:   /
+# GESTOR ROUTING SCHEDULE
+app_schedule:
+    resource: '@AppBundle/Resources/config/routing/schedule.yml'
+    prefix:   /
+# GESTOR DOCUMENTOS
+app_doc:
+    resource: '@AppBundle/Resources/config/routing/documents.yml'
+    prefix:   /
+# PRUEBAS
+pruebas_pdf:
+    path: /pruebas_pdf
+    defaults: { _controller: AppBundle:Pruebas:pdf }
+# PRUEBAS
+pruebas_googleCalendar:
+    path: /google_calendar
+    defaults: { _controller: AppBundle:Pruebas:googleCalendar }    

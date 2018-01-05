@@ -1,0 +1,45 @@
+# To get started with security, check out the documentation:
+# https://symfony.com/doc/current/security.html
+security:
+# DEFINIMOS EL SISTEMA DE ENCRIPTACIÓN QUE SE USARÁ.................................................... #
+# https://symfony.com/doc/current/security.html
+# http://symfony.com/doc/current/security/named_encoders.html
+    encoders:
+        BackendBundle\Entity\User:
+            algorithm: bcrypt
+            cost: 4 # Número de veces que se va a encriptar la contraseña
+# ....................................................DEFINIMOS EL SISTEMA DE ENCRIPTACIÓN QUE SE USARÁ #
+# PROVEEDOR DE USUARIOS................................................................................ #
+# https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    providers:
+        user_db_provider:
+            entity:
+                class: BackendBundle:User
+                property: userName
+# ................................................................................PROVEEDOR DE USUARIOS #
+# CORTAFUEGOS.......................................................................................... #
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: ~
+            provider: user_db_provider
+            form_login:
+                login_path: /login
+                check_path: /login_check
+            logout:
+                path: logout
+                target: /
+# ..........................................................................................CORTAFUEGOS #
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+            #http_basic: ~
+            # https://symfony.com/doc/current/security/form_login_setup.html
+            #form_login: ~
+    access_control:
+        # ^/login puede entrar cualquier usuario (ANÓNIMO)
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - { path: ^/, roles: [ROLE_USER, ROLE_ADMIN]}

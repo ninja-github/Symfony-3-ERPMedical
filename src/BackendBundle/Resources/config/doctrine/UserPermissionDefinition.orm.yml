@@ -1,0 +1,350 @@
+BackendBundle\Entity\UserPermissionDefinition:
+    type: entity
+    table: user_permission_definition
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        userCreate:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: user_create
+        userEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: user_edit
+        userRemove:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: user_remove
+        userDumpView:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: user_dump_view
+        userPermission:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: user_permission
+        clinicViewOther:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: clinic_view_other
+        clinicCreate:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: clinic_create
+        clinicEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: clinic_edit
+        clinicRemove:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: clinic_remove
+        medicalHistoryCreate:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: medical_history_create
+        medicalHistoryEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: medical_history_edit
+        medicalHistoryRemove:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: medical_history_remove
+        medicalHistoryRegistrationDateEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: medical_history_registration_date_edit
+        medicalHistoryModificationDateEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: medical_history_modification_date_edit
+        medicalHistoryUserRegistererEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: medical_history_user_registerer_edit
+        medicalHistoryUserModifierEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: medical_history_user_modifier_edit
+        medicalHistoryDocCreate:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: medical_history_doc_create
+        medicalHistoryDocEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: medical_history_doc_edit
+        medicalHistoryDocRemove:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: medical_history_doc_remove
+        medicalHistoryDocRegistrationDateEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: medical_history_doc_registration_date_edit
+        medicalHistoryDocModificationDateEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: medical_history_doc_modification_date_edit
+        medicalHistoryDocUserRegistererEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: medical_history_doc_user_registerer_edit
+        medicalHistoryDocUserModifierEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: medical_history_doc_user_modifier_edit
+        orthopodologyHistoryCreate:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: orthopodology_history_create
+        orthopodologyHistoryEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: orthopodology_history_edit
+        orthopodologyHistoryRemove:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: orthopodology_history_remove
+        orthopodologyHistoryRegistrationDateEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: orthopodology_history_registration_date_edit
+        orthopodologyHistoryModificationDateEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: orthopodology_history_modification_date_edit
+        orthopodologyHistoryUserRegistererEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: orthopodology_history_user_registerer_edit
+        orthopodologyHistoryUserModifierEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: orthopodology_history_user_modifier_edit
+        orthopodologyHistoryDocCreate:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: orthopodology_history_doc_create
+        orthopodologyHistoryDocEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: orthopodology_history_doc_edit
+        orthopodologyHistoryDocRemove:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: orthopodology_history_doc_remove
+        orthopodologyHistoryDocRegistrationDateEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: orthopodology_history_doc_registration_date_edit
+        orthopodologyHistoryDocModificationDateEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: orthopodology_history_doc_modification_date_edit
+        orthopodologyHistoryDocUserRegistererEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: orthopodology_history_doc_user_registerer_edit
+        orthopodologyHistoryDocUserModifierEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: orthopodology_history_doc_user_modifier_edit
+        serviceCreate:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: service_create
+        serviceEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: service_edit
+        serviceRemove:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: service_remove
+        tracingCreate:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: tracing_create
+        tracingEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: tracing_edit
+        tracingRemove:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: tracing_remove
+        tracingServiceCreate:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: tracing_service_create
+        tracingServiceEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: tracing_service_edit
+        tracingServiceRemove:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: tracing_service_remove
+        adminSectionAccess:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: admin_section_access
+        adminGeneralDataAccess:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: admin_general_data_access
+    lifecycleCallbacks: {  }

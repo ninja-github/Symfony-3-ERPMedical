@@ -1,0 +1,20 @@
+# ROUTING ADMINISTRARCIÓN GENERAL
+admin_home:
+    path: /
+    defaults: { _controller: AppBundle:Admin:index }
+# ROUTING LISTAR CLÍNICAS
+admin_clinics_list:
+    path: /clinics
+    defaults: { _controller: AppBundle:Clinic:clinicsList }
+# ROUTING ADMIN USER EDIT 
+admin_user_edit:
+    path: /user/{userName}/edit
+    defaults: { _controller: AppBundle:User:userEdit }
+# ROUTING ADMIN USER EDIT
+admin_user_create:
+    path: /user/create
+    defaults: { _controller: AppBundle:User:userCreate }     
+# ROUTING ADMIN USER EDIT 
+admin_user_permission_edit:
+    path: /user/{userName}/permission/edit
+    defaults: { _controller: AppBundle:User:userPermissionEdit }    

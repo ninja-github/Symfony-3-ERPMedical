@@ -1,0 +1,118 @@
+BackendBundle\Entity\User:
+    type: entity
+    repositoryClass: BackendBundle\Repository\UserRepository
+    table: user
+    indexes:
+        type_sex:
+            columns:
+                - gender
+        user_registerer:
+            columns:
+                - user_registerer
+        user_modifier:
+            columns:
+                - user_modifier
+    uniqueConstraints:
+        UNIQ_8D93D64924A232CF:
+            columns:
+                - user_name
+        UNIQ_8D93D649E7927C74:
+            columns:
+                - email
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        userName:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+            column: user_name
+        name:
+            type: string
+            nullable: false
+            length: 100
+            options:
+                fixed: false
+        surnames:
+            type: string
+            nullable: false
+            length: 100
+            options:
+                fixed: false
+        password:
+            type: string
+            nullable: false
+            length: 64
+            options:
+                fixed: false
+        email:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+        role:
+            type: json_array
+            nullable: false
+            length: null
+            options:
+                fixed: false
+        image:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+        registrationDate:
+            type: datetime
+            nullable: false
+            column: registration_date
+        modificationDate:
+            type: datetime
+            nullable: true
+            column: modification_date
+    manyToOne:
+        gender:
+            targetEntity: TypeGender
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gender:
+                    referencedColumnName: id
+            orphanRemoval: false
+        userRegisterer:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user_registerer:
+                    referencedColumnName: id
+            orphanRemoval: false
+        userModifier:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user_modifier:
+                    referencedColumnName: id
+            orphanRemoval: false
+    oneToMany:
+        clinicList:
+            targetEntity: ClinicUser
+            mappedBy: user                 
+    lifecycleCallbacks: {  }

@@ -1,0 +1,249 @@
+BackendBundle\Entity\MedicalHistory:
+    type: entity
+    repositoryClass: BackendBundle\Repository\MedicalHistoryRepository
+    table: medical_history
+# indexes #############################################################
+    indexes:
+        address_city:
+            columns:
+                - city
+        user:
+            columns:
+                - user_registerer
+        user_modifier:
+            columns:
+                - user_modifier
+        clinic:
+            columns:
+                - clinic
+        gender:
+            columns:
+                - gender
+# /indexes ############################################################                
+# id ################################################################## 
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+# /id #################################################################
+# fields ##############################################################
+    fields:
+        numberMedicalHistory:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: number_medical_history
+        name:
+            type: string
+            nullable: true
+            length: 50
+            options:
+                fixed: false
+        surname:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+        nickname:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+        dni:
+            type: string
+            nullable: true
+            length: 10
+            options:
+                fixed: false
+        phoneHome:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: phone_home
+        phoneMobile:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+            column: phone_mobile
+        email:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+        address:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+        birthday:
+            type: date
+            nullable: true
+        height:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 2
+        weight:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 2
+        note:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+        reasonConsultation:
+            type: string
+            nullable: true
+            length: 512
+            options:
+                fixed: false
+            column: reason_consultation
+        background:
+            type: string
+            nullable: true
+            length: 512
+            options:
+                fixed: false
+        patientRisk:
+            type: json_array
+            nullable: true
+            length: null
+            options:
+                fixed: false
+                comment: "\t"
+            column: patient_risk
+        allergicDiseases:
+            type: string
+            nullable: true
+            length: 512
+            options:
+                fixed: false
+            column: allergic_diseases
+        treatmentDiseases:
+            type: string
+            nullable: true
+            length: 512
+            options:
+                fixed: false
+            column: treatment_diseases
+        patologies:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+        supplementaryTest:
+            type: string
+            nullable: true
+            length: 512
+            options:
+                fixed: false
+            column: supplementary_test
+        diagnostic:
+            type: string
+            nullable: true
+            length: 512
+            options:
+                fixed: false
+        treatment:
+            type: string
+            nullable: true
+            length: 512
+            options:
+                fixed: false
+        registrationDate:
+            type: datetime
+            nullable: false
+            column: registration_date
+        modificationDate:
+            type: datetime
+            nullable: true
+            column: modification_date
+# /fields #############################################################
+# manyToOne ###########################################################
+    manyToOne:
+        city:
+            targetEntity: AddressCity
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                city:
+                    referencedColumnName: id
+            orphanRemoval: false
+        userRegisterer:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user_registerer:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gender:
+            targetEntity: TypeGender
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gender:
+                    referencedColumnName: id
+            orphanRemoval: false
+        clinic:
+            targetEntity: Clinic
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                clinic:
+                    referencedColumnName: id
+            orphanRemoval: false
+        userModifier:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user_modifier:
+                    referencedColumnName: id
+            orphanRemoval: false
+# /manyToOne ##########################################################
+# oneToMany ###########################################################           
+    oneToMany:
+        # docList # no se encuentra dentro de la BD, pero se define en la entidad para listar los elementos
+        docList:
+            targetEntity: MedicalHistoryDoc
+            # mappedBy # hace referencia a la columna de la tabla # MedicalHistoryDoc # dentro de la BD relacionada con la tabla # MedicalHistory #
+            mappedBy: medicalHistory
+        # tracingList # no se encuentra dentro de la BD, pero se define en la entidad para listar los elementos
+        tracingList:
+            targetEntity: Tracing
+            # mappedBy # hace referencia a la columna de la tabla # Tracing # dentro de la BD relacionada con la tabla # MedicalHistory #
+            mappedBy: medicalHistory
+        # orthopodologyHistoryList # no se encuentra dentro de la BD, pero se define en la entidad para listar los elementos
+        orthopodologyHistoryList:
+            targetEntity: OrthopodologyHistory
+            # mappedBy # hace referencia a la columna de la tabla # OrthopodologyHistory # dentro de la BD relacionada con la tabla # MedicalHistory #
+            mappedBy: medicalHistory
+# /oneToMany ##########################################################           
+    lifecycleCallbacks: {  }

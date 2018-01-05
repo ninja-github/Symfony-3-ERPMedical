@@ -1,0 +1,28 @@
+###########################################################################################################
+# definimos el sistema de validación de los datos en las entidades dentro de "app\config\config.yml"
+# y la gestionamos en "src\AppBundle\Resources\config\validation.yml", cada entidad deberá llamar a
+# "use Symfony\Component\Validator\Constraints as Assert;"
+# VER src\BackendBundle\Entity\User.php
+###########################################################################################################
+AppBundle\Entity\User:
+    properties:
+        userName:
+            - NotBlank: ~
+            - Length:
+                min: 2
+                max: 16
+                minMessage: 'Tu Nombre de Usuario debe ser mayor de {{ limit }} caracteres de longitud.'
+                maxMessage: 'Tu Nombre de Usuario no puede ser mayor de {{ limit }} caracteres de longitud.'
+        email:
+            - Email:
+                message: 'El email {{ value }} no es válido.'
+                checkMX: true
+###########################################################################################################
+# El password no es necesario indicarlo, ya que solo queremos que no sea
+# blanco y por defecto el formulario inspecciona eso.
+###########################################################################################################
+UserBundle\Form\Model\ChangePassword:
+    properties:
+        oldPassword:
+            - Symfony\Component\Security\Core\Validator\Constraints\UserPassword:
+                message: 'Valor incorrecto para su contraseña actual'

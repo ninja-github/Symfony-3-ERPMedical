@@ -1,0 +1,46 @@
+BackendBundle\Entity\UserSession:
+    type: entity
+    repositoryClass: BackendBundle\Repository\UserSessionRepository
+    table: user_session
+    indexes:
+        user:
+            columns:
+                - user
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        datetime:
+            type: datetime
+            nullable: false
+        ip:
+            type: string
+            nullable: false
+            length: 100
+            options:
+                fixed: false
+        pathInfo:
+            type: string
+            nullable: false
+            length: 255
+            column: path_info            
+            options:
+                fixed: false                
+    manyToOne:
+        user:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

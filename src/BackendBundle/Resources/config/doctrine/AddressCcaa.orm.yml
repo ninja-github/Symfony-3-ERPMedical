@@ -1,0 +1,20 @@
+BackendBundle\Entity\AddressCcaa:
+    type: entity
+    table: address_ccaa
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        ccaa:
+            type: string
+            nullable: true
+            length: 30
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

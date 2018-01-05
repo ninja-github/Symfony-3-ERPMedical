@@ -1,0 +1,21 @@
+BackendBundle\Entity\TypeDoc:
+    type: entity
+    table: type_doc
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        type:
+            type: string
+            nullable: false
+            length: 30
+            options:
+                fixed: false
+#            column: type
+    lifecycleCallbacks: {  }

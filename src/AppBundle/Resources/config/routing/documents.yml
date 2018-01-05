@@ -1,0 +1,10 @@
+####################################################################################
+# ROUTING PARA LISTAR LAS HISTORIAS CLÍNICAS
+medical_history_doc_remove:
+    path: /{clinicNameUrl}/medicalhistory/{medicalHistoryNumber}/removedoc/{idDoc}
+    defaults: { _controller: AppBundle:MedicalHistoryDoc:medicalHistoryDocRemove }
+####################################################################################
+# ROUTING PARA LISTAR LAS HISTORIAS CLÍNICAS
+orthopodology_history_doc_remove:
+    path: /{clinicNameUrl}/medicalhistory/{medicalHistoryNumber}/orthopodologyhistory/{registrationDate}/removedoc/{idDoc}
+    defaults: { _controller: AppBundle:MedicalHistoryDoc:orthopodologyHistoryDocRemove }

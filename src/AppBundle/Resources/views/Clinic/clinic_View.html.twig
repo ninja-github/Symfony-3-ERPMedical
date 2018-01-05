@@ -1,0 +1,205 @@
+{#{% set medicalHistoryPatient = medicalHistoryPatient[0] %}#}
+{# EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig'...................... #}
+	{% extends "AppBundle:Layouts:layout.html.twig"%}
+{# ......................EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig' #}
+{# INCLUIMOS EL JAVASCRIPT QUE VERIFICA SI EL NICK EXISTE............................ #}
+{% block javascripts %}
+	{# la función parent() carga todo el contenido del bloque anterior #}
+	{{ parent() }}
+{% endblock %}
+{# ............................INCLUIMOS EL JAVASCRIPT QUE VERIFICA SI EL NICK EXISTE #}
+{% block content %}
+		<!-- page content -->
+			<div class="right_col" role="main">
+				<div class="">
+					<div class="clearfix"></div>
+					<div class="row">
+						<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+							<div class="x_panel" >
+								<div class="x_title">
+									<h3 style="display:inline;">Datos de Clínica</h3>
+									<div class="clearfix"></div>
+								</div>
+								<div class="x_content row">
+									<div class="col-lg-12 col-md-6 col-sm-12 col-xs-12 profile_left">
+										<div class="profile_img">
+											<div id="crop-avatar">
+												{# IMAGEN DE CLINICA SI EXISTIESE O NO UN EGISTRO......................................................... #}
+													{% if clinic.image == null %}
+														<img class="img-responsive avatar-view" src="{{ asset ('assets/images/default_clinic.png') }}" alt="Avatar" title="Change the avatar" style ="max-width:170px;">
+													{% else %}
+														<img lass="img-responsive avatar-view" src="{{ asset ('uploads/clinics/'~clinic.image) }}" alt="Avatar" title="Change the avatar"/>
+													{% endif %}
+												{# ..........................................................IMAGEN DE CLINICA SI EXISTIESE O NO UN REGISTRO #}
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-12 col-md-6 col-sm-12 col-xs-12 profile_left">
+										{% if clinic.name != NULL %}
+											<h3>{{clinic.name | upper}}</h3>
+										{% endif %}
+										<ul class="list-unstyled user_data">
+											{% if clinic.phone != NULL %}
+												<li>
+													<i class="fa fa-phone user-profile-icon"></i>
+													{{clinic.phone}}
+												</li>
+											{% endif %}
+											{% if clinic.address != NULL %}
+												<li>
+													<i class="fa fa-map-marker user-profile-icon"></i>
+													{{clinic.address | title}}, <br/>
+													{% if clinic.city != NULL %}
+														{{clinic.city | title}}
+														<br/>
+													{% endif %}
+													{#}
+													{% if addressCity != NULL %}
+														{{addressCity.cp | title}}, {{addressCity.city | title}}, <br/>
+														{{addressCity.idAddressProvince.province}}
+														<br/>
+													{% endif %}
+													#}
+												</li>
+											{% endif %}
+											{% if clinic.registrationDate != NULL %}
+												<li>
+													<i class="fa fa-calendar-o user-profile-icon"></i>
+													{{clinic.registrationDate | date("d/m/Y")}}<br/>
+												</li>
+											{% endif %}
+										</ul>
+									</div>
+									<a class="btn btn-success pull-right"
+										href="{{ path("medical_history_create", {clinicNameUrl:ClinicsUser.nameUrl}) }}">
+										<i class="fa fa-edit m-right-xs"></i>
+										Editar
+									</a>
+								</div>
+							</div>
+							<br />
+						</div>
+						<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+							<div class="x_panel">
+								<div class="x_title">
+									<h3 style="display:inline;">Usuarios</h3>
+									<ul class="nav navbar-right panel_toolbox">
+										<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+										</li>
+										<li class="dropdown">
+											<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+											<ul class="dropdown-menu" role="menu">
+												<li><a href="#">Settings 1</a>
+												</li>
+												<li><a href="#">Settings 2</a>
+												</li>
+											</ul>
+										</li>
+										<li><a class="close-link"><i class="fa fa-close"></i></a>
+										</li>
+									</ul>
+									<div class="clearfix"></div>
+								</div>
+								<div class="x_content">
+									<table class="table table-striped">
+										<thead>
+											<tr>
+												<th>Nick</th>
+												<th>Nombre</th>
+												<th>Apellidos</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for user in clinicUser %}
+												{% set user = user.user %}
+												<tr>
+													<td><a href="{{ path ("clinic_view", {clinicNameUrl:clinic.nameUrl})}}">{{user.userName}}</a></td>
+													<td>{{user.name}}</td>
+													<td>{{user.surnames}}</td>
+												</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+							<div class="x_panel">
+								<div class="x_title">
+									<h3 style="display:inline;">Género</h3>
+									<ul class="nav navbar-right panel_toolbox">
+										<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+										</li>
+										<li class="dropdown">
+											<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+											<ul class="dropdown-menu" role="menu">
+												<li><a href="#">Settings 1</a>
+												</li>
+												<li><a href="#">Settings 2</a>
+												</li>
+											</ul>
+										</li>
+										<li><a class="close-link"><i class="fa fa-close"></i></a>
+										</li>
+									</ul>
+									<div class="clearfix"></div>
+								</div>
+							<div class="x_content">
+								<table class="" style="width:100%">
+									<tbody>
+										<tr>
+											<td>
+												<iframe class="chartjs-hidden-iframe" style="width: 90%; display: block; border: 0px; height: 0px; margin: 0px; position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px;"></iframe>
+												<canvas id="doughnutChart" height="150" width="150" style=" width: 140px; height: 140px;"></canvas>
+											</td>
+											<td>
+												<table class="tile_info">
+													<tbody>
+														<tr>
+															<td><i class="fa fa-square dark-blue"></i></td>
+															<td> {{medicalHistoryRatioSex[1].percent}}%</td>
+														</tr>
+														<tr>
+															<td><i class="fa fa-square green"></td>
+															<td>{{medicalHistoryRatioSex[2].percent}}%</td>
+														</tr>
+													</tbody>
+												</table>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		<!-- /page content -->
+{% endblock %}
+{% block javascriptsFinal %}
+	{{ parent() }}
+	<!-- Chart.js -->
+	<script src="{{ asset ('assets/vendors/Chart.js/dist/Chart.min.js') }}"></script>
+	<!-- Custom.js -->
+	<script>
+		//doughnut{}
+		var ctxD = document.getElementById("doughnutChart").getContext('2d');
+		var myLineChart = new Chart(ctxD, {
+			type: 'doughnut',
+			data: {
+				labels: ["{{medicalHistoryRatioSex[1].gender}}","{{medicalHistoryRatioSex[2].gender}}"],
+				datasets: [
+					{
+						data: [{{medicalHistoryRatioSex[1].number}}, {{medicalHistoryRatioSex[2].number}}],
+						backgroundColor: ["#455C73", "#26B99A"],
+						hoverBackgroundColor: ["#FF5A5E", "#5AD3D1"]
+					}
+				]
+			},
+			options: {
+				responsive: true
+			}
+		});
+	</script>
+{% endblock %}

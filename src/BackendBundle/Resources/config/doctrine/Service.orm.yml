@@ -1,0 +1,136 @@
+BackendBundle\Entity\Service:
+    type: entity
+    repositoryClass: BackendBundle\Repository\ServiceRepository
+    table: service
+    indexes:
+        type_tax:
+            columns:
+                - type_tax
+        user_registerer:
+            columns:
+                - user_registerer
+        user_modifier:
+            columns:
+                - user_modifier
+        clinic:
+            columns:
+                - clinic
+        parent:
+            columns:
+                - parent
+        updated_service:
+            columns:
+                - updated_service
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        service:
+            type: string
+            nullable: false
+            length: 150
+            options:
+                fixed: false
+        description:
+            type: string
+            nullable: true
+            length: 512
+            options:
+                fixed: false
+        minimalPrice:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            column: minimal_price
+        maximumPrice:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            column: maximum_price
+        registrationDate:
+            type: datetime
+            nullable: false
+            column: registration_date
+        modificationDate:
+            type: datetime
+            nullable: true
+            column: modification_date
+        state:
+            type: boolean
+            nullable: false
+            options:
+                default: '1'
+    manyToOne:
+        parent:
+            targetEntity: Service
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: children
+            joinColumns:
+                parent:
+                    referencedColumnName: id
+            orphanRemoval: false
+        clinic:
+            targetEntity: Clinic
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: servicesList
+            joinColumns:
+                clinic:
+                    referencedColumnName: id
+            orphanRemoval: false
+        updatedService:
+            targetEntity: Service
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                updated_service:
+                    referencedColumnName: id
+            orphanRemoval: false
+        typeTax:
+            targetEntity: TypeTax
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                type_tax:
+                    referencedColumnName: id
+            orphanRemoval: false
+        userModifier:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user_modifier:
+                    referencedColumnName: id
+            orphanRemoval: false
+        userRegisterer:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user_registerer:
+                    referencedColumnName: id
+            orphanRemoval: false
+    oneToMany:
+        children:
+            targetEntity: Service
+            mappedBy: parent
+    lifecycleCallbacks: {  }

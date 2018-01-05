@@ -1,0 +1,641 @@
+{# EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig'...................... #}
+  {% extends "AppBundle:Layouts:layout.html.twig"%}
+{# ......................EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig' #}
+{# INCLUIMOS EL JAVASCRIPT QUE VERIFICA SI EL NICK EXISTE............................ #}
+{% block stylesheets %}
+	{# la función parent() carga todo el contenido del bloque anterior #}
+	{{ parent() }}
+	<!-- Font Awesome EXTRA-->
+	<link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
+{% endblock %}
+{# ............................INCLUIMOS EL JAVASCRIPT QUE VERIFICA SI EL NICK EXISTE #}
+{% block content %}
+	{% set medicalHistory = orthopodologyHistory.medicalHistory %}
+	<!-- page content -->
+		<div class="right_col" role="main">
+			<div class="clearfix"></div>
+			<div class="row">
+				<!-- Bloque -->
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<div class="x_panel" >
+							<!-- Título del Bloque -->							
+								<div class="x_title">
+									<h3 style="display:inline-block;">Estudio Ortopodológico</h3>
+									<div style="display:block;margin-top:4px;" class="pull-right">
+										<a class="btn btn-success" href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory} ) }}">
+											<i class="fa fa-mail-reply-all m-right-xs"></i>
+											Historia
+										</a>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							<!-- /título del Bloque -->
+							<!-- Contenido del Bloque -->								
+								<div class="x_content">
+									<!-- Datos Paciente -->
+										<div class="col-md-3 col-sm-12 col-xs-12 profile_left">
+											<!-- Datos Paciente-->
+												{% if medicalHistory.surname != NULL or  medicalHistory.name != NULL %}
+													<h3>{{medicalHistory.surname | upper}},<br/>{{medicalHistory.name | upper}} </h3>
+												{% endif %}
+												<ul class="list-unstyled user_data">
+													<li>
+														<i class="fa fa-file-text user-profile-icon"></i> Número de Historia: {{medicalHistory.numberMedicalHistory}}
+													</li>
+													{% if medicalHistory.dni != NULL %}
+														<li>
+															<i class="fa fa-book user-profile-icon"></i>
+															{{medicalHistory.dni}}
+														</li>
+													{% endif %}
+													{% if medicalHistory.phoneHome != NULL or medicalHistory.phoneMobile != NULL %}
+														<li>
+															<i class="fa fa-phone user-profile-icon"></i>
+															{{medicalHistory.phoneHome}}, {{medicalHistory.phoneMobile}}
+														</li>
+													{% endif %}
+													{% if medicalHistory.address != NULL %}
+														<li>
+															<i class="fa fa-map-marker user-profile-icon"></i>
+															{{medicalHistory.address | title}}, <br/>
+															{% if medicalHistory.city != NULL %}
+																{{medicalHistory.city.cp | title}}, {{medicalHistory.city.city | title}}, <br/>
+																{{medicalHistory.city.province}}
+																<br/>
+															{% endif %}
+														</li>
+													{% endif %}
+													{% if medicalHistory.birthday != NULL %}
+														<li>
+															<i class="fa fa-calendar-o user-profile-icon"></i>
+															{{medicalHistory.birthday.date | date("d/m/Y")}}<br/>
+														</li>
+													{% endif %}
+													<li>
+														{% if medicalHistory.gender == "Hombre" %}
+															<i class="ionicons ion-male"></i>
+															Hombre<br/>
+														{% elseif medicalHistory.gender == "Mujer" %}
+															<i class="ionicons ion-female" ></i>
+															Mujer<br/>
+														{% endif %}
+													</li>
+													{% if medicalHistory.email != NULL %}
+														<li class="m-top-xs">
+															<i class="fa fa-external-link user-profile-icon"></i><a href="mailto:{{medicalHistory.email | lower}}">{{medicalHistory.email | lower}}</a><br/>
+														</li>
+													{% endif %}
+												</ul>
+											<!-- /datos Paciente-->
+											<!-- Estudios Ortopodológicos -->									
+										</div>
+										<br />
+									<!-- /datos Paciente -->
+									<!-- Estudio Ortopodológico -->						
+										<div class="col-md-9 col-sm-12 col-xs-12">
+											<!-- start orthopodologyHistory -->
+												<div class="message_wrapper">
+													<div class="message_wrapper">
+														<h4 class="heading">RAZÓN DE LA CONSULTA:</h4>
+														<blockquote class="message">{{orthopodologyHistory.reasonConsultation}}</blockquote>
+														<h4 class="heading">ANTECEDENTES:</h4>
+														<blockquote class="message">{{orthopodologyHistory.background}}</blockquote>
+														<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+															<thead>
+																<tr>
+																	<th style="text-align: center;">Izquierdo</th>
+																	<th style="text-align: center;">EXPLORACIÓN ARTICULAR</th>
+																	<th style="text-align: center;">Derecho</th>
+																<tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationRotaryPatternExternalLeft}}/{{orthopodologyHistory.articularExplorationRotaryPatternInternalLeft}}</td>
+																	<td style="text-align: center;">PATRON ROTADOR (ext / int)</td>
+																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationRotaryPatternExternalRight}}/{{orthopodologyHistory.articularExplorationRotaryPatternInternalRight}}</td>
+																</tr>
+																<tr>
+																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationHipLeft}}</td>
+																	<td style="text-align: center;">CADERA</td>
+																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationHipRight}}</td>
+																</tr>
+																<tr>
+																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationKneeLeft}}</td>
+																	<td style="text-align: center;">RODILLA</td>
+																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationKneeRight}}</td>
+																</tr>
+																<tr>
+																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationAnkleLeft}}</td>
+																	<td style="text-align: center;">TOBILLO</td>
+																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationAnkleRight}}</td>
+																</tr>
+																<tr>
+																<td style="text-align: center;">{{orthopodologyHistory.articularExplorationRetroPieLeft}}</td>
+																	<td style="text-align: center;">RETROPIÉ</td>
+																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationRetroPieRight}}</td>
+																</tr>
+																<tr>
+																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationBeforeFootLeft}}</td>
+																	<td style="text-align: center;">ANTEPIÉ</td>
+																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationBeforeFootRight}}</td>
+																</tr>
+																<tr>
+																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationFirstRadioLeft}}</td>
+																	<td style="text-align: center;">I RADIO</td>
+																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationFirstRadioRight}}</td>
+																</tr>
+																<tr>
+																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationFifthRadioLeft}}</td>
+																	<td style="text-align: center;">V RADIO</td>
+																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationFifthRadioRight}}</td>
+																</tr>
+																<tr>
+																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationCentralRadiosLeft}}</td>
+																	<td style="text-align: center;">R. CENTRALES</td>
+																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationCentralRadiosRight}}</td>
+																</tr>
+																<tr>
+																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationFirstFingerLeft}}</td>
+																	<td style="text-align: center;">1º DEDO</td>
+																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationFirstFingerRight}}</td>
+																</tr>
+																<tr>
+																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationSmallerFingersLeft}}</td>
+																	<td style="text-align: center;">D. MENORES</td>
+																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationSmallerFingersRight}}</td>
+																</tr>
+															</tbody>
+														</table>
+														<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+															<thead>
+																<tr>
+																	<th style="text-align: center;">Izquierdo</th>
+																	<th style="text-align: center;">TORSIONES</th>
+																	<th style="text-align: center;">Derecho</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td style="text-align: center;">{{orthopodologyHistory.torsionsFemoralLeft}}</td>
+																	<td style="text-align: center;">FEMORAL</td>
+																	<td style="text-align: center;">{{orthopodologyHistory.torsionsFemoralRight}}</td>
+																</tr>
+																<tr>
+																	<td style="text-align: center;">{{orthopodologyHistory.torsionsGenusLeft}}</td>
+																	<td style="text-align: center;">GENUS</td>
+																	<td style="text-align: center;">{{orthopodologyHistory.torsionsGenusRight}}</td>
+																</tr>
+																<tr>
+																	<td style="text-align: center;">{{orthopodologyHistory.torsionsAngleQLeft}}</td>
+																	<td style="text-align: center;">ÁNGULO Q</td>
+																	<td style="text-align: center;">{{orthopodologyHistory.torsionsAngleQRight}}</td>
+																</tr>
+																<tr>
+																	<td style="text-align: center;">{{orthopodologyHistory.torsionsTibialLeft}}</td>
+																	<td style="text-align: center;">TIBIAL</td>
+																	<td style="text-align: center;">{{orthopodologyHistory.torsionsTibialRight}}</td>
+																</tr>
+																<tr>
+																	<td style="text-align: center;">{{orthopodologyHistory.torsionsHelbingLeft}}</td>
+																	<td style="text-align: center;">HELBING</td>
+																	<td style="text-align: center;">{{orthopodologyHistory.torsionsHelbingRight}}</td>
+																</tr>
+															</tbody>
+														</table>
+														<h4 class="heading">DISIMETRÍA:</h4>
+														<blockquote class="message">{{orthopodologyHistory.dissimmetry}}</blockquote>
+														<h4 class="heading">EXPLORACIÓN MUSCULAR:</h4>
+														<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+															<thead>
+																<tr>
+																	<th style="text-align: center;">Izquierdo</th>
+																	<th style="text-align: center;">EXPLORACIÓN MUSCULAR</th>
+																		<th style="text-align: center;">Derecho</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td style="text-align: center;">{{orthopodologyHistory.muscularExplorationDorsalFlexionLeft}}</td>
+																		<td style="text-align: center;">FLEXIÓN DORSAL</td>
+																		<td style="text-align: center;">{{orthopodologyHistory.muscularExplorationDorsalFlexionRight}}</td>
+																	</tr>
+																	<tr>
+																		<td style="text-align: center;">{{orthopodologyHistory.muscularExplorationPlantarFlexionLeft}}</td>
+																		<td style="text-align: center;">FLEXION PLANTAR</td>
+																		<td style="text-align: center;">{{orthopodologyHistory.muscularExplorationPlantarFlexionRight}}</td>
+																	</tr>
+																	<tr>
+																		<td style="text-align: center;">{{orthopodologyHistory.muscularExplorationEversionLeft}}</td>
+																		<td style="text-align: center;">EVERSIÓN</td>
+																		<td style="text-align: center;">{{orthopodologyHistory.muscularExplorationEversionRight}}</td>
+																	</tr>
+																	<tr>
+																		<td style="text-align: center;">{{orthopodologyHistory.muscularExplorationReversalLeft}}</td>
+																		<td style="text-align: center;">INVERSION</td>
+																		<td style="text-align: center;">{{orthopodologyHistory.muscularExplorationReversalRight}}</td>
+																	</tr>
+																</tbody>
+															</table>
+															<h4 class="heading">EXPLORACIÓN DINÁMICA:</h4>
+															<blockquote class="message">{{orthopodologyHistory.dinamicExploration}}</blockquote>
+															<h4 class="heading">SIGNOS DE HUELLA:</h4>
+															<blockquote class="message">{{orthopodologyHistory.signsFootprint}}</blockquote>
+															<h4 class="heading">PRUEBAS COMPLEMENTARIAS:</h4>
+															<blockquote class="message">{{orthopodologyHistory.suplementaryTest}}</blockquote>
+															<h4 class="heading">DIAGNÓSTICO:</h4>
+															<blockquote class="message">{{orthopodologyHistory.diagnostic}}</blockquote>
+															<h4 class="heading">TRATAMIENTO:</h4>
+															<blockquote class="message">{{orthopodologyHistory.treatment}}</blockquote>
+													</div>
+												</div>
+											<!-- start orthopodologyHistory -->
+										</div>
+									<!-- /estudio Ortopodológico -->
+									<!-- Seguimiento -->	
+										<div class="col-md-12 col-sm-12 col-xs-12">
+											{% if tracingOrthopodologyHistoryList is not empty %}
+												<div class="accordion" id="accordion_tracing" role="tablist" aria-multiselectable="true">
+													<div class="panel">
+														<a class="panel-heading collapsed" role="tab" id="heading_tracing" data-toggle="collapse" data-parent="#accordion_tracing" href="#collapse_tracing" aria-expanded="false" aria-controls="collapse_tracing">
+															<h4 class="panel-title">Seguimiento</h4>
+														</a>
+														<div id="collapse_tracing" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+															<!-- start recent activity -->
+																<ul class="messages">
+																	{% for tracingDay in orthopodologyHistory.tracingList  %}
+																		<li>
+																			<div style ="width:60px; display:inline;position:relative;top:-40px;left:15px;">
+																				{# IMAGEN DE USUARIO SI EXISTIESE O NO UN REGISTRO........... #}
+																					{% if tracingDay.user.image == null %}
+																						<img src="{{ asset ('assets/images/default_profile.png') }}" class="avatar" alt="Avatar"/>
+																					{% else %}
+																						<img src="{{ asset ('uploads/users/'~tracingDay.user.id~'/'~tracingDay.user.image) }}" class="avatar" alt="Avatar"/>
+																					{% endif %}
+																				{# ...........IMAGEN DE USUARIO SI EXISTIESE O NO UN REGISTRO #}
+																				{# LOGO TIPO DE TRACING ...........#}
+																					{% if tracingDay.typeTracing.type == 'medical_history' %}
+																						<img src="{{ asset ('assets/images/medicalHistory.png') }}" class="avatar" style="position: relative; top: 23px; right: 10px; padding:0px; height: 25px; width: 25px;"/>
+																					{% elseif tracingDay.typeTracing.type == 'orthopodology_history' %}
+																						<img src="{{ asset ('assets/images/orthopodologyHistory.png') }}" class="avatar" style="position: relative; top: 23px; right: 10px; padding:0px; height: 32px; width: 32px;"/>
+																					{% endif %}
+																				{# ...........LOGO TIPO DE TRACING #}
+																			</div>
+																			<div style="display:inline-block;width:calc(100% - 80px);">
+																				<h4 class="heading" style="display:inline;">{{tracingDay.date.date | date("d/m/Y")}} - {{tracingDay.user.userName}}</h4>
+																				<!-- Modificar Seguimiento -->
+																					<a data-toggle="modal" data-target="#tracingEdit_{{tracingDay.id}}" style="cursor: pointer; cursor: hand; margin:5px;" class="pull-right"><i class="fa fa-pencil fa-2x"></i></a>
+																				<!-- /modificar Seguimiento -->
+																				<blockquote class="message" style="margin-bottom:10px;">{{tracingDay.tracing}}</blockquote>
+																				<br />
+																			</div>
+																		</li>
+																	{% endfor %}
+																</ul>
+															<!-- end recent activity -->
+														</div>
+													</div>
+												</div>
+											{% endif %}
+										</div>
+									<!-- /seguimiento -->
+									<!-- Documentos -->
+										{% if orthopodologyHistory.docList is not empty %}
+											<div class="col-md-12 col-sm-12 col-xs-12" style="padding-right:0px;">
+												<div class="accordion" id="accordion_tracing" role="tablist" aria-multiselectable="true">
+													<div class="panel">
+														<a class="panel-heading collapsed" role="tab" id="heading_doc" data-toggle="collapse" data-parent="#accordion_doc" href="#collapse_doc" aria-expanded="false" aria-controls="collapse_doc">
+															<h4 class="panel-title">Documentos</h4>
+														</a>
+														<div id="collapse_doc" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+															<div class="row">
+																<div class="col-md-12">
+																	<!-- Listado de documentos -->
+																		{% for orthopodologyHistoryDoc in orthopodologyHistory.docList %}
+																			<div class="col-md-55">
+																				<div class="thumbnail">
+																					<!-- Imagen del documento -->
+																						<div class="image view view-first">
+																							<!-- Para imágenes -->
+																								{% if orthopodologyHistoryDoc.typeDoc.type == "image" %}
+																									<a href="{{ asset ('uploads/clinics/'~orthopodologyHistory.medicalHistory.clinic.nameUrl~'/medicalHistory/'~orthopodologyHistory.medicalHistory.numberMedicalHistory~'/orthopodologyHistory/'~orthopodologyHistory.registrationDate| date("Y_m_d")~'/'~orthopodologyHistoryDoc.doc
+																									) }}" data-toggle="lightbox" data-gallery="example-gallery" >
+																										<img src="{{ asset ('uploads/clinics/'~orthopodologyHistory.medicalHistory.clinic.nameUrl~'/medicalHistory/'~orthopodologyHistory.medicalHistory.numberMedicalHistory~'/orthopodologyHistory/'~orthopodologyHistory.registrationDate| date("Y_m_d")~'/'~orthopodologyHistoryDoc.doc
+																									) }}" class="img-fluid">
+																									</a>
+																								{% endif %}
+																							<!-- /para imágenes -->
+																							<!-- Para pdf -->
+																								{% if orthopodologyHistoryDoc.TypeDoc.Type == "pdf" %}
+																									<a data-toggle="modal" data-target="#viewPdf_{{orthopodologyHistoryDoc.id}}">
+																										<img src="{{ asset ('/assets/images/pdf_document.png' ) }}" class="img-fluid" style="width: 80%; cursor: pointer; cursor: hand; top: 30px;">
+																									</a>
+																								{% endif %}
+																							<!-- /para pdf -->
+																							<!-- Máscara opciones de documento -->
+																								<div class="mask">
+																									<div class="tools tools-bottom">
+																										<!-- Modificar Documento -->
+																											<a data-toggle="modal" data-target="#viewDocEdit_{{orthopodologyHistoryDoc.id}}" style="cursor: pointer; cursor: hand;"><i class="fa fa-pencil"></i></a>
+																										<!-- /modificar Documento -->
+																										<!-- Eliminar Documento -->
+																											<a href="{{ path("orthopodology_history_doc_remove", {'clinicNameUrl': orthopodologyHistory.medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.numberMedicalHistory, 'registrationDate': orthopodologyHistory.registrationDate| date("Y_m_d"),'idDoc':orthopodologyHistoryDoc.id} ) }}"><i class="fa fa-times"></i></a>
+																										<!-- /eliminar Documento -->
+																									</div>
+																								</div>
+																							<!-- /máscara opciones de documento -->
+																						</div>
+																					<!-- /imagen del documento -->
+																					<!-- Título del documento -->
+																						<div class="caption col-md-12" style="width: 100%;height: 59px;">
+																							<p class="col-md-12" style="dispaly:block;">{{orthopodologyHistoryDoc.title}}</p>
+																						</div>
+																					<!-- /título del documento -->
+																				</div>
+																			</div>
+																		{% endfor %}
+																	<!-- /listado de documentos -->
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										{% endif %}
+									<!-- /documentos -->																	
+									<div class="clearfix"></div>
+									<div class="divider-dashed"></div>
+									<!-- Sección final Bloque (operativa) -->								
+										<div class="col-md-12 col-sm-12 col-xs-12" style="padding-right:0px;">
+											<div class="pull-left">
+												{% if orthopodologyHistory.registrationDate.date | date("Y-m-d") ==  registrationDate %}
+													<a class="btn btn-success"
+														href="{{ path("orthopodology_history_edit", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory, 'registrationDate' : orthopodologyHistory.registrationDate.date | date("Y_m_d") } ) }}">
+														<i class="fa fa-edit m-right-xs"></i>
+														Editar Estudio
+													</a>
+												{% endif %}
+											</div>
+											<div class="pull-right">
+												<!-- Nuevo Estudio -->
+													<a class="btn btn-success"
+														href="{{ path("orthopodology_history_create", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory} ) }}">
+														<div data-toggle="tooltip" data-placement="top" title="Nuevo Estudio">
+															<i class="fa fa-plus-square m-right-xs"></i>
+															<i class="fa fa-book m-right-xs"></i>
+														</div>
+													</a>
+												<!-- /nuevo Estudio -->
+												<!-- Activa Modal - Nuevo Seguimiento -->
+													<button class="btn btn-success" data-toggle="modal" data-target="#createTracing">
+														<div data-toggle="tooltip" data-placement="top" title="Nuevo Seguimiento">
+															<i class="fa fa-plus-square m-right-xs"></i>
+															<i class="fa fa-history m-right-xs"></i>
+														</div>
+													</button>
+												<!-- /activa Modal - nuevo Seguimiento -->
+												<!-- Activa Modal - Nuevo Documento -->
+													<button class="btn btn-success" data-toggle="modal" data-target="#uploadDocuments">
+														<div data-toggle="tooltip" data-placement="top" title="Nuevo Documento">
+															<i class="fa fa-plus-square m-right-xs"></i>
+															<i class="fa fa-paperclip  m-right-xs"></i>
+														</div>
+													</button>
+												<!-- /activa Modal - Nuevo Documento -->
+											</div>
+										</div>
+									<!-- /sección final Bloque (operativa) -->
+								</div>
+							<!-- /contenido del Bloque -->
+						</div>
+					</div>
+					<br />
+				<!-- /bloque -->
+			</div>
+		</div>
+	<!-- /page content -->
+	<!-- Modal - Nuevo Seguimiento -->
+		<div class="modal fade" id="createTracing" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<!-- Modal Header -->
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">&times;</span>
+								<span class="sr-only">Close</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">Nuevo Seguimiento</h4>
+						</div>
+					<!-- Modal Header -->
+					<!-- Modal Body -->
+						<div class="modal-body">
+							<div class="row control-label form-horizontal form-label-left">
+								{{ form_start(form_orthopodologyHistoryTracing, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
+									<div class="col-md-12 col-sm-12 col-xs-12 pull-left">
+										<div class="form-group">
+											<!-- Fecha -->
+												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12">Fecha de Seguimiento</label>
+												<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+													<div class='input-group date' id='datetimepicker_newTracing'>
+														{{form_widget(form_orthopodologyHistoryTracing.date)}}
+														<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+														</span>
+													</div>
+												</div>
+												<div class="clearfix"></div>
+											<!-- /fecha -->
+											<!-- Seguimiento -->
+												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12" >Seguimiento<span class="required">*</span>
+												</label>
+												<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form_orthopodologyHistoryTracing.tracing)}}</div>
+												<div class="clearfix"></div>
+												<div class="divider-dashed"></div>
+											<!-- /seguimiento -->
+											<!-- Enviar Nuevo Seguimiento -->
+												{{ form_row(form_orthopodologyHistoryTracing.submit, { 'label': 'Añadir Seguimiento' }) }}
+											<!-- /enviar Nuevo Seguimiento -->
+										</div>
+									</div>
+								{{ form_end(form_orthopodologyHistoryTracing) }}
+		            		</div>
+		            	</div>
+					<!-- Modal Body -->
+					{#
+					<!-- Modal Footer -->
+						<div class="modal-footer"></div>
+					<!-- Modal Footer -->
+					#}
+				</div>
+			</div>
+		</div>
+	<!-- /modal - Nuevo Seguimiento -->
+	<!-- Modal - Editar Seguimientos -->
+		{% for tracingDay in tracingOrthopodologyHistoryList %}
+				{# Renombro la variable ...#}
+					{% set form_orthopodologyHistoryTracing  = form_tracingOrthopodologyHistoryList[tracingDay.id] %}
+				{# ...Renombro la variable #}
+				<div class="modal fade" id="tracingEdit_{{tracingDay.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<!-- Modal Header -->
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">
+										<span aria-hidden="true">&times;</span>
+										<span class="sr-only">Close</span>
+									</button>
+									<h4 class="modal-title" id="myModalLabel">Editar Seguimiento</h4>
+								</div>
+							<!-- Modal Header -->
+							<!-- Modal Body -->
+								<div class="modal-body">
+									<div class="row control-label form-horizontal form-label-left">
+										{{ form_start(form_orthopodologyHistoryTracing, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
+											<div class="col-md-12 col-sm-12 col-xs-12 pull-left">
+												<div class="form-group">
+													<!-- Fecha -->
+														<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12">Fecha de Seguimiento</label>
+														<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+															<div class='input-group date' id='datetimepicker_editTracing'>
+																{{form_widget(form_orthopodologyHistoryTracing.date)}}
+																<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+																</span>
+															</div>
+														</div>
+														<div class="clearfix"></div>
+													<!-- /fecha -->
+													<!-- Seguimiento -->
+														<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12" >Seguimiento<span class="required">*</span>
+														</label>
+														<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form_orthopodologyHistoryTracing.tracing)}}</div>
+													<!-- /seguimiento -->
+													<!-- Id Oculto -->
+														{{form_widget(form_orthopodologyHistoryTracing.id)}}
+													<!-- /id Oculto -->
+													<!-- Editar Seguimiento -->
+														{{ form_row(form_orthopodologyHistoryTracing.submit, { 'label': 'Editar Seguimiento' }) }}
+													<!-- /editar Seguimiento -->
+												</div>
+											</div>
+										{{ form_end(form_orthopodologyHistoryTracing) }}
+				            		</div>
+				            	</div>
+							<!-- Modal Body -->
+							{#
+							<!-- Modal Footer -->
+								<div class="modal-footer"></div>
+							<!-- Modal Footer -->
+							#}
+						</div>
+					</div>
+				</div>
+		{% endfor %}
+	<!-- /modal - Editar Seguimientos -->
+	<!-- Modal - Nuevo Documento -->
+		<div class="modal fade" id="uploadDocuments" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<!-- Modal Header -->
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">&times;</span>
+								<span class="sr-only">Close</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">Subir documento</h4>
+						</div>
+					<!-- Modal Header -->
+					<!-- Modal Body -->
+						<div class="modal-body">
+							<div class="row control-label form-horizontal form-label-left">
+								{{ form_start(form_orthopodologyHistoryDoc, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
+									<div class="col-md-12 col-sm-12 col-xs-12 pull-left">
+										<div class="form-group">
+											<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-2" >Título<span class="required"></span></label>
+											<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">{{form_widget(form_orthopodologyHistoryDoc.title)}}</div>
+											<div class="clearfix"></div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-2" >Título<span class="required"></span></label>
+											<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">{{form_widget(form_orthopodologyHistoryDoc.doc)}}</div>
+											<div class="clearfix"></div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-2" >Descripción<span class="required"></span></label>
+											<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">{{form_widget(form_orthopodologyHistoryDoc.description)}}</div>
+											<div class="clearfix"></div>
+										</div>
+										{{form_widget(form_orthopodologyHistoryDoc.add, { 'label': 'Añadir Documento' }) }}
+									</div>
+								{{ form_end(form_orthopodologyHistoryDoc)}}
+		            		</div>
+		            	</div>
+					<!-- Modal Body -->
+					<!-- Modal Footer -->
+						<div class="modal-footer"></div>
+					<!-- Modal Footer -->
+				</div>
+			</div>
+		</div>
+	<!-- /modal - Nuevo Documento -->	
+	<!-- Modal - Ver Pdf -->
+		{% for orthopodologyHistoryDoc in orthopodologyHistory.docList %}
+			{% if orthopodologyHistoryDoc.typeDoc.type == "pdf" %}
+				<div class="modal fade" id="viewPdf_{{orthopodologyHistoryDoc.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<!-- Modal Header -->
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">
+										<span aria-hidden="true">&times;</span>
+										<span class="sr-only">Close</span>
+									</button>
+									<h4 class="modal-title" id="myModalLabel">Visualizador pdf</h4>
+								</div>
+							<!-- Modal Header -->
+							<!-- Modal Body -->
+								<div class="modal-body">
+									<div class="row control-label form-horizontal form-label-left">
+										<div class="col-md-12 col-sm-12 col-xs-12 pull-left">
+											<div id="viewerPdf_{{orthopodologyHistoryDoc.id}}" style="height:calc (100%-100px);">
+											<!-- Modal Body -->
+											</div>
+										</div>
+									</div>
+								</div>
+							<!-- Modal Body -->
+							<!-- Modal Footer -->
+								<div class="modal-footer"></div>
+							<!-- Modal Footer -->
+						</div>
+					</div>
+				</div>
+			{% endif %}
+		{% endfor %}
+	<!-- /modal - Ver Pdf -->	
+{% endblock %}
+{% block javascriptsFinal %}
+	{# la función parent() carga todo el contenido del bloque anterior #}
+	{{ parent() }}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.3/js/bootstrap-datetimepicker.min.js"></script>
+	<!-- dateTimePickerCustom -->
+	<script src="{{ asset ('assets/js/custom/dateTimePicker.js') }}"></script>
+	<!-- bootstrap-progressbar -->
+	<script src="{{ asset ('assets/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js') }}"></script>
+	<!-- tether.io -->
+	<script src="{{ asset ('assets/vendors/tether.io/dist/js/tether.min.js') }}"></script>
+<!-- ------------------------------------------- PRUEBA PDF ------------------- -->
+		<!-- pdfObject -->
+		<script src="{{ asset ('assets/vendors/pdfObject/pdfobject.js') }}"></script>
+		<script>
+			// https://pdfobject.com/
+			{% for orthopodologyHistoryDoc in orthopodologyHistory.docList %}
+				{% if orthopodologyHistoryDoc.typeDoc.type == "pdf" %}
+					PDFObject.embed("{{ asset ('uploads/clinics/'~orthopodologyHistory.medicalHistory.clinic.nameUrl~'/medicalHistory/'~orthopodologyHistory.medicalHistory.numberMedicalHistory~'/orthopodologyHistory/'~orthopodologyHistory.registrationDate| date("Y_m_d")~'/'~orthopodologyHistoryDoc.doc) }}", "#viewerPdf_{{orthopodologyHistoryDoc.id}}");
+				{% endif %}
+			{% endfor %}
+		</script>
+<!-- ------------------------------------------- PRUEBA PDF ------------------- -->		<!-- anchor-js -->
+		<script src="{{ asset ('assets/vendors/anchor-js/anchor.min.js') }}"></script>
+		<!-- lightbox -->
+		<script src="{{ asset ('assets/vendors/lightbox/dist/ekko-lightbox.js') }}"></script>
+		<script src="{{ asset ('assets/js/custom/custom-lightbox.js') }}"></script>
+{% endblock %}		

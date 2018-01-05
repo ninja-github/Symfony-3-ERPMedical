@@ -1,0 +1,659 @@
+{# EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig'...................... #}
+{% extends "AppBundle:Layouts:layout.html.twig"%}
+{# ......................EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig' #}
+{% block stylesheets %}
+	{# la función parent() carga todo el contenido del bloque anterior #}
+	{{ parent() }}
+	<!-- switchery Checkbox -->
+	<link href="{{ asset ('assets/vendors/switchery/dist/switchery.min.css') }}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+	<!-- page content -->
+		<div class="right_col" role="main">
+			<div class="clearfix"></div>
+			<div class="row">
+				<!-- Bloque -->
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<div class="x_panel" >
+							<!-- Título del Bloque -->
+								<div class="x_title">
+									<h3 style="display:inline-block;">Editar Usuario</h3>
+									<div style="display:block;margin-top:4px;" class="pull-right">
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							<!-- /título del Bloque -->
+							<!-- Contenido del Bloque -->
+								<div class="x_content">
+									<!-- Formulario Usuario -->
+										{{ form_start(formUserEdit, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
+											<div class="col-md-9 col-sm-9 col-xs-12 pull-left">
+												<div class="form-group">
+													<label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Nombre de Usuario<span class="required">*</span></label>
+													<div class="col-md-9 col-sm-9 col-xs-12"> {{form_widget(formUserEdit.userName)}} </div>
+												</div>
+												<div class="form-group">
+													<label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Password<span class="required">*</span></label>
+													<div class="col-md-9 col-sm-9 col-xs-12"> {{form_widget(formUserEdit.password)}} </div>
+												</div>
+												<div class="form-group">
+													<label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Email<span class="required">*</span></label>
+													<div class="col-md-9 col-sm-9 col-xs-12"> {{form_widget(formUserEdit.email)}} </div>
+												</div>
+												<div class="form-group">
+													<label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Género<span class="required">*</span>
+													</label>
+													<div class="col-md-9 col-sm-9 col-xs-12"> {{form_widget(formUserEdit.gender)}} </div>
+												</div>
+												<div class="form-group">
+													<label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Imagen<span class="required">*</span>
+													</label>
+													<div class="col-md-9 col-sm-9 col-xs-12"> {{form_widget(formUserEdit.image)}} </div>
+												</div>
+											</div>
+											<div class="col-md-3 col-sm-3 col-xs-12">
+												<div class="profile_img">
+													<div id="crop-avatar">
+														{# IMAGEN DE USUARIO SI EXISTIESE O NO UN REGISTRO........... #}
+														{% if user.image == null %}
+															<img class=" img-responsive center-block avatar-view" src="{{ asset ('assets/images/default_profile.png') }}" alt="default_profile.png" title="Change the avatar">
+														{% else %}
+															<img class=" img-responsive center-block avatar-view" src="{{ asset ('uploads/users/'~user.image) }}" alt="{{user.image}}" title="Change the avatar">
+														{% endif %}
+														{# ...........IMAGEN DE USUARIO SI EXISTIESE O NO UN REGISTRO #}
+													</div>
+												</div>
+											</div>
+											<div class="clearfix"></div>
+											<div class="divider-dashed"></div>
+											<div>
+												{{form_widget(formUserEdit.Actualizar)}}
+											</div>
+										{{ form_end(formUserEdit) }}
+									<!-- /formulario Usuario -->							
+									{% if permissionLoggedUser.userPermission == true %}
+										<!-- Activa Modal -->
+											<div class="pull-right">
+												<button class="btn btn-success" data-toggle="modal" data-target="#userPermission" style="bottom: 39px; position: relative;">
+													<i class="fa fa-plus-square m-right-xs"></i> Permisos
+												</button>
+											</div>
+										<!-- /activa Modal -->
+									{% endif %}
+								</div>
+							<!-- /contenido del Bloque -->
+						</div>
+					</div>
+				<!-- /bloque -->				
+			</div>
+		</div>
+	<!-- /page content -->
+
+	<!-- Modal Permisos -->
+		{% if permissionLoggedUser.userPermission == true %}
+			<div class="modal fade" id="userPermission" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<!-- Modal Header -->
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">
+									<span aria-hidden="true">&times;</span>
+									<span class="sr-only">Close</span>
+								</button>
+								<h4 class="modal-title" id="myModalLabel">Editar Permisos Usuario</h4>
+							</div>
+						<!-- Modal Header -->
+						<!-- Modal Body -->
+							<div class="modal-body">
+								<div class="row control-label form-horizontal form-label-left">
+									{{ form_start(formUserPermission, { 'attr':{'class': 'form-horizontal form-label-left' ,'novalidate':''}})}}
+										<div class="col-md-12 col-sm-12 col-xs-12 pull-left">
+											<div class="form-group">
+												<!-- Admin -->
+													<!-- SubTítulo -->
+														<div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+															<h4 style="display:inline-block;">Administración</h4>
+														</div>
+													<!-- /subTítulo -->
+													<!-- Contenido -->
+														<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.adminSectionAccess == true %}
+																	{{form_widget (formUserPermission.adminSectionAccess, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.adminSectionAccess, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>	 Acceso Menú <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.adminSectionAccess}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.adminGeneralDataAccess == true %}
+																	{{form_widget (formUserPermission.adminGeneralDataAccess, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.adminGeneralDataAccess, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>	 Acceso Url <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.adminGeneralDataAccess}}"></i></sup></label>
+															</div>
+														</div>	
+													<!-- Subsalto Final -->
+														<div class="clearfix"></div>
+														<div class="divider-dashed"></div>
+													<!-- /subsalto Final -->	
+												<!-- /admin -->
+												<!-- Usuarios -->
+													<!-- SubTítulo -->
+														<div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+															<h4 style="display:inline-block;">Usuarios</h4>
+														</div>
+													<!-- /subTítulo -->
+													<!-- Contenido -->
+														<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.userCreate == true %}
+																	{{form_widget (formUserPermission.userCreate, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.userCreate, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>	 Crear <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.userCreate}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.userEdit == true %}
+																	{{form_widget (formUserPermission.userEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.userEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>	 Editar <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.userEdit}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.userRemove == true %}
+																	{{form_widget (formUserPermission.userRemove, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.userRemove, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>	 Eliminar <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.userRemove}}"></i></sup></label>
+															</div>
+															<!-- Subsalto -->
+																<div class="clearfix"></div><div class="divider-dashed"></div>
+															<!-- /subsalto -->
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.userDumpView == true %}
+																	{{form_widget (formUserPermission.userDumpView, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.userDumpView, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>	 Activar Dump <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.userDumpView}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.userPermission == true %}
+																	{{form_widget (formUserPermission.userPermission, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.userPermission, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>	 Editar Permisos <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.userPermission}}"></i></sup></label>
+															</div>
+														</div>
+													<!-- Subsalto Final -->
+														<div class="clearfix"></div>
+														<div class="divider-dashed"></div>
+													<!-- /subsalto Final -->	
+												<!-- /usuarios -->
+												<!-- Clinic -->
+													<!-- SubTítulo -->
+														<div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+															<h4 style="display:inline-block;">Clínicas</h4>
+														</div>
+													<!-- /subTítulo -->
+													<!-- Contenido -->
+														<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.clinicCreate == true %}
+																	{{form_widget (formUserPermission.clinicCreate, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.clinicCreate, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>	 Crear <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.clinicCreate}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.clinicEdit == true %}
+																	{{form_widget (formUserPermission.clinicEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.clinicEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Editar <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.clinicEdit}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.clinicRemove == true %}
+																	{{form_widget (formUserPermission.clinicRemove, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.clinicRemove, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Eliminar <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.clinicRemove}}"></i></sup></label>
+															</div>
+															<!-- Subsalto -->
+																<div class="clearfix"></div><div class="divider-dashed"></div>
+															<!-- /subsalto -->
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.clinicViewOther == true %}
+																	{{form_widget (formUserPermission.clinicViewOther, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.clinicViewOther, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>	 Ver otras <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.clinicViewOther}}"></i></sup></label>
+															</div>
+														</div>
+													<!-- /contenido -->
+													<!-- Subsalto Final -->
+														<div class="clearfix"></div>
+														<div class="divider-dashed"></div>
+													<!-- /subsalto Final -->
+												<!-- /clinic -->
+												<!-- Historias Médicas -->
+													<!-- SubTítulo -->
+														<div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+															<h4 style="display:inline-block;">Historias Médicas</h4>
+														</div>
+													<!-- /subTítulo -->
+													<!-- Contenido -->
+														<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.medicalHistoryCreate == true %}
+																	{{form_widget (formUserPermission.medicalHistoryCreate, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.medicalHistoryCreate, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Crear <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.medicalHistoryCreate}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.medicalHistoryEdit == true %}
+																	{{form_widget (formUserPermission.medicalHistoryEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.medicalHistoryEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Editar <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.medicalHistoryEdit}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.medicalHistoryRemove == true %}
+																	{{form_widget (formUserPermission.medicalHistoryRemove, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.medicalHistoryRemove, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Eliminar <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.medicalHistoryRemove}}"></i></sup></label>
+															</div>															
+															<!-- Subsalto -->
+																<div class="clearfix"></div><div class="divider-dashed"></div>
+															<!-- /subsalto -->															
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.medicalHistoryRegistrationDateEdit == true %}
+																	{{form_widget (formUserPermission.medicalHistoryRegistrationDateEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.medicalHistoryRegistrationDateEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Fecha Registro <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.medicalHistoryRegistrationDateEdit}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.medicalHistoryUserRegistererEdit == true %}
+																	{{form_widget (formUserPermission.medicalHistoryUserRegistererEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.medicalHistoryUserRegistererEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Usuario Registro <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.medicalHistoryUserRegistererEdit}}"></i></sup></label>
+															</div>
+															<!-- Subsalto -->
+																<div class="clearfix"></div><div class="divider-dashed"></div>
+															<!-- /subsalto -->
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.medicalHistoryModificationDateEdit == true %}
+																	{{form_widget (formUserPermission.medicalHistoryModificationDateEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.medicalHistoryModificationDateEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Fecha Modificación <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.medicalHistoryModificationDateEdit}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.medicalHistoryUserModifierEdit == true %}
+																	{{form_widget (formUserPermission.medicalHistoryUserModifierEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.medicalHistoryUserModifierEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Usuario Modificación <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.medicalHistoryUserModifierEdit}}"></i></sup></label>
+															</div>
+														</div>	
+													<!-- Subsalto Final -->
+														<div class="clearfix"></div>
+														<div class="divider-dashed"></div>
+													<!-- /subsalto Final -->
+												<!-- /historias Médicas -->
+												<!-- Historias Médicas Doc-->
+													<!-- SubTítulo -->
+														<div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+															<h4 style="display:inline-block;">Documentos Historias Médicas</h4>
+														</div>
+													<!-- /subTítulo -->
+													<!-- Contenido -->
+														<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.medicalHistoryDocCreate == true %}
+																	{{form_widget (formUserPermission.medicalHistoryDocCreate, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.medicalHistoryDocCreate, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Crear <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.medicalHistoryDocCreate}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.medicalHistoryDocEdit == true %}
+																	{{form_widget (formUserPermission.medicalHistoryDocEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.medicalHistoryDocEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Editar <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.medicalHistoryDocEdit}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.medicalHistoryDocRemove == true %}
+																	{{form_widget (formUserPermission.medicalHistoryDocRemove, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.medicalHistoryDocRemove, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Eliminar <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.medicalHistoryDocRemove}}"></i></sup></label>
+															</div>															
+															<!-- Subsalto -->
+																<div class="clearfix"></div><div class="divider-dashed"></div>
+															<!-- /subsalto -->															
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.medicalHistoryDocRegistrationDateEdit == true %}
+																	{{form_widget (formUserPermission.medicalHistoryDocRegistrationDateEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.medicalHistoryDocRegistrationDateEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Fecha Registro <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.medicalHistoryDocRegistrationDateEdit}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.medicalHistoryDocUserRegistererEdit == true %}
+																	{{form_widget (formUserPermission.medicalHistoryDocUserRegistererEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.medicalHistoryDocUserRegistererEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Usuario Registro <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.medicalHistoryDocUserRegistererEdit}}"></i></sup></label>
+															</div>
+															<!-- Subsalto -->
+																<div class="clearfix"></div><div class="divider-dashed"></div>
+															<!-- /subsalto -->
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.medicalHistoryDocModificationDateEdit == true %}
+																	{{form_widget (formUserPermission.medicalHistoryDocModificationDateEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.medicalHistoryDocModificationDateEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Fecha Modificación <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.medicalHistoryDocModificationDateEdit}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.medicalHistoryDocUserModifierEdit == true %}
+																	{{form_widget (formUserPermission.medicalHistoryDocUserModifierEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.medicalHistoryDocUserModifierEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Usuario Modificación <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.medicalHistoryDocUserModifierEdit}}"></i></sup></label>
+															</div>
+														</div>	
+													<!-- Subsalto Final -->
+														<div class="clearfix"></div>
+														<div class="divider-dashed"></div>
+													<!-- /subsalto Final -->
+												<!-- /historias Médicas Doc-->												
+												<!-- Estudios Orhopodológicos -->
+													<!-- SubTítulo -->
+														<div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+															<h4 style="display:inline-block;">Estudios Ortopodológicos</h4>
+														</div>
+													<!-- /subTítulo -->
+													<!-- Contenido -->
+														<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">												
+																{% if userPermission.orthopodologyHistoryCreate == true %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryCreate, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryCreate, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Crear <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.orthopodologyHistoryCreate}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">												
+																{% if userPermission.orthopodologyHistoryEdit == true %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Editar <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.orthopodologyHistoryEdit}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">												
+																{% if userPermission.orthopodologyHistoryRemove == true %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryRemove, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryRemove, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Eliminar <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.orthopodologyHistoryRemove}}"></i></sup></label>
+															</div>															
+															<!-- Subsalto -->
+																<div class="clearfix"></div><div class="divider-dashed"></div>
+															<!-- /subsalto -->
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">												
+																{% if userPermission.orthopodologyHistoryRegistrationDateEdit == true %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryRegistrationDateEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryRegistrationDateEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Fecha Registro <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.orthopodologyHistoryRegistrationDateEdit}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">												
+																{% if userPermission.orthopodologyHistoryUserRegistererEdit == true %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryUserRegistererEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryUserRegistererEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Usuario Registro <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.orthopodologyHistoryUserRegistererEdit}}"></i></sup></label>
+															</div>
+															<!-- Subsalto -->
+																<div class="clearfix"></div><div class="divider-dashed"></div>
+															<!-- /subsalto -->
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">												
+																{% if userPermission.orthopodologyHistoryModificationDateEdit == true %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryModificationDateEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryModificationDateEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Fecha Registro <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.orthopodologyHistoryModificationDateEdit}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">												
+																{% if userPermission.orthopodologyHistoryUserModifierEdit == true %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryUserModifierEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryUserModifierEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Usuario Registro <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.orthopodologyHistoryUserModifierEdit}}"></i></sup></label>
+															</div>
+														</div>
+													<!-- Subsalto Final -->
+														<div class="clearfix"></div>
+														<div class="divider-dashed"></div>
+													<!-- /subsalto Final -->
+												<!-- /estudios Orhopodológicos -->
+												<!-- Estudios Orhopodológicos Doc -->
+													<!-- SubTítulo -->
+														<div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+															<h4 style="display:inline-block;">Documentos Estudios Ortopodológicos</h4>
+														</div>
+													<!-- /subTítulo -->
+													<!-- Contenido -->
+														<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">												
+																{% if userPermission.orthopodologyHistoryDocCreate == true %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryDocCreate, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryDocCreate, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Crear <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.orthopodologyHistoryDocCreate}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">												
+																{% if userPermission.orthopodologyHistoryDocEdit == true %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryDocEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryDocEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Editar <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.orthopodologyHistoryDocEdit}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">												
+																{% if userPermission.orthopodologyHistoryDocRemove == true %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryDocRemove, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryDocRemove, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Eliminar <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.orthopodologyHistoryDocRemove}}"></i></sup></label>
+															</div>															
+															<!-- Subsalto -->
+																<div class="clearfix"></div><div class="divider-dashed"></div>
+															<!-- /subsalto -->
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">												
+																{% if userPermission.orthopodologyHistoryDocRegistrationDateEdit == true %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryDocRegistrationDateEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryDocRegistrationDateEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Fecha Registro <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.orthopodologyHistoryDocRegistrationDateEdit}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">												
+																{% if userPermission.orthopodologyHistoryDocUserRegistererEdit == true %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryDocUserRegistererEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryDocUserRegistererEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Usuario Registro <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.orthopodologyHistoryDocUserRegistererEdit}}"></i></sup></label>
+															</div>
+															<!-- Subsalto -->
+																<div class="clearfix"></div><div class="divider-dashed"></div>
+															<!-- /subsalto -->
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">												
+																{% if userPermission.orthopodologyHistoryDocModificationDateEdit == true %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryDocModificationDateEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryDocModificationDateEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Fecha Registro <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.orthopodologyHistoryDocModificationDateEdit}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">												
+																{% if userPermission.orthopodologyHistoryDocUserModifierEdit == true %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryDocUserModifierEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.orthopodologyHistoryDocUserModifierEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Usuario Registro <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.orthopodologyHistoryDocUserModifierEdit}}"></i></sup></label>
+															</div>
+														</div>
+													<!-- Subsalto Final -->
+														<div class="clearfix"></div>
+														<div class="divider-dashed"></div>
+													<!-- /subsalto Final -->
+												<!-- /estudios Orhopodológicos -->											
+												<!-- Tracing -->
+													<!-- SubTítulo -->
+														<div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+															<h4 style="display:inline-block;">Seguimientos</h4>
+														</div>
+													<!-- /subTítulo -->
+													<!-- Contenido -->
+														<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.tracingCreate == true %}
+																	{{form_widget (formUserPermission.tracingCreate, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.tracingCreate, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>	 Crear <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.tracingCreate}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.tracingEdit == true %}
+																	{{form_widget (formUserPermission.tracingEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.tracingEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Editar <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.tracingEdit}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.tracingRemove == true %}
+																	{{form_widget (formUserPermission.tracingRemove, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.tracingRemove, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Eliminar <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.tracingRemove}}"></i></sup></label>
+															</div>
+														</div>
+													<!-- /contenido -->
+													<!-- Subsalto Final -->
+														<div class="clearfix"></div>
+														<div class="divider-dashed"></div>
+													<!-- /subsalto Final -->
+												<!-- /tracing -->
+												<!-- Service -->
+													<!-- SubTítulo -->
+														<div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+															<h4 style="display:inline-block;">Servicios</h4>
+														</div>
+													<!-- /subTítulo -->
+													<!-- Contenido -->
+														<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.serviceCreate == true %}
+																	{{form_widget (formUserPermission.serviceCreate, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.serviceCreate, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>	 Crear <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.serviceCreate}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.serviceEdit == true %}
+																	{{form_widget (formUserPermission.serviceEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.serviceEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Editar <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.serviceEdit}}"></i></sup></label>
+															</div>
+															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
+																{% if userPermission.serviceRemove == true %}
+																	{{form_widget (formUserPermission.serviceRemove, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																{% else %}
+																	{{form_widget (formUserPermission.serviceRemove, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																{% endif %}
+																<label>  Eliminar <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.serviceRemove}}"></i></sup></label>
+															</div>
+														</div>
+													<!-- /contenido -->
+													<!-- Subsalto Final -->
+														<div class="clearfix"></div>
+														<div class="divider-dashed"></div>
+													<!-- /subsalto Final -->
+												<!-- /tracing -->																			
+												<div>
+													{{form_widget(formUserPermission.Editar)}}
+												</div>
+											</div>
+										</div>
+									{{ form_end(formUserPermission) }}
+								</div>
+							</div>
+					    <!-- Modal Body -->
+						{#
+							<!-- Modal Footer -->
+								<div class="modal-footer"></div>
+							<!-- Modal Footer -->
+						#}
+					</div>
+				</div>
+			</div>
+		{% endif %}
+	<!-- /modal Permisos -->
+{% endblock %}
+{% block javascriptsFinal %}
+	{{ parent() }}
+	<!-- switchery Checkbox -->
+	<script src="{{ asset ('assets/vendors/switchery/dist/switchery.min.js') }}"></script>
+	<!-- switchery Checkbox Custom Input-->
+	<script src="{{ asset ('assets/js/custom/switchery_input_checkbox.js') }}"></script>
+	<!-- Popper.js - Tooltip.js-->
+	<script src="{{ asset ('assets/vendors/popper.js/packages/tooltip/tests/functional/tooltip.js') }}"></script>	
+{% endblock %}

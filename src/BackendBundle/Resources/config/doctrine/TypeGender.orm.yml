@@ -1,0 +1,29 @@
+BackendBundle\Entity\TypeGender:
+    type: entity
+    table: type_gender
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        type:
+            type: string
+            nullable: false
+            length: 50
+            options:
+                fixed: false
+# Extra One To Many                
+#    oneToMany:
+#        user:
+#            targetEntity: User
+#            mappedBy: TypeGender 
+#        medicalHistory:
+#            targetEntity: MedicalHistory
+#            mappedBy: TypeGender         
+# Extra One To Many                             
+    lifecycleCallbacks: {  }

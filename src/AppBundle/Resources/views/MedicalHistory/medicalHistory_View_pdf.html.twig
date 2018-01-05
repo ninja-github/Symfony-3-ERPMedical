@@ -1,0 +1,398 @@
+<!--
+<page backtop="7mm" backbottom="7mm" backleft="10mm" backright="10mm">
+	<page_header>
+		<h4>Podologia Priego, dirección teléfono</h4>
+		<hr style="color: #0056b2;" />
+	</page_header>
+		<div style="width: 10%; border:1px solid #021a40; display:inline; position:relative;top:25px;">
+			<img src="https://i.pinimg.com/736x/33/b8/69/33b869f90619e81763dbf1fccc896d8d--lion-logo-modern-logo.jpg" alt="Smiley face" style="width: 200px; height: 200px; border:1px solid #021a40;">
+		</div>
+		<div style="width: 450px;border:1px solid #021a40; display:inline;">
+			<p>lorem ipsum:</p><p>lorem ipsum:</p>
+		</div>
+	<page_footer>
+	</page_footer>
+ </page>
+ -->
+
+<link type="text/css" href="./{{ asset ('assets/vendors/bootstrap-3.3.7/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+<link type="text/css" href="./{{ asset ('assets/vendors/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
+<link type="text/css" href="./{{ asset ('assets/css/custom.css')}}" rel="stylesheet">
+<link type="text/css" href="./{{ asset ('assets/css/custom.pdf.css')}}" rel="stylesheet">
+<style>
+/*	.clinicLogo img{
+		width:100%;
+		max-width:150px;
+		display: inline;
+		margin: auto 5px;
+	}*/
+	table {
+		border:1px solid #5a738e;
+		margin-bottom:10px;
+	}
+	tr.title td.heading, .namePatient{
+		background-color:#2a3f54;
+		padding:7px;
+		color:white;
+		width:100%;
+	}
+	.titleData{
+		background-color:#2a3f54;
+		padding:7px;
+		color:white;
+		border:1px solid #5a738e;
+	}
+	tr.content td.heading{
+		padding:7px;
+		color:grey;
+		width:100%;
+		border:1px solid #5a738e;
+		min-height:80px;
+	}
+	.contentData{
+		padding:7px;
+		color:grey;
+		min-height:80px;
+		border:1px solid #5a738e;
+	}
+	tr.content td.heading div{
+		min-height:100px;display:block;
+	}
+</style>
+	<page backtop="15mm" backbottom="15mm" backleft="10mm" backright="10mm">
+		<page_header>
+					<table style="width:200mm;">
+						<tr class="title">
+							<td class="heading" >
+								NºH : {{medicalHistory.numberMedicalHistory}} - {{medicalHistory.surname | upper}},&nbsp;{{medicalHistory.name | upper}}
+							</td>
+						</tr>
+					</table>
+		</page_header>
+		<!-- Datos -->
+			<div>
+				<nobreak>
+					<table>
+						<tr>
+							<td rowspan="5">
+								<div style="width:53mm;padding:15px 0px;position:relative;left:8mm">
+									<img  src="./{{ asset ('uploads/clinics/'~medicalHistory.clinic.nameUrl~'/'~medicalHistory.clinic.image) }}" style="max-width:150px;">
+								</div>
+							</td>
+							<td class="titleData" rowspan="2">
+								<div style="width:20mm;">Nº.Historia:</div>							
+							</td>
+							<td class="contentData" rowspan="2">
+								<div style="width:20mm;"><h3 style="text-align: center;color:grey;">{{medicalHistory.numberMedicalHistory}}</h3></div>
+							</td>
+							<td class="titleData" >
+								<div style="width:30mm;">Fecha de Registro:</div>
+							</td>
+							<td class="contentData">
+								<div style="width:30mm; text-align:center;">							
+									{% if medicalHistory.registrationDate != null %}
+										{{medicalHistory.registrationDate.date | date("d/m/Y")}}
+									{% endif %}
+								</div>								
+							</td>
+						</tr>
+						<tr>
+							<td class="titleData">
+								<div style="width:140px;">Fecha de Modificación:</div>
+							</td>
+							<td class="contentData" style="border-top:1px solid #5a738e;">
+								<div style="width:90px; text-align:center;">
+									{% if medicalHistory.modificationDate != null %}
+										{{medicalHistory.modificationDate.date | date("d/m/Y")}}
+									{% endif %}
+								</div>
+							</td>
+						</tr>		
+						<tr>		
+							<td class="titleData">
+								Nombre:
+							</td>
+							<td class="contentData" colspan="3">
+								{{medicalHistory.name | upper}}
+							</td>
+						</tr>					
+						<tr>
+							<td class="titleData">
+								Apellidos:
+							</td>
+							<td class="contentData" colspan="3">
+								{{medicalHistory.surname | upper}}
+							</td>
+						</tr>
+						<tr>
+							<td class="titleData">
+								DNI:
+							</td>
+							<td class="contentData" colspan="3">
+								{{medicalHistory.dni}}
+							</td>
+						</tr>
+					</table>
+				</nobreak>
+				<nobreak>
+					<table>				
+						<tr class="title">
+							<td class="heading" colspan="4">
+								DATOS DE CONTACTO:
+							</td>
+						</tr>					
+						<tr>
+							<td class="titleData">
+								<div style="width:20mm;">Tlfn.Casa:</div>							
+							</td>
+							<td class="contentData">
+								<div style="width:15mm;">{{medicalHistory.phoneHome}}</div>	
+							</td>
+							<td class="titleData">
+								<div style="width:20mm;">Dirección:</div>	
+							</td>
+							<td class="contentData">
+								<div style="width:100mm;">
+									{{medicalHistory.address | title}},&nbsp;
+									{% if medicalHistory.city != null %}
+										{{medicalHistory.city.cp | title}},&nbsp;{{medicalHistory.city.city | title}},&nbsp;{{medicalHistory.city.province}}
+									{% endif %}
+								</div>	
+							</td>
+						</tr>
+						<tr>
+							<td class="titleData" >
+								<div style="width:20mm;">Tlfn.Móvil:</div>
+							</td>
+							<td class="contentData" >
+								{{medicalHistory.phoneMobile}}
+							</td>	
+							<td class="titleData">
+								Email:
+							</td>
+							<td class="contentData" >
+								{{medicalHistory.email}}
+							</td>											
+						</tr>						
+					</table>
+				</nobreak>
+				<nobreak>					
+					<table>
+						<tr>
+							<td style="width:30mm;border:0px white;"></td>
+							<td class="titleData">
+								Nacimiento:
+							</td>
+							<td class="contentData">
+								{% if medicalHistory.birthday != null %}
+									{{medicalHistory.birthday.date | date("d/m/Y")}}
+								{% else %}
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								{% endif %}
+							</td>
+							<td class="titleData">
+								Sexo:
+							</td>
+							<td class="contentData">
+								{{medicalHistory.gender}}
+							</td>
+							<td class="titleData">
+								Altura:
+							</td>
+							<td class="contentData">
+								{% if medicalHistory.height == null or medicalHistory.height == "0.00" %} 
+									<div style="width:35px; text-align:center;">
+										-
+									</div>
+								{% else %}
+									<div style="width:35px; text-align:center;">								
+										{{medicalHistory.height}} m 
+									</div>									
+								{% endif %}
+							</td>
+							<td class="titleData">
+								Peso:
+							</td>
+							<td class="contentData">
+								{% if medicalHistory.weight == null or medicalHistory.weight == "0.00" %} 
+									<div style="width:35px; text-align:center;">
+										-
+									</div>
+								{% else %}
+									<div style="width:35px; text-align:center;">								
+										{{medicalHistory.weight}} kg
+									</div>									
+								{% endif %}							
+							</td>
+						</tr>							
+					</table>
+				</nobreak>
+				<nobreak>					
+					<table>
+						<tr class="title">
+							<td class="heading">RIESGOS:</td>
+						</tr>
+						<tr class="content">
+							<td class="heading">
+								<div>
+									{% if medicalHistory.patientRisk is empty %}
+										<br/>
+									{% else %}
+										{% for patientRisk in medicalHistory.patientRisk %}
+											{{ patientRisk }}
+										{% endfor %}
+									{% endif %}
+								</div>
+							</td>
+						</tr>
+					</table>
+				</nobreak>
+				<nobreak>					
+					<table>
+						<tr class="title">
+							<td class="heading">RAZÓN DE LA CONSULTA:</td>
+						</tr>
+						<tr class="content">
+							<td class="heading">
+								<div>
+									{% if medicalHistory.reasonConsultation is empty %}
+										<br/><br/><br/>
+									{% else %}
+										{{medicalHistory.reasonConsultation}}
+									{% endif %}
+								</div>
+							</td>
+						</tr>
+					</table>
+				</nobreak>
+				<nobreak>					
+					<table>
+						<tr class="title">
+							<td class="heading">ANTECEDENTES:</td>
+						</tr>
+						<tr class="content">
+							<td class="heading">
+								<div>
+									{% if medicalHistory.background is empty %}
+										<br/><br/><br/>
+									{% else %}
+										{{medicalHistory.background}}
+									{% endif %}
+								</div>
+							</td>
+						</tr>
+					</table>
+				</nobreak>
+				<nobreak>					
+					<table>
+						<tr class="title">
+							<td class="heading">ALERGIAS:</td>
+						</tr>
+						<tr class="content">
+							<td class="heading">
+								<div>
+									{% if medicalHistory.allergicDiseases is empty %}
+										<br/>
+									{% else %}
+										{{medicalHistory.allergicDiseases}}
+									{% endif %}
+								</div>
+							</td>
+						</tr>
+					</table>
+				</nobreak>
+				<nobreak>					
+					<table >
+						<tr class="title">
+							<td class="heading">TRATAMIENTO / ENFERMEDADES:</td>
+						</tr>
+						<tr class="content">
+							<td class="heading">
+								<div>
+									{% if medicalHistory.treatmentDiseases is empty %}
+										<br/><br/>
+									{% else %}
+										{{medicalHistory.treatmentDiseases}}
+									{% endif %}
+								</div>
+							</td>
+						</tr>
+					</table>
+				</nobreak>
+				<nobreak>					
+					<table >
+						<tr class="title">
+							<td class="heading">PATOLOGÍAS:</td>
+						</tr>
+						<tr class="content">
+							<td class="heading">
+								<div>
+									{% if medicalHistory.patologies is empty %}
+										<br/>
+									{% else %}
+										{{medicalHistory.patologies}}
+									{% endif %}
+								</div>
+							</td>
+						</tr>
+					</table>
+				</nobreak>
+				<nobreak>					
+					<table>
+						<tr class="title">
+							<td class="heading">PRUEBAS SUPLEMENTARIAS:</td>
+						</tr>
+						<tr class="content">
+							<td class="heading">
+								<div>
+									{% if medicalHistory.supplementaryTest is empty %}
+										<br/><br/><br/>
+									{% else %}
+										{{medicalHistory.supplementaryTest}}
+									{% endif %}
+								</div>
+							</td>
+						</tr>
+					</table>
+				</nobreak>
+				<nobreak>					
+					<table>
+						<tr class="title">
+							<td class="heading">DIAGNÓSTICO:</td>
+						</tr>
+						<tr class="content">
+							<td class="heading">
+								<div>
+									{% if medicalHistory.diagnostic is empty %}
+										<br/><br/>
+									{% else %}
+										{{medicalHistory.diagnostic}}
+									{% endif %}
+								</div>
+							</td>
+						</tr>
+					</table>
+				</nobreak>
+				<nobreak>					
+					<table>
+						<tr class="title">
+							<td class="heading">TRATAMIENTO:</td>
+						</tr>
+						<tr class="content">
+							<td class="heading">
+								<div>
+									{% if medicalHistory.treatment is empty %}
+										<br/><br/>
+									{% else %}
+										{{medicalHistory.treatment}}
+									{% endif %}
+								</div>
+							</td>
+						</tr>
+					</table>
+				</nobreak>
+			</div>
+		<!-- /historia Médica -->
+	<page_footer>
+	</page_footer>
+ </page>
