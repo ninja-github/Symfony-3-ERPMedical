@@ -6,7 +6,7 @@
 	use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 	use Symfony\Component\HttpFoundation\Request;
 	use Spipu\Html2Pdf\Html2Pdf;    // Objeto Base de Html2Pdf
-	use Symfony\Component\HttpFoundation\RedirectResponse;
+
 
 class PruebasController extends Controller {
 	public function pdfAction(Request $request){
@@ -24,10 +24,10 @@ class PruebasController extends Controller {
 	}
 	public function googleCalendarAction(Request $request){
 		$request = $this->get('request_stack')->getMasterRequest();
-
 		$googleCalendar = $this->get('fungio.google_calendar');
-		$googleCalendar->setRedirectUri($redirectUri);
-
+		if (isset($redirectUri)){
+			$googleCalendar->setRedirectUri($redirectUri);
+		}
 		if ($request->query->has('code') && $request->get('code')) {
 		    $client = $googleCalendar->getClient($request->get('code'));
 		} else {

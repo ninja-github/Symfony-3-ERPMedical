@@ -1,17 +1,11 @@
 # DATABASE
 /readme/database/*
 !/readme/database/erp_medical_structure_database.sql
-<<<<<<< HEAD
-
-# Google Calendar
-/readme/client_secret.json
 
 # Parameters
 /app/config/parameters.yml
 /app/config/parameters_hosting.yml
 /app/config/parameters.ini
-=======
->>>>>>> master
 
 # Cache and logs (Symfony2)
 /app/cache/*
@@ -24,15 +18,6 @@
 /var/logs/*
 !var/cache/.gitkeep
 !var/logs/.gitkeep
-
-<<<<<<< HEAD
-
-=======
-# Parameters
-/app/config/parameters.yml
-/app/config/parameters_hosting.yml
-/app/config/parameters.ini
->>>>>>> master
 
 # Managed by Composer
 /app/bootstrap.php.cache

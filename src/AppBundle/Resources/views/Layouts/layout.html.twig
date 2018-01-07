@@ -244,7 +244,7 @@
 {% block footerContent %}
 			{% if permissionLoggedUser is defined %}
 				{% if permissionLoggedUser.userDumpView == true %}
-					<div class="col-lg-10 col-md-10" style="position:absolute;top:50px;right:5px;z-index:0;margin:auto;">
+					<div class="col-lg-10 col-md-10" style="position:absolute;top:50px;right:5px;z-index:3000;margin:auto;">
 						{{dump()}}
 					</div>
 				{% endif %}

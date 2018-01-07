@@ -28,7 +28,7 @@
 													{% if clinic.image == null %}
 														<img class="img-responsive avatar-view" src="{{ asset ('assets/images/default_clinic.png') }}" alt="Avatar" title="Change the avatar" style ="max-width:170px;">
 													{% else %}
-														<img lass="img-responsive avatar-view" src="{{ asset ('uploads/clinics/'~clinic.image) }}" alt="Avatar" title="Change the avatar"/>
+														<img lass="img-responsive avatar-view" src="{{ asset ('uploads/clinics/'~clinic.nameUrl~'/'~clinic.image) }}" alt="Avatar" title="Change the avatar"/>
 													{% endif %}
 												{# ..........................................................IMAGEN DE CLINICA SI EXISTIESE O NO UN REGISTRO #}
 											</div>

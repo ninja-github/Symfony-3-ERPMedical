@@ -2,3 +2,6 @@
 schedule_home:
     path: /schedule
     defaults: { _controller: AppBundle:Schedule:home }
+schedule_config:
+    path: /schedule_config
+    defaults: { _controller: AppBundle:Schedule:config }    

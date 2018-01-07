@@ -17,7 +17,7 @@
 						<div class="x_panel" >
 							<!-- Título del Bloque -->
 								<div class="x_title">
-									<h3 style="display:inline-block;">Editar Usuario</h3>
+									<h3 style="display:inline-block;">Perfil de Usuario</h3>
 									<div style="display:block;margin-top:4px;" class="pull-right">
 									</div>
 									<div class="clearfix"></div>
@@ -25,6 +25,91 @@
 							<!-- /título del Bloque -->
 							<!-- Contenido del Bloque -->
 								<div class="x_content">
+									<div class="col-md-3 col-sm-3 col-xs-12 profile_left">
+										<div class="profile_img">
+											<div id="crop-avatar">
+												{# IMAGEN DE USUARIO SI EXISTIESE O NO UN REGISTRO........... #}
+													{% if user.image == null %}
+														<img class=" img-responsive center-block avatar-view" src="{{ asset ('assets/images/default_profile.png') }}" alt="default_profile.png" title="Change the avatar">
+													{% else %}
+														<img class=" img-responsive center-block avatar-view" src="{{ asset ('uploads/users/'~user.id~'/'~user.image) }}" alt="{{user.image}}" title="Change the avatar">
+													{% endif %}
+												{# ...........IMAGEN DE USUARIO SI EXISTIESE O NO UN REGISTRO #}
+											</div>
+										</div>
+										<div>
+											<h3>{{user.name}} {{user.surnames}} ({{user.userName}})</h3>
+											<ul class="list-unstyled user_data">
+												<li class="m-top-xs">
+													<i class="fa fa-external-link user-profile-icon"></i><a href="mailto:{{user.email | lower}}"> {{user.email | lower}}</a><br/>
+												</li>
+												<li>
+													{% if user.gender == "Hombre" %}
+														<i class="ionicons ion-male"></i>
+														{{user.gender}}<br/>
+													{% elseif user.gender == "Mujer" %}
+														<i class="ionicons ion-female" ></i>
+														{{user.gender}}<br/>
+													{% endif %}
+												</li>
+											</ul>
+										</div><br>
+										<div class="clearfix"></div>
+										<div class="divider-dashed"></div>
+										{% if permissionLoggedUser.userPermission == true %}
+											<!-- Activa Modal -->
+												<div class="pull-left">
+													<button class="btn btn-success" data-toggle="modal" data-target="#userEdit" >
+														<i class="fa fa-edit m-right-xs"></i>Editar Perfil
+													</button>
+												</div>
+											<!-- /activa Modal -->
+										{% endif %}	
+										{% if permissionLoggedUser.userPermission == true %}
+											<!-- Activa Modal -->
+												<div data-toggle="tooltip" data-placement="top" title="Editar Permisos" style="display:inline;">
+													<button class="btn btn-success" data-toggle="modal" data-target="#userPermission" >
+														<i class="fa fa-chain-broken m-right-xs"></i> 
+													</button>
+												</div>
+											<!-- /activa Modal -->
+										{% endif %}
+										{% if permissionLoggedUser.userPermission == true %}
+											<!-- Google Calendar -->
+												<div data-toggle="tooltip" data-placement="top" title="GoogleCalendar" style="display:inline;">
+													<a class="btn btn-success"
+														href="{{ path("schedule_config") }}">
+														<i class="fa fa-calendar m-right-xs"></i>
+													</a>
+												</div>		
+											<!-- Google Calendar -->
+										{% endif %}																				
+									</div>
+								</div>
+							<!-- /contenido del Bloque -->						
+						</div>
+					</div>
+				<!-- /bloque -->				
+			</div>
+		</div>
+	<!-- /page content -->
+	<!-- Modal Editar Usuario -->
+		{% if permissionLoggedUser.userPermission == true %}
+			<div class="modal fade" id="userEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<!-- Modal Header -->
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">
+									<span aria-hidden="true">&times;</span>
+									<span class="sr-only">Close</span>
+								</button>
+								<h4 class="modal-title" id="myModalLabel">Editar Permisos Usuario</h4>
+							</div>
+						<!-- Modal Header -->
+						<!-- Modal Body -->
+							<div class="modal-body">
+								<div class="row control-label form-horizontal form-label-left">
 									<!-- Formulario Usuario -->
 										{{ form_start(formUserEdit, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
 											<div class="col-md-9 col-sm-9 col-xs-12 pull-left">
@@ -58,7 +143,7 @@
 														{% if user.image == null %}
 															<img class=" img-responsive center-block avatar-view" src="{{ asset ('assets/images/default_profile.png') }}" alt="default_profile.png" title="Change the avatar">
 														{% else %}
-															<img class=" img-responsive center-block avatar-view" src="{{ asset ('uploads/users/'~user.image) }}" alt="{{user.image}}" title="Change the avatar">
+															<img class=" img-responsive center-block avatar-view" src="{{ asset ('uploads/users/'~user.id~'/'~user.image) }}" alt="{{user.image}}" title="Change the avatar">
 														{% endif %}
 														{# ...........IMAGEN DE USUARIO SI EXISTIESE O NO UN REGISTRO #}
 													</div>
@@ -70,24 +155,23 @@
 												{{form_widget(formUserEdit.Actualizar)}}
 											</div>
 										{{ form_end(formUserEdit) }}
-									<!-- /formulario Usuario -->							
-									{% if permissionLoggedUser.userPermission == true %}
-										<!-- Activa Modal -->
-											<div class="pull-right">
-												<button class="btn btn-success" data-toggle="modal" data-target="#userPermission" style="bottom: 39px; position: relative;">
-													<i class="fa fa-plus-square m-right-xs"></i> Permisos
-												</button>
-											</div>
-										<!-- /activa Modal -->
-									{% endif %}
+									<!-- /formulario Usuario -->	
+
 								</div>
-							<!-- /contenido del Bloque -->
-						</div>
+							</div>
+					    <!-- Modal Body -->
+						{#
+							<!-- Modal Footer -->
+								<div class="modal-footer"></div>
+							<!-- Modal Footer -->
+						#}
 					</div>
-				<!-- /bloque -->				
+				</div>
 			</div>
-		</div>
-	<!-- /page content -->
+		{% endif %}
+	<!-- /modal Editar Usuario -->
+
+
 
 	<!-- Modal Permisos -->
 		{% if permissionLoggedUser.userPermission == true %}

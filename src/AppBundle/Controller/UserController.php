@@ -138,7 +138,7 @@ class UserController extends Controller{
 		}
 		/******************************************************************************************************/
 		// Enviamos el formulario y su vista a la plantilla TWIG
-		return $this->render('AppBundle:User:user_Edit.html.twig',
+		return $this->render('AppBundle:User:user_View.html.twig',
 			array(
 				'permissionDescription'=> $permissionDescription,
 				'permissionLoggedUser'=>$permissionLoggedUser,

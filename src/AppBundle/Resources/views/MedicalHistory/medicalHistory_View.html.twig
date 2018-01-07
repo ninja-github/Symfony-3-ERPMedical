@@ -334,29 +334,35 @@
 											<!-- /editar Historia -->
 											<div class="pull-right">
 												<!-- Nuevo Estudio -->
-													<a class="btn btn-success"
-														href="{{ path("orthopodology_history_create", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory} ) }}">
-														<i class="fa fa-plus-square m-right-xs"></i>
-														<i class="fa fa-book m-right-xs"  data-toggle="tooltip" data-placement="top" title="Nuevo Estudio"></i>
-													</a>
+													<div data-toggle="tooltip" data-placement="top" title="Nuevo Estudio" style="display:inline;">
+														<a class="btn btn-success"
+														href="{{ path("orthopodology_history_create", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory} ) }}" >
+															<i class="fa fa-plus-square m-right-xs"></i>
+															<i class="fa fa-book m-right-xs"></i>
+														</a>
+													</div>										
 												<!-- /nuevo Estudio -->
 												<!-- Activa Modal - nuevo Informe -->
-													<button class="btn btn-success" data-toggle="modal" data-target="#createReport">
-														<i class="fa fa-plus-square m-right-xs"></i>
-														<i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="Nuevo Informe"></i>
-													</button>
+													<div data-toggle="tooltip" data-placement="top" title="Nuevo Informe" style="display:inline;">
+														<button class="btn btn-success" data-toggle="modal" data-target="#createReport">					<i class="fa fa-plus-square m-right-xs"></i>
+															<i class="fa fa-info-circle m-right-xs"></i>
+														</button>
+													</div>
 												<!-- /activa Modal - nuevo Informe -->												
 												<!-- Activa Modal - Nuevo Seguimiento -->
-													<button class="btn btn-success" data-toggle="modal" data-target="#createTracing">
-														<i class="fa fa-plus-square m-right-xs"></i>
-														<i class="fa fa-history m-right-xs" data-toggle="tooltip" data-placement="top" title="Nuevo Seguimiento"></i>
-													</button>
+													<div data-toggle="tooltip" data-placement="top" title="Nuevo Seguimiento" style="display:inline;">
+														<button class="btn btn-success" data-toggle="modal" data-target="#createTracing">					<i class="fa fa-plus-square m-right-xs"></i>
+															<i class="fa fa-history m-right-xs"></i>
+														</button>
+													</div>
 												<!-- /activa Modal - nuevo Seguimiento -->
 												<!-- Activa Modal - Nuevo Documento -->
-													<button class="btn btn-success" data-toggle="modal" data-target="#uploadDocuments">
-														<i class="fa fa-plus-square m-right-xs"></i>
-														<i class="fa fa-paperclip  m-right-xs" data-toggle="tooltip" data-placement="top" title="Nuevo Documento"></i>
-													</button>
+													<div data-toggle="tooltip" data-placement="top" title="Nuevo Documento" style="display:inline;">
+														<button class="btn btn-success" data-toggle="modal" data-target="#uploadDocuments">
+															<i class="fa fa-plus-square m-right-xs"></i>
+															<i class="fa fa-paperclip  m-right-xs" ></i>
+														</button>
+													</div>
 												<!-- /activa Modal - Nuevo Documento -->
 											</div>
 										</div>
