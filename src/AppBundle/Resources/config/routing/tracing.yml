@@ -1,0 +1,8 @@
+# ROUTING PARA CREAR SEGUIMIENTO HISTORIA
+tracing_create:
+    path: /{clinicNameUrl}/medicalhistory/{medicalHistoryNumber}/tracing
+    defaults: { _controller: AppBundle:Tracing:tracingCreate }
+# ROUTING PARA CREAR SEGUIMIENTO ESTUDIO
+tracing_create_orthopodology_history:
+    path: /{clinicNameUrl}/medicalhistory/{medicalHistoryNumber}/orthopodologyhistory/{registrationDate}/tracing
+    defaults: { _controller: AppBundle:Tracing:tracingCreate }

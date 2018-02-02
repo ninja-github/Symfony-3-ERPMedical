@@ -31,6 +31,28 @@
         </div>
       </div>
     </div>
-{% endblock %}
+
+  {# MOSTRAMOS LOS FLASHBAG...................................................... #}
+    <div class="container">
+      <div id="status" style="position: fixed;bottom: 30px;z-index: 200;right: 10px;">
+        {% for message in app.session.flashbag().get('status') %}
+            <div class="alert alert-{{message['type']}} alert-dismissible fade in"  role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">  <span aria-hidden="true">×</span>
+              </button>
+              {{message['description']}}
+            </div>
+        {% endfor %}
+      </div>
+    </div>
+    <script>
+    window.setTimeout(function() {
+      $(".alert").fadeTo(500, 0).slideUp(500, function(){
+      $(this).remove();
+      });
+    }, 3000);
+    </script>
+        <div class="clearfix"></div>
+  {# ......................................................MOSTRAMOS LOS FLASHBAG #}
+{% endblock %}  
 {% block footerContent %}{% endblock %}
 

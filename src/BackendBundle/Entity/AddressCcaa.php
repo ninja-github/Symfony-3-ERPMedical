@@ -24,7 +24,7 @@ class AddressCcaa{
 /*
  * Un ArrayCollection es una implementación de colección que se ajusta a la matriz PHP normal.
  */
-    private $ccaas;
+	private $ccaas;
 	public function __construct() { $this->ccaas = new \Doctrine\Common\Collections\ArrayCollection(); }
 /* Id de la Tabla *********************************************************************************************/
 /* Id de la Tabla *********************************************************************************************/
@@ -44,4 +44,3 @@ class AddressCcaa{
 	public function __toString(){ return (string)$this->ccaa; }
 /**************************************************************************************************************/
 }
-

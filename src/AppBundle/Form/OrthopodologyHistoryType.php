@@ -32,6 +32,7 @@ class OrthopodologyHistoryType extends AbstractType {
 		$permissionLoggedUser = $options['allow_extra_fields'];
 		$medicalHistoryNumber = $options['attr']['medicalHistoryNumber'];
 		$clinicNameUrl = $options['attr']['clinicNameUrl'];
+		$userLoggedId = $options['attr']['userLoggedId'];
 		if($medicalHistoryNumber == 'without_MedicalHistoryNumber' ){
 			$builder
 				->add('medicalHistory', EntityType::class,array(
@@ -205,8 +206,8 @@ class OrthopodologyHistoryType extends AbstractType {
 				->add('userRegisterer', EntityType::class,array(
 					'class' => 'BackendBundle:User',
 					'choice_label' => 'user',
-					'query_builder' => function($er) use($clinicNameUrl) {
-						return $er->getUserListOfClinic($clinicNameUrl);
+					'query_builder' => function($er) use( $clinicNameUrl, $userLoggedId ) {
+						return $er->getUserListOfClinic($clinicNameUrl, $userLoggedId);
                 	},
 					'label' => 'userName',
 					'expanded' => false,		// Muestra todas las opciones (radio buttons O checkboxes)
@@ -229,8 +230,8 @@ class OrthopodologyHistoryType extends AbstractType {
 				->add('userModifier', EntityType::class,array(
 					'class' => 'BackendBundle:User',
 					'choice_label' => 'user',
-					'query_builder' => function($er) use($clinicNameUrl) {
-						return $er->getUserListOfClinic($clinicNameUrl);
+					'query_builder' => function($er) use( $clinicNameUrl, $userLoggedId ) {
+						return $er->getUserListOfClinic($clinicNameUrl, $userLoggedId);
                 	},
 					'label' => 'userName',
 					'expanded'     => false,       // Muestra todas las opciones (radio buttons O checkboxes)

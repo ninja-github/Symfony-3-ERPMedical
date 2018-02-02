@@ -64,17 +64,17 @@ class TracingController extends Controller{
 					$tracingNew->setDate($form->get("date")->getData());
 				}
 				$tracingNew->setTracing($form->get("tracing")->getData());
-				$tracingNew->setIdUser($user);
+				$tracingNew->setUser($user);
 				if($registrationDate==null){
-					$TypeTracing = $typeTracing_repo->findOneByTypeTracing('medical_history');
+					$TypeTracing = $typeTracing_repo->findOneByType('medical_history');
 				}else{
-					$TypeTracing = $typeTracing_repo->findOneByTypeTracing('orthopodology_history');
+					$TypeTracing = $typeTracing_repo->findOneByType('orthopodology_history');
 				}
-				$tracingNew->setIdTypeTracing($TypeTracing);
+				$tracingNew->setType($TypeTracing);
 				$orthopodologyHistory = $orthopodologyHistory_repo->getOrthopodologyHistory($clinicNameUrl, $medicalHistoryNumber, $registrationDate);
-				$tracingNew->setIdOrthopodologyHistory($orthopodologyHistory);
+				$tracingNew->setOrthopodologyHistory($orthopodologyHistory);
 				$medicalHistory = $medicalHistory_repo->getMedicalHistoryObject( $clinicNameUrl, $medicalHistoryNumber );
-				$tracingNew->setIdMedicalHistory($medicalHistory);
+				$tracingNew->setMedicalHistory($medicalHistory);
 				// persistimos los datos dentro de Doctirne
 				$em->persist($tracingNew);
 				// guardamos los datos persistidos dentro de la BD

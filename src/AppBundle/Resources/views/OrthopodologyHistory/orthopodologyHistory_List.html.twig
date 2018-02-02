@@ -37,25 +37,28 @@
 								</tr>
 							</thead>
 							<tbody>
-								{% for orthopodologyHistory in orthopodologyHistories %}
+								{% for orthopodologyHistory in orthopodologyHistoryList %}
+									{# DEFINO VARIABLES ................................................................... #}
+										{% set clinicNameUrl = orthopodologyHistory.medicalHistory.clinic.nameUrl %}
+									{# ................................................................... DEFINO VARIABLES #}
 									<tr {% if orthopodologyHistory.medicalHistory.patientRisk != NULL %} class="danger"{% endif %}>
 										<td>
-											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.numberMedicalHistory, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">{{orthopodologyHistory.medicalHistory.numberMedicalHistory}} - {{orthopodologyHistory.registrationDate | date("d/m/Y")}}</a>
+											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">{{orthopodologyHistory.medicalHistory.medicalHistoryNumber}} - {{orthopodologyHistory.registrationDate | date("d/m/Y")}}</a>
 										</td>
 										<td>
-											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.numberMedicalHistory, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">{{orthopodologyHistory.medicalHistory.surname| title}}, {{orthopodologyHistory.medicalHistory.name| title}}</a>
+											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">{{orthopodologyHistory.medicalHistory.surname| title}}, {{orthopodologyHistory.medicalHistory.name| title}}</a>
 										</td>
 										<td>
-											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.numberMedicalHistory, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">{{orthopodologyHistory.medicalHistory.dni}}</a>
+											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">{{orthopodologyHistory.medicalHistory.dni}}</a>
 										</td>
 										<td>
-											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.numberMedicalHistory, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">{{orthopodologyHistory.medicalHistory.phoneMobile}}</a>
+											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">{{orthopodologyHistory.medicalHistory.phoneMobile}}</a>
 										</td>
 										<td>
-											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.numberMedicalHistory, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">{{orthopodologyHistory.medicalHistory.phoneHome}}</a>
+											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">{{orthopodologyHistory.medicalHistory.phoneHome}}</a>
 										</td>
 										<td style="text-align: center;">
-											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.numberMedicalHistory, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">
+											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">
 												{% if orthopodologyHistory.medicalHistory.gender == "Hombre" %}
 													<i class="ionicons ion-male"></i>
 												{% elseif orthopodologyHistory.medicalHistory.gender == "Mujer" %}
@@ -72,7 +75,6 @@
 			</div>
 		</div>
 	</div>
-
 <!-- /page content -->
 {% endblock %}
 {% block javascriptsFinal %}

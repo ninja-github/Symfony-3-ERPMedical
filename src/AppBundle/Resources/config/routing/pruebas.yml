@@ -1,0 +1,16 @@
+# PRUEBAS
+pruebas_pdf:
+    path: /pruebas_pdf
+    defaults: { _controller: AppBundle:Pruebas:pdf }
+# PRUEBAS GOOGLE CALENDAR CONNECT
+pruebas_googleCalendar:
+    path: /google_calendar
+    defaults: { _controller: AppBundle:Pruebas:googleCalendar } 
+# PRUEBAS GET EVENT
+pruebas_googleCalendar_get_event:
+    path: /google_calendar_get_event
+    defaults: { _controller: AppBundle:Pruebas:getDataEvent }  
+# PRUEBAS GET EVENT
+pruebas_googleCalendar_update_event:
+    path: /google_calendar_update_event
+    defaults: { _controller: AppBundle:Pruebas:updateDataEvent } 

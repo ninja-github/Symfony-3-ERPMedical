@@ -17,10 +17,21 @@
 	<link href="{{ asset ('assets/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css') }}" rel="stylesheet">
 	<!-- bootstrap-lightbox -->
 	<link href="{{ asset ('assets/vendors/lightbox/dist/ekko-lightbox.css') }}" rel="stylesheet">
-		<style>
-			.pdfobject-container { height: 500px;}
-			.pdfobject { border: 1px solid #666; }
-		</style>
+	<style>
+		.pdfobject-container { 
+			height: 500px;
+		}
+		.pdfobject { 
+			border: 1px solid #666; 
+		}
+		.bootstrap-datetimepicker-widget table td, .bootstrap-datetimepicker-widget table th {
+			text-align: center;
+			border-radius: 0px;
+			background-color:  #2B6D8D;
+			color:#fff;
+	 		/*https://www.jquery-az.com/bootstrap-datetimepicker-managing-with-date-and-time-in-bootstrap/*/
+		}			
+	</style>
 {% endblock %}
 {% block content %}
 	<!-- page content -->
@@ -38,16 +49,16 @@
 											<i class="fa fa-mail-reply-all m-right-xs"></i>
 											Listado
 										</a>
-										<a class="btn btn-success" href="{{ path("medical_history_pdf", {clinicNameUrl:medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory} ) }}">
+										<a class="btn btn-success" href="{{ path("medical_history_pdf", {clinicNameUrl:medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}">
 											<i class="fa fa-file-pdf-o m-right-xs"></i>
 										</a>										
-										{% if medicalHistory.numberMedicalHistory != medicalHistoryData.min %}
-											<a class="btn btn-success" href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory-1} ) }}">
+										{% if medicalHistory.medicalHistoryNumber != medicalHistoryData.min %}
+											<a class="btn btn-success" href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber-1} ) }}">
 												<i class="fa fa-backward m-right-xs"></i>
 											</a>
 										{% endif %}
-										{% if medicalHistory.numberMedicalHistory  != medicalHistoryData.max %}
-											<a class="btn btn-success" href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory+1} ) }}">
+										{% if medicalHistory.medicalHistoryNumber  != medicalHistoryData.max %}
+											<a class="btn btn-success" href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber+1} ) }}">
 												<i class="fa fa-forward m-right-xs"></i>
 											</a>
 										{% endif %}
@@ -65,7 +76,7 @@
 												{% endif %}
 												<ul class="list-unstyled user_data">
 													<li>
-														<i class="fa fa-file-text user-profile-icon"></i> Número de Historia: {{medicalHistory.numberMedicalHistory}}
+														<i class="fa fa-file-text user-profile-icon"></i> Número de Historia: {{medicalHistory.medicalHistoryNumber}}
 													</li>
 													{% if medicalHistory.dni != NULL %}
 														<li>
@@ -127,7 +138,7 @@
 																<div class="panel-body">
 																	{% for orthopodologyHistory in medicalHistory.orthopodologyHistoryList %}
 																		<a class="btn btn-success"
-																		href="{{ path("orthopodology_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory, 'registrationDate' : orthopodologyHistory.registrationDate.date | date("Y_m_d") } ) }}">
+																		href="{{ path("orthopodology_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate.date | date("Y_m_d") } ) }}">
 																			<i class="fa fa-eye m-right-xs"></i>
 																				{{orthopodologyHistory.registrationDate.date | date("d/m/Y")}}
 																		</a>
@@ -233,7 +244,7 @@
 																										{% endif %}
 																									</td>
 																									<td class=" ">{{tracingService.Description}}</td>
-																									<td class=" ">{{tracingService.Price}}</td>
+																									<td class=" " style="text-align: right;">{{tracingService.Price}} €</td>
 																									<td class=" " style="text-align: center;" id="remove_tracing_service_{{tracingService.id}}">
 																											<i class="fa fa-minus-square m-right-xs" onclick="remove_line_tracing_service({{tracingService.id}});" style="cursor: pointer; cursor: hand; margin:5px;"></i>
 																									</td>
@@ -275,9 +286,9 @@
 																						<div class="image view view-first">
 																							<!-- Para imágenes -->
 																								{% if medicalHistoryDoc.typeDoc.type == "image" %}
-																									<a href="{{ asset ('uploads/clinics/'~medicalHistory.clinic.nameUrl~'/medicalHistory/'~medicalHistory.numberMedicalHistory~'/'~medicalHistoryDoc.doc
+																									<a href="{{ asset ('uploads/clinics/'~medicalHistory.clinic.nameUrl~'/medicalHistory/'~medicalHistory.medicalHistoryNumber~'/'~medicalHistoryDoc.doc
 																									) }}" data-toggle="lightbox" data-gallery="example-gallery" >
-																										<img src="{{ asset ('uploads/clinics/'~medicalHistory.clinic.nameUrl~'/medicalHistory/'~medicalHistory.numberMedicalHistory~'/'~medicalHistoryDoc.doc ) }}" class="img-fluid">
+																										<img src="{{ asset ('uploads/clinics/'~medicalHistory.clinic.nameUrl~'/medicalHistory/'~medicalHistory.medicalHistoryNumber~'/'~medicalHistoryDoc.doc ) }}" class="img-fluid">
 																									</a>
 																								{% endif %}
 																							<!-- /para imágenes -->
@@ -292,10 +303,12 @@
 																								<div class="mask">
 																									<div class="tools tools-bottom">
 																										<!-- Modificar Documento -->
+																											{#																								
 																											<a data-toggle="modal" data-target="#viewDocEdit_{{medicalHistoryDoc.id}}" style="cursor: pointer; cursor: hand;"><i class="fa fa-pencil"></i></a>
+																											#}																						
 																										<!-- /modificar Documento -->
 																										<!-- Eliminar Documento -->
-																											<a href="{{ path("medical_history_doc_remove", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory, 'idDoc':medicalHistoryDoc.id} ) }}"><i class="fa fa-times"></i></a>
+																											<a href="{{ path("medical_history_doc_remove", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber, 'idDoc':medicalHistoryDoc.id} ) }}"><i class="fa fa-times"></i></a>
 																										<!-- /eliminar Documento -->
 																									</div>
 																								</div>
@@ -326,7 +339,7 @@
 											<!-- Editar Historia -->
 												<div class="pull-left">
 													<a class="btn btn-success"
-														href="{{ path("medical_history_edit", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory} ) }}">
+														href="{{ path("medical_history_edit", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}">
 														<i class="fa fa-edit m-right-xs"></i>
 														Editar Historia
 													</a>
@@ -336,7 +349,7 @@
 												<!-- Nuevo Estudio -->
 													<div data-toggle="tooltip" data-placement="top" title="Nuevo Estudio" style="display:inline;">
 														<a class="btn btn-success"
-														href="{{ path("orthopodology_history_create", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory} ) }}" >
+														href="{{ path("orthopodology_history_create", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}" >
 															<i class="fa fa-plus-square m-right-xs"></i>
 															<i class="fa fa-book m-right-xs"></i>
 														</a>
@@ -398,6 +411,7 @@
 											<!-- Fecha -->
 												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12">Fecha de Seguimiento</label>
 												<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+													{# Script al final de la plantilla que gestiona 'datetimepicker' de Bootstrap #}
 													<div class='input-group date' id='datetimepicker_newTracing'>
 														{{form_widget(form_medicalHistoryTracing.date)}}
 														<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
@@ -612,10 +626,28 @@
 {% block javascriptsFinal %}
 	{# la función parent() carga todo el contenido del bloque anterior #}
 	{{ parent() }}
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
+	<!-- moment.js -->
+	<!-- Analice, valide, manipule y muestre fechas y horas en JavaScript.-->
+    <script src="{{ asset ('assets/vendors/moment/min/moment.min.js') }}"></script>
+    <!-- locale -->
+    <script src="{{ asset ('assets/vendors/fullcalendar/locale/es.js') }}"></script>
+	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>-->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.3/js/bootstrap-datetimepicker.min.js"></script>
-	<!-- dateTimePickerCustom -->
-	<script src="{{ asset ('assets/js/custom/dateTimePicker.js') }}"></script>
+	<script type="text/javascript">
+		// El selector JQuery hace referencia a todos los id con 'datetimepicker' 
+		$('[id ^= datetimepicker]').datetimepicker({
+		//$('#datetimepicker_birthday').datetimepicker({
+			format: 'DD/MM/YYYY',
+			locale:'es',
+			pickTime: false,
+			icons: {
+		//		time: "fa fa-clock-o",
+				date: "fa fa-calendar",
+		//		up: "fa fa-arrow-up",
+		//		down: "fa fa-arrow-down"
+			}
+		});
+	</script>	
 	<!-- bootstrap-progressbar -->
 	<script src="{{ asset ('assets/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js') }}"></script>
 	<!-- tether.io -->
@@ -627,12 +659,11 @@
 			// https://pdfobject.com/
 			{% for medicalHistoryDoc in medicalHistory.docList %}
 				{% if medicalHistoryDoc.typeDoc.type == "pdf" %}
-					PDFObject.embed("{{ asset ('uploads/clinics/'~medicalHistory.clinic.nameUrl~'/medicalHistory/'~medicalHistory.numberMedicalHistory~'/'~medicalHistoryDoc.doc ) }}", "#viewerPdf_{{medicalHistoryDoc.id}}");
+					PDFObject.embed("{{ asset ('uploads/clinics/'~medicalHistory.clinic.nameUrl~'/medicalHistory/'~medicalHistory.medicalHistoryNumber~'/'~medicalHistoryDoc.doc ) }}", "#viewerPdf_{{medicalHistoryDoc.id}}");
 				{% endif %}
 			{% endfor %}
 		</script>
 <!-- ------------------------------------------- PRUEBA PDF ------------------- -->
-
 <!-- ------------------------------------------- TRACING SERVICE FORM ------------------- -->
 		<!-- Service Tracing Form -->
 			<script>
@@ -659,13 +690,10 @@
 
 			</script>
 		<!-- /service Tracing Form -->
-
-
-
 		<!-- RemoveTracingService -->
 		<script src="{{ asset ('assets/js/custom/tracingService.js') }}"></script>
 		<!-- /removeTracingService -->
-<!-- ------------------------------------------- TRACING SERVICE FORM ------------------- -->
+<!--------------------------------------------- TRACING SERVICE FORM ------------------- -->
 		<!-- anchor-js -->
 		<script src="{{ asset ('assets/vendors/anchor-js/anchor.min.js') }}"></script>
 		<!-- lightbox -->

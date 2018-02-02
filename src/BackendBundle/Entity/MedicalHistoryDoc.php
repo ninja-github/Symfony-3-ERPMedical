@@ -53,4 +53,3 @@ class MedicalHistoryDoc {
     public function getMedicalHistory() { return $this->medicalHistory; }
 /**************************************************************************************************************/
 }
-

@@ -1,11 +1,15 @@
 BackendBundle\Entity\AddressCity:
     type: entity
+    # repository ######################################################        
     repositoryClass: BackendBundle\Repository\AddressCityRepository
     table: address_city
+# indexes #############################################################        
     indexes:
         province:
             columns:
                 - province
+# /indexes ############################################################                
+# id ##################################################################                 
     id:
         id:
             type: integer
@@ -15,6 +19,8 @@ BackendBundle\Entity\AddressCity:
             id: true
             generator:
                 strategy: IDENTITY
+# /id #################################################################
+# fields ##############################################################                
     fields:
         cp:
             type: integer
@@ -27,6 +33,8 @@ BackendBundle\Entity\AddressCity:
             length: 500
             options:
                 fixed: false
+# /fields #############################################################
+# manyToOne ###########################################################                  
     manyToOne:
         province:
             targetEntity: AddressProvince
@@ -38,4 +46,7 @@ BackendBundle\Entity\AddressCity:
                 province:
                     referencedColumnName: id
 #            orphanRemoval: false
+# /manyToOne ##########################################################
+# oneToMany ###########################################################
+# /oneToMany ##########################################################  
     lifecycleCallbacks: {  }

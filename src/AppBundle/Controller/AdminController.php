@@ -19,26 +19,37 @@ class AdminController extends Controller {
 /* MÉTODO PARA LISTAR CONTENIDO ADMIN *************************************************************************/
 	public function indexAction(Request $request) {
 		/* CARGA INICIAL **************************************************************************************/
-		$em = $this->getDoctrine()->getManager();
-		$userlogged = $this->getUser();	// extraemos el usuario de la sessión
+			$em = $this->getDoctrine()->getManager();
+			$userlogged = $this->getUser();	// extraemos el usuario de la sessión
 		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
-		$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userlogged, $request);
+			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userlogged, $request);
 		/* EXTRAE PERMISOS DEL USUARIO  ***********************************************************************/
-		$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userlogged);
-		/* PUEDO ENTRAR  **************************************************************************************/
-		if($permissionLoggedUser->getAdminGeneralDataAccess() == false){ return $this->redirectToRoute('homepage'); }
+			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userlogged);
+		/* PERMISO ACCESO *************************************************************************************/
+			if($permissionLoggedUser->getAdminGeneralDataAccess() == false){ 
+				$status = ['type'=>'danger','description'=>'No tiene permisos suficientes para acceder a la zona de Administración General.'];
+					// generamos los mensajes FLASH (necesario activar las sesiones)
+				$this->session->getFlashBag()->add("status", $status);				
+				return $this->redirectToRoute('homepage');
+			}
 		/******************************************************************************************************/
-		$clinic_repo = $em->getRepository("BackendBundle:Clinic");
-		$clinics_list = $clinic_repo->getListTenLastClinics();
-		$user_repo = $em->getRepository("BackendBundle:User");
-		$users_list = $user_repo->getListTenLastUsers();
-		return $this->render('AppBundle:Admin:admin_Index.html.twig',
-			array(
-				'permissionLoggedUser'=>$permissionLoggedUser,
-				'clinics_list'=>$clinics_list,
-				'users_list'=>$users_list
-			)
-		);
+		/* CARGO LOS REPOSITORIOS  ****************************************************************************/
+			$clinic_repo = $em->getRepository("BackendBundle:Clinic");
+			$user_repo = $em->getRepository("BackendBundle:User");
+		/******************************************************************************************************/
+		/* REALIZO LAS CONSULTAS NECESARIAS A LA BD MEDIANTE LOS REPOSITORIOS *********************************/			
+			$users_list = $user_repo->getListTenLastUsers();
+			$clinics_list = $clinic_repo->getListTenLastClinics();	
+		/******************************************************************************************************/
+		/* CARGAMOS LA VISTA CON SUS VARIABLES ****************************************************************/ 					
+			return $this->render('AppBundle:Admin:admin_Index.html.twig',
+				array(
+					'permissionLoggedUser'=>$permissionLoggedUser,
+					'clinics_list'=>$clinics_list,
+					'users_list'=>$users_list
+				)
+			);
+		/******************************************************************************************************/ 			
 	}
 /**************************************************************************************************************/
 }

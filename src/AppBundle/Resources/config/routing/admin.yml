@@ -7,9 +7,9 @@ admin_clinics_list:
     path: /clinics
     defaults: { _controller: AppBundle:Clinic:clinicsList }
 # ROUTING ADMIN USER EDIT 
-admin_user_edit:
-    path: /user/{userName}/edit
-    defaults: { _controller: AppBundle:User:userEdit }
+admin_user_view:
+    path: /user/{userName}
+    defaults: { _controller: AppBundle:User:userView }
 # ROUTING ADMIN USER EDIT
 admin_user_create:
     path: /user/create

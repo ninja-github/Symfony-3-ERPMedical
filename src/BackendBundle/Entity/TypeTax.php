@@ -31,4 +31,3 @@ class TypeTax {
 	public function getRegistrationDate() { return $this->registrationDate; }
 /**************************************************************************************************************/
 }
-

@@ -1,6 +1,11 @@
 BackendBundle\Entity\UserPermissionDefinition:
     type: entity
     table: user_permission_definition
+# indexes #############################################################     
+# /indexes ############################################################ 
+# uniqueConstraints####################################################       
+# /uniqueConstraints###################################################               
+# id ##################################################################
     id:
         id:
             type: integer
@@ -10,7 +15,24 @@ BackendBundle\Entity\UserPermissionDefinition:
             id: true
             generator:
                 strategy: IDENTITY
+# /id #################################################################
+# fields ############################################################## 
     fields:
+    # USER ############################################################
+        userList:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: user_list
+        userView:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: user_view
         userCreate:
             type: string
             nullable: true
@@ -53,6 +75,22 @@ BackendBundle\Entity\UserPermissionDefinition:
             options:
                 fixed: false
             column: clinic_view_other
+    # /USER ###########################################################
+    # CLINIC ##########################################################
+        clinicList:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: clinic_list
+        clinicView:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: clinic_view                
         clinicCreate:
             type: string
             nullable: true
@@ -74,6 +112,22 @@ BackendBundle\Entity\UserPermissionDefinition:
             options:
                 fixed: false
             column: clinic_remove
+    # /CLINIC #########################################################
+    # MEDICAL HISTORY #################################################
+        medicalHistoryList:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: medical_history_list
+        medicalHistoryView:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: medical_history_view
         medicalHistoryCreate:
             type: string
             nullable: true
@@ -123,6 +177,22 @@ BackendBundle\Entity\UserPermissionDefinition:
             options:
                 fixed: false
             column: medical_history_user_modifier_edit
+    # /MEDICAL HISTORY ################################################
+    # MEDICAL HISTORY DOC #############################################
+        medicalHistoryDocList:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: medical_history_doc_list
+        medicalHistoryDocView:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: medical_history_doc_view
         medicalHistoryDocCreate:
             type: string
             nullable: true
@@ -151,13 +221,6 @@ BackendBundle\Entity\UserPermissionDefinition:
             options:
                 fixed: false
             column: medical_history_doc_registration_date_edit
-        medicalHistoryDocModificationDateEdit:
-            type: string
-            nullable: true
-            length: 255
-            options:
-                fixed: false
-            column: medical_history_doc_modification_date_edit
         medicalHistoryDocUserRegistererEdit:
             type: string
             nullable: true
@@ -165,6 +228,13 @@ BackendBundle\Entity\UserPermissionDefinition:
             options:
                 fixed: false
             column: medical_history_doc_user_registerer_edit
+        medicalHistoryDocModificationDateEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: medical_history_doc_modification_date_edit
         medicalHistoryDocUserModifierEdit:
             type: string
             nullable: true
@@ -172,6 +242,22 @@ BackendBundle\Entity\UserPermissionDefinition:
             options:
                 fixed: false
             column: medical_history_doc_user_modifier_edit
+    # /MEDICAL HISTORY DOC ############################################
+    # ORTHOPODOLOGY HISTORY ###########################################
+        orthopodologyHistoryList:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: orthopodology_history_list
+        orthopodologyHistoryView:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: orthopodology_history_view
         orthopodologyHistoryCreate:
             type: string
             nullable: true
@@ -200,13 +286,6 @@ BackendBundle\Entity\UserPermissionDefinition:
             options:
                 fixed: false
             column: orthopodology_history_registration_date_edit
-        orthopodologyHistoryModificationDateEdit:
-            type: string
-            nullable: true
-            length: 255
-            options:
-                fixed: false
-            column: orthopodology_history_modification_date_edit
         orthopodologyHistoryUserRegistererEdit:
             type: string
             nullable: true
@@ -214,6 +293,13 @@ BackendBundle\Entity\UserPermissionDefinition:
             options:
                 fixed: false
             column: orthopodology_history_user_registerer_edit
+        orthopodologyHistoryModificationDateEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: orthopodology_history_modification_date_edit
         orthopodologyHistoryUserModifierEdit:
             type: string
             nullable: true
@@ -221,6 +307,22 @@ BackendBundle\Entity\UserPermissionDefinition:
             options:
                 fixed: false
             column: orthopodology_history_user_modifier_edit
+    # /ORTHOPODOLOGY HISTORY ##########################################
+    # ORTHOPODOLOGY HISTORY DOC #######################################
+        orthopodologyHistoryDocList:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: orthopodology_history_doc_list
+        orthopodologyHistoryDocView:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: orthopodology_history_doc_view
         orthopodologyHistoryDocCreate:
             type: string
             nullable: true
@@ -249,13 +351,6 @@ BackendBundle\Entity\UserPermissionDefinition:
             options:
                 fixed: false
             column: orthopodology_history_doc_registration_date_edit
-        orthopodologyHistoryDocModificationDateEdit:
-            type: string
-            nullable: true
-            length: 255
-            options:
-                fixed: false
-            column: orthopodology_history_doc_modification_date_edit
         orthopodologyHistoryDocUserRegistererEdit:
             type: string
             nullable: true
@@ -263,6 +358,13 @@ BackendBundle\Entity\UserPermissionDefinition:
             options:
                 fixed: false
             column: orthopodology_history_doc_user_registerer_edit
+        orthopodologyHistoryDocModificationDateEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: orthopodology_history_doc_modification_date_edit
         orthopodologyHistoryDocUserModifierEdit:
             type: string
             nullable: true
@@ -270,6 +372,96 @@ BackendBundle\Entity\UserPermissionDefinition:
             options:
                 fixed: false
             column: orthopodology_history_doc_user_modifier_edit
+    # /ORTHOPODOLOGY HISTORY DOC ######################################
+    # REPORT ##########################################################
+        reportList:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: report_list
+        reportView:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: report_view            
+        reportCreate:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: report_create            
+        reportEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: report_edit
+        reportRemove:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: report_remove                        
+    # /REPORT #########################################################
+    # INVOICE #########################################################
+        invoiceList:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: invoice_list
+        invoiceView:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: invoice_view
+        invoiceCreate:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: invoice_create
+        invoiceEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: invoice_edit
+        invoiceRemove:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: invoice_remove
+    # /INVOICE ########################################################
+    # SERVICE #########################################################
+        serviceList:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: service_list
+        serviceView:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: service_view
         serviceCreate:
             type: string
             nullable: true
@@ -291,6 +483,59 @@ BackendBundle\Entity\UserPermissionDefinition:
             options:
                 fixed: false
             column: service_remove
+    # /SERVICE ########################################################
+    # SCHEDULE ########################################################
+        scheduleList:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+            column: schedule_list
+        scheduleView:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+            column: schedule_view
+        scheduleCreate:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+            column: schedule_create
+        scheduleEdit:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+            column: schedule_edit
+        scheduleRemove:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+            column: schedule_remove
+    # /SCHEDULE #######################################################
+    # TRACING #########################################################
+        tracingList:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: tracing_list
+        tracingView:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: tracing_view
         tracingCreate:
             type: string
             nullable: true
@@ -312,6 +557,22 @@ BackendBundle\Entity\UserPermissionDefinition:
             options:
                 fixed: false
             column: tracing_remove
+    # /TRACING ########################################################
+    # TRACING SERVICE #################################################
+        tracingServiceList:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: tracing_service_list
+        tracingServiceView:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: tracing_service_view
         tracingServiceCreate:
             type: string
             nullable: true
@@ -333,6 +594,8 @@ BackendBundle\Entity\UserPermissionDefinition:
             options:
                 fixed: false
             column: tracing_service_remove
+    # /TRACING SERVICE ################################################
+    # ADMIN ###########################################################
         adminSectionAccess:
             type: string
             nullable: true
@@ -347,4 +610,10 @@ BackendBundle\Entity\UserPermissionDefinition:
             options:
                 fixed: false
             column: admin_general_data_access
+    # /ADMIN ##########################################################
+# /fields #############################################################
+# manyToOne ########################################################### 
+# /manyToOne ##########################################################
+# oneToMany ########################################################### 
+# /oneToMany ########################################################## 
     lifecycleCallbacks: {  }

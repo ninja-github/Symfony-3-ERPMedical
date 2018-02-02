@@ -23,7 +23,7 @@ class UserController extends Controller{
 	public function __construct(){ $this->session = new Session(); }
 /**************************************************************************************************************/
 /* MÉTODO PARA EDITAR DATOS DEL PERFIL DE USUARIO *************************************************************/
-	public function userEditAction(Request $request, $userName=NULL){
+	public function userViewAction(Request $request, $userName=NULL){
 		/* CARGA INICIAL **************************************************************************************/
 		$em = $this->getDoctrine()->getManager();
 		$userlogged = $this->getUser();	// extraemos el usuario de la sessión
@@ -137,6 +137,16 @@ class UserController extends Controller{
 			}
 		}
 		/******************************************************************************************************/
+			$scheduleGoogleCalendar_repo = $em->getRepository("BackendBundle:ScheduleGoogleCalendar");
+			$scheduleGoogleCalendar = $scheduleGoogleCalendar_repo->findOneBy(array('user'=>$user));
+			if( $scheduleGoogleCalendar != NULL){
+				$refreshToken = $scheduleGoogleCalendar->getRefreshToken();
+				$request = $this->get('request_stack')->getMasterRequest();
+				$googleCalendar = $this->get('fungio.google_calendar');
+				$googleCalendar->setRefreshToken($refreshToken);
+				$client = $googleCalendar->getClient();
+				$listCalendars = $googleCalendar->listCalendars();				
+			}
 		// Enviamos el formulario y su vista a la plantilla TWIG
 		return $this->render('AppBundle:User:user_View.html.twig',
 			array(
@@ -146,7 +156,8 @@ class UserController extends Controller{
 				'formUserEdit'=>$formUserEdit->createView(),
 				'userPermission'=>$userPermission,
 				'user'=>$user,
-				'pathInfo'=> $request->getPathInfo() == '/my-data' ?  false:true
+				'pathInfo'=> $request->getPathInfo() == '/my-data' ?  false:true,
+				//'listCalendars'=>$listCalendars
 			)
 		);
 	}

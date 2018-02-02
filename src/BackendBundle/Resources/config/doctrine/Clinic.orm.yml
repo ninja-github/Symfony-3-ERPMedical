@@ -1,7 +1,9 @@
 BackendBundle\Entity\Clinic:
     type: entity
+    # repository ######################################################     
     repositoryClass: BackendBundle\Repository\ClinicRepository    
     table: clinic
+# indexes #############################################################    
     indexes:
         city:
             columns:
@@ -12,6 +14,8 @@ BackendBundle\Entity\Clinic:
         user_modifier:
             columns:
                 - user_modifier
+# /indexes ############################################################ 
+# uniqueConstraints####################################################                 
     uniqueConstraints:
         clinic_name:
             columns:
@@ -19,6 +23,8 @@ BackendBundle\Entity\Clinic:
         name_url:
             columns:
                 - name_url
+# /uniqueConstraints###################################################               
+# id ################################################################## 
     id:
         id:
             type: integer
@@ -28,6 +34,8 @@ BackendBundle\Entity\Clinic:
             id: true
             generator:
                 strategy: IDENTITY
+# /id #################################################################
+# fields ##############################################################
     fields:
         name:
             type: string
@@ -66,6 +74,18 @@ BackendBundle\Entity\Clinic:
             length: 150
             options:
                 fixed: false
+        noteReport:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false
+        noteInvoice:
+            type: text
+            nullable: true
+            length: 65535
+            options:
+                fixed: false                                
         registrationDate:
             type: datetime
             nullable: false
@@ -74,6 +94,8 @@ BackendBundle\Entity\Clinic:
             type: datetime
             nullable: true
             column: modification_date
+# /fields #############################################################
+# manyToOne ###########################################################            
     manyToOne:
         city:
             targetEntity: AddressCity
@@ -105,8 +127,22 @@ BackendBundle\Entity\Clinic:
                 user_modifier:
                     referencedColumnName: id
             orphanRemoval: false
+# /manyToOne ##########################################################
+# oneToMany ###########################################################               
     oneToMany:
+        # servicesList # no se encuentra dentro de la BD, pero se define en la entidad para listar los elementos
         servicesList:
             targetEntity: Service
-            mappedBy: clinic         
+            mappedBy: clinic
+        # medicalHistoryList # no se encuentra dentro de la BD, pero se define en la entidad para listar los elementos
+        medicalHistoryList:
+            targetEntity: MedicalHistory
+            # mappedBy # hace referencia a la columna de la tabla # MedicalHistory # dentro de la BD relacionada con la tabla # Clinic #
+            mappedBy: clinic
+        # businessList # no se encuentra dentro de la BD, pero se define en la entidad para listar los elementos
+        businessList:
+            targetEntity: Business
+            # mappedBy # hace referencia a la columna de la tabla # Business # dentro de la BD relacionada con la tabla # Clinic #
+            mappedBy: clinic            
+# /oneToMany ##########################################################               
     lifecycleCallbacks: {  }

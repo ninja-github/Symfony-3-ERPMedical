@@ -82,9 +82,9 @@
 										<tbody>
 											{% for user in users_list %}
 												<tr>
-													<td><a href="{{ path("admin_user_edit", {userName: user.userName}) }}">{{user.userName}}</a></td>
-													<td><a href="{{ path("admin_user_edit", {userName: user.userName}) }}">{{user.name}}</a></td>
-													<td><a href="{{ path("admin_user_edit", {userName: user.userName}) }}">{{user.surnames}}</a></td>
+													<td><a href="{{ path("admin_user_view", {userName: user.userName}) }}">{{user.userName}}</a></td>
+													<td><a href="{{ path("admin_user_view", {userName: user.userName}) }}">{{user.name}}</a></td>
+													<td><a href="{{ path("admin_user_view", {userName: user.userName}) }}">{{user.surnames}}</a></td>
 												</tr>
 											{% endfor %}
 										</tbody>

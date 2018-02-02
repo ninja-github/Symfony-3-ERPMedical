@@ -22,7 +22,7 @@
 								<div class="x_title">
 									<h3 style="display:inline-block;">Estudio Ortopodológico</h3>
 									<div style="display:block;margin-top:4px;" class="pull-right">
-										<a class="btn btn-success" href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory} ) }}">
+										<a class="btn btn-success" href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}">
 											<i class="fa fa-mail-reply-all m-right-xs"></i>
 											Historia
 										</a>
@@ -40,7 +40,7 @@
 												{% endif %}
 												<ul class="list-unstyled user_data">
 													<li>
-														<i class="fa fa-file-text user-profile-icon"></i> Número de Historia: {{medicalHistory.numberMedicalHistory}}
+														<i class="fa fa-file-text user-profile-icon"></i> Número de Historia: {{medicalHistory.medicalHistoryNumber}}
 													</li>
 													{% if medicalHistory.dni != NULL %}
 														<li>
@@ -87,7 +87,6 @@
 													{% endif %}
 												</ul>
 											<!-- /datos Paciente-->
-											<!-- Estudios Ortopodológicos -->									
 										</div>
 										<br />
 									<!-- /datos Paciente -->
@@ -317,9 +316,9 @@
 																						<div class="image view view-first">
 																							<!-- Para imágenes -->
 																								{% if orthopodologyHistoryDoc.typeDoc.type == "image" %}
-																									<a href="{{ asset ('uploads/clinics/'~orthopodologyHistory.medicalHistory.clinic.nameUrl~'/medicalHistory/'~orthopodologyHistory.medicalHistory.numberMedicalHistory~'/orthopodologyHistory/'~orthopodologyHistory.registrationDate| date("Y_m_d")~'/'~orthopodologyHistoryDoc.doc
+																									<a href="{{ asset ('uploads/clinics/'~orthopodologyHistory.medicalHistory.clinic.nameUrl~'/medicalHistory/'~orthopodologyHistory.medicalHistory.medicalHistoryNumber~'/orthopodologyHistory/'~orthopodologyHistory.registrationDate| date("Y_m_d")~'/'~orthopodologyHistoryDoc.doc
 																									) }}" data-toggle="lightbox" data-gallery="example-gallery" >
-																										<img src="{{ asset ('uploads/clinics/'~orthopodologyHistory.medicalHistory.clinic.nameUrl~'/medicalHistory/'~orthopodologyHistory.medicalHistory.numberMedicalHistory~'/orthopodologyHistory/'~orthopodologyHistory.registrationDate| date("Y_m_d")~'/'~orthopodologyHistoryDoc.doc
+																										<img src="{{ asset ('uploads/clinics/'~orthopodologyHistory.medicalHistory.clinic.nameUrl~'/medicalHistory/'~orthopodologyHistory.medicalHistory.medicalHistoryNumber~'/orthopodologyHistory/'~orthopodologyHistory.registrationDate| date("Y_m_d")~'/'~orthopodologyHistoryDoc.doc
 																									) }}" class="img-fluid">
 																									</a>
 																								{% endif %}
@@ -335,10 +334,12 @@
 																								<div class="mask">
 																									<div class="tools tools-bottom">
 																										<!-- Modificar Documento -->
+																											{#
 																											<a data-toggle="modal" data-target="#viewDocEdit_{{orthopodologyHistoryDoc.id}}" style="cursor: pointer; cursor: hand;"><i class="fa fa-pencil"></i></a>
+																											#}
 																										<!-- /modificar Documento -->
 																										<!-- Eliminar Documento -->
-																											<a href="{{ path("orthopodology_history_doc_remove", {'clinicNameUrl': orthopodologyHistory.medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.numberMedicalHistory, 'registrationDate': orthopodologyHistory.registrationDate| date("Y_m_d"),'idDoc':orthopodologyHistoryDoc.id} ) }}"><i class="fa fa-times"></i></a>
+																											<a href="{{ path("orthopodology_history_doc_remove", {'clinicNameUrl': orthopodologyHistory.medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.medicalHistoryNumber, 'registrationDate': orthopodologyHistory.registrationDate| date("Y_m_d"),'idDoc':orthopodologyHistoryDoc.id} ) }}"><i class="fa fa-times"></i></a>
 																										<!-- /eliminar Documento -->
 																									</div>
 																								</div>
@@ -369,7 +370,7 @@
 											<div class="pull-left">
 												{% if orthopodologyHistory.registrationDate.date | date("Y-m-d") ==  registrationDate %}
 													<a class="btn btn-success"
-														href="{{ path("orthopodology_history_edit", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory, 'registrationDate' : orthopodologyHistory.registrationDate.date | date("Y_m_d") } ) }}">
+														href="{{ path("orthopodology_history_edit", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate.date | date("Y_m_d") } ) }}">
 														<i class="fa fa-edit m-right-xs"></i>
 														Editar Estudio
 													</a>
@@ -377,13 +378,15 @@
 											</div>
 											<div class="pull-right">
 												<!-- Nuevo Estudio -->
+													{#
 													<a class="btn btn-success"
-														href="{{ path("orthopodology_history_create", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory} ) }}">
+														href="{{ path("orthopodology_history_create", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}">
 														<div data-toggle="tooltip" data-placement="top" title="Nuevo Estudio">
 															<i class="fa fa-plus-square m-right-xs"></i>
 															<i class="fa fa-book m-right-xs"></i>
 														</div>
 													</a>
+													#}
 												<!-- /nuevo Estudio -->
 												<!-- Activa Modal - Nuevo Seguimiento -->
 													<button class="btn btn-success" data-toggle="modal" data-target="#createTracing">
@@ -629,7 +632,7 @@
 			// https://pdfobject.com/
 			{% for orthopodologyHistoryDoc in orthopodologyHistory.docList %}
 				{% if orthopodologyHistoryDoc.typeDoc.type == "pdf" %}
-					PDFObject.embed("{{ asset ('uploads/clinics/'~orthopodologyHistory.medicalHistory.clinic.nameUrl~'/medicalHistory/'~orthopodologyHistory.medicalHistory.numberMedicalHistory~'/orthopodologyHistory/'~orthopodologyHistory.registrationDate| date("Y_m_d")~'/'~orthopodologyHistoryDoc.doc) }}", "#viewerPdf_{{orthopodologyHistoryDoc.id}}");
+					PDFObject.embed("{{ asset ('uploads/clinics/'~orthopodologyHistory.medicalHistory.clinic.nameUrl~'/medicalHistory/'~orthopodologyHistory.medicalHistory.medicalHistoryNumber~'/orthopodologyHistory/'~orthopodologyHistory.registrationDate| date("Y_m_d")~'/'~orthopodologyHistoryDoc.doc) }}", "#viewerPdf_{{orthopodologyHistoryDoc.id}}");
 				{% endif %}
 			{% endfor %}
 		</script>

@@ -1,7 +1,7 @@
 # MÉTODO AJAX PARA BUSCAR COINCIDENCIAS EN CIUDAD
 address_city_search:
     path: /searchcity
-    defaults: { _controller: AppBundle:AddressCity:search }
+    defaults: { _controller: AppBundle:AddressCity:searchCity }
 # ROUTING PARA TAXONOMIAS
 taxonomy_city:
     path: /admin/taxonomy/cities

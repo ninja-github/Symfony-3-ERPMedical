@@ -2,7 +2,19 @@
   {% extends "AppBundle:Layouts:layout.html.twig"%}
 {# ......................EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig' #}
 {% block content %}
-	<!-- page content -->
+	<style>
+		.bootstrap-datetimepicker-widget table td, .bootstrap-datetimepicker-widget table th {
+			text-align: center;
+			border-radius: 0px;
+			/*
+			background-color:  #2B6D8D;
+			color:#fff;
+			*/
+			color:#2B6D8D;
+	 		/*https://www.jquery-az.com/bootstrap-datetimepicker-managing-with-date-and-time-in-bootstrap/*/
+		}
+	</style>
+<!-- page content -->
 		<div class="right_col" role="main">
 			<div class="clearfix"></div>
 			<div class="row">
@@ -345,14 +357,27 @@
 {% endblock %}
 {% block javascriptsFinal %}
 	{{ parent() }}
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.3/js/bootstrap-datetimepicker.min.js"></script>
-		<!-- dateTimePickerCustom -->
-		<script src="{{ asset ('assets/js/custom/dateTimePicker.js') }}"></script>
-		<!-- bootstrap-daterangepicker -->
-		<script src="{{ asset ('assets/vendors/moment/min/moment.min.js') }}"></script>
-		<script src="{{ asset ('assets/vendors/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
-		<!-- bootstrap-datetimepicker -->
-		<script src="{{ asset ('assets/vendors/bootstrap-datetimepicker/js/bootstrap-datepicker.js') }}"></script>
-		<script src="{{ asset ('assets/vendors/bootstrap-datetimepicker/js/locales/bootstrap-datepicker.es.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/moment/min/moment.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/fullcalendar/locale/es.js') }}"></script>
+	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.3/js/bootstrap-datetimepicker.min.js"></script>
+	{#
+	<!-- dateTimePickerCustom -->
+	<script src="{{ asset ('assets/js/custom/dateTimePicker.js') }}"></script>
+	#}
+	<script type="text/javascript">
+		// El selector JQuery hace referencia a todos los id con 'datetimepicker' 
+		$('[id ^= datetimepicker]').datetimepicker({
+		//$('#datetimepicker_birthday').datetimepicker({
+			format: 'DD/MM/YYYY',
+			locale:'es',
+			pickTime: false,
+			icons: {
+		//		time: "fa fa-clock-o",
+				date: "fa fa-calendar",
+		//		up: "fa fa-arrow-up",
+		//		down: "fa fa-arrow-down"
+			}
+		});
+	</script>
 {% endblock %}

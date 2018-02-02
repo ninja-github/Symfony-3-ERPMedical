@@ -1,0 +1,12 @@
+# ROUTING PARA LISTAR FACTURAS
+invoice_list:
+    path: /{clinicNameUrl}/invoice
+    defaults: { _controller: AppBundle:Invoice:invoiceList }
+# ROUTING PARA CREAR UNA NUEVA FACTURA
+invoice_create:
+    path: /{clinicNameUrl}/medicalhistory/{medicalHistoryNumber}/invoice/create/
+    defaults: { _controller: AppBundle:Invoice:invoiceCreate }
+# ROUTING PARA VER UNA FACTURA
+invoice_view:
+    path: /{clinicNameUrl}/medicalhistory/{invoiceNumber}/invoice/view/
+    defaults: { _controller: AppBundle:Invoice:invoiceView }    

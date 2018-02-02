@@ -2,11 +2,11 @@
 # ROUTING PARA LISTAR LAS HISTORIAS CLÍNICAS
 medical_history_index:
     path: /{clinicNameUrl}/medicalhistory
-    defaults: { _controller: AppBundle:MedicalHistory:medicalHistoriesList }
+    defaults: { _controller: AppBundle:MedicalHistory:medicalHistoryList }
 # ROUTING PARA LISTAR LAS HISTORIAS CLÍNICAS
 medical_history_list:
     path: /{clinicNameUrl}/medicalhistory
-    defaults: { _controller: AppBundle:MedicalHistory:medicalHistoriesList }
+    defaults: { _controller: AppBundle:MedicalHistory:medicalHistoryList }
 # ROUTING PARA VER EL CONTENIDO DE UNA HISTORIA CLÍNICA
 medical_history_view:
     path: /{clinicNameUrl}/medicalhistory/{medicalHistoryNumber}
@@ -22,34 +22,8 @@ medical_history_edit:
 # ROUTING PARA VER PDF EL CONTENIDO DE UNA HISTORIA CLÍNICA
 medical_history_pdf:
     path: /{clinicNameUrl}/medicalhistory/{medicalHistoryNumber}/pdf/
-    defaults: { _controller: AppBundle:MedicalHistory:medicalHistoryPdf }       
-####################################################################################
-# ROUTING PARA LISTAR ESTUDIOS ORTOPODOLOGICOS ClÍNICA
-orthopodology_history_list:
-    path: /{clinicNameUrl}/orthopodologyhistory
-    defaults: { _controller: AppBundle:OrthopodologyHistory:orthopodologyHistoriesList }
-# ROUTING PARA VER ESTUDIO ORTOPODOLOGICO
-orthopodology_history_view:
-    path: /{clinicNameUrl}/medicalhistory/{medicalHistoryNumber}/orthopodologyhistory/{registrationDate}
-    defaults: { _controller: AppBundle:OrthopodologyHistory:orthopodologyHistoryView }
-# ROUTING PARA CREAR UN NUEVO ESTUDIO ORTOPODOLOGICO
-orthopodology_history_create:
-    path: /{clinicNameUrl}/medicalhistory/{medicalHistoryNumber}/orthopodologyhistory/create/
-    defaults: { _controller: AppBundle:OrthopodologyHistory:orthopodologyHistoryCreate }
-# ROUTING PARA EDITAR UN ESTUDIO ORTOPODOLOGICO
-orthopodology_history_edit:
-    path: /{clinicNameUrl}/medicalhistory/{medicalHistoryNumber}/orthopodologyhistory/{registrationDate}/edit
-    defaults: { _controller: AppBundle:OrthopodologyHistory:orthopodologyHistoryEdit }
-# ROUTING PARA EDITAR UN ESTUDIO ORTOPODOLOGICO
-orthopodology_history_remove:
-    path: /{clinicNameUrl}/medicalhistory/{medicalHistoryNumber}/orthopodologyhistory/{registrationDate}/remove
-    defaults: { _controller: AppBundle:OrthopodologyHistory:orthopodologyHistoryRemove }
-####################################################################################
-# ROUTING PARA CREAR SEGUIMIENTO HISTORIA
-tracing_create:
-    path: /{clinicNameUrl}/medicalhistory/{medicalHistoryNumber}/tracing/
-    defaults: { _controller: AppBundle:Tracing:tracingCreate }
-# ROUTING PARA CREAR SEGUIMIENTO ESTUDIO
-tracing_create:
-    path: /{clinicNameUrl}/medicalhistory/{medicalHistoryNumber}/orthopodologyhistory/{registrationDate}/tracing
-    defaults: { _controller: AppBundle:Tracing:tracingCreate }
+    defaults: { _controller: AppBundle:MedicalHistory:medicalHistoryPdf } 
+# MÉTODO AJAX PARA BUSCAR COINCIDENCIAS HISTORIA CLÍNICA
+medical_history_search:
+    path: /searchmedicalhistory
+    defaults: { _controller: AppBundle:MedicalHistory:searchMedicalHistory }

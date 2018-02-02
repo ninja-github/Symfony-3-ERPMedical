@@ -23,6 +23,12 @@ class HomeController extends Controller {
 		/* CARGA INICIAL **************************************************************************************/
 		$em = $this->getDoctrine()->getManager();
 		$userlogged = $this->getUser();	// extraemos el usuario de la sessión
+		/* USUARIO ACTIVO? ************************************************************************************/
+		if($userlogged->getIsActive() == false){
+			$status = ['type'=>'danger','description'=>'Usuario Bloqueado'];
+			$this->session->getFlashBag()->add("status", $status);
+			return $this->redirect('login');
+		}
 		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
 		$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userlogged, $request);
 		/* EXTRAE PERMISOS DEL USUARIO  ***********************************************************************/

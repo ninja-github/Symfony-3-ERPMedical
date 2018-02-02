@@ -24,7 +24,7 @@ class AddressProvince{
 /*
  * Un ArrayCollection es una implementación de colección que se ajusta a la matriz PHP normal.
  */
-    private $addressProvince;
+	private $addressProvince;
 	public function __construct() { $this->addressProvince = new \Doctrine\Common\Collections\ArrayCollection(); }
 /* Id de la Tabla *********************************************************************************************/
 	private $id;

@@ -20,12 +20,12 @@ class MedicalHistoryRepository extends \Doctrine\ORM\EntityRepository {
 	public function getMedicalHistoryListQuery( $clinicNameUrl ){
 		$em=$this->getEntityManager();
 		$query = $this->createQueryBuilder('mh')
-			->select( 'mh.numberMedicalHistory', 'mh.name', 'mh.surname', 'mh.phoneHome', 'mh.phoneMobile', 'mh.dni', 'mh.patientRisk', 'tg.gender', 'cl.nameUrl')
+			->select( 'mh.medicalHistoryNumber', 'mh.name', 'mh.surname', 'mh.phoneHome', 'mh.phoneMobile', 'mh.dni', 'mh.patientRisk', 'tg.gender', 'cl.nameUrl')
 			->innerJoin('mh.idGender', 'tg', 'tg.id = mh.idGender')
 			->innerJoin('mh.idClinic', 'cl', 'cl.id = mh.idClinic')
 			->where('cl.nameUrl=:clinicNameUrl')
 			->setParameter('clinicNameUrl', $clinicNameUrl)
-			->orderBy('mh.numberMedicalHistory','ASC')
+			->orderBy('mh.medicalHistoryNumber','ASC')
 			->getQuery();
 		$medicalHistories = $query->getResult();
 		return $medicalHistories;
@@ -35,11 +35,11 @@ class MedicalHistoryRepository extends \Doctrine\ORM\EntityRepository {
 	public function getMedicalHistoryQuery ( $clinicNameUrl, $medicalHistoryNumber ){
 		$em=$this->getEntityManager();
 		$medicalHistory = $this->createQueryBuilder('mh')
-			->select('mh.id', 'mh.numberMedicalHistory', 'mh.name', 'mh.surname', 'mh.birthday', 'mh.address', 'mh.phoneHome', 'mh.email', 'mh.phoneMobile', 'mh.dni', 'mh.patientRisk', 'mh.reasonConsultation', 'mh.background', 'mh.allergicDiseases', 'mh.treatmentDiseases', 'mh.patologies', 'mh.supplementaryTest', 'mh.diagnostic',	 'mh.treatment', 'IDENTITY(mh.city) AS city', 'tg.type', 'cl.nameUrl'
+			->select('mh.id', 'mh.medicalHistoryNumber', 'mh.name', 'mh.surname', 'mh.birthday', 'mh.address', 'mh.phoneHome', 'mh.email', 'mh.phoneMobile', 'mh.dni', 'mh.patientRisk', 'mh.reasonConsultation', 'mh.background', 'mh.allergicDiseases', 'mh.treatmentDiseases', 'mh.patologies', 'mh.supplementaryTest', 'mh.diagnostic',	 'mh.treatment', 'IDENTITY(mh.city) AS city', 'tg.type', 'cl.nameUrl'
 			)
 			->innerJoin('mh.gender', 'tg', 'tg.id = mh.gender')
 			->innerJoin('mh.clinic', 'cl', 'cl.id = mh.clinic')
-			->where('mh.numberMedicalHistory =:medicalHistoryNumber AND cl.nameUrl=:clinicNameUrl')
+			->where('mh.medicalHistoryNumber =:medicalHistoryNumber AND cl.nameUrl=:clinicNameUrl')
 			->setParameter('clinicNameUrl', $clinicNameUrl)
 			->setParameter('medicalHistoryNumber', $medicalHistoryNumber)
 			->setMaxResults(1)
@@ -62,7 +62,7 @@ class MedicalHistoryRepository extends \Doctrine\ORM\EntityRepository {
 		$medicalHistoryId = $this->createQueryBuilder('mh')
 			->select('mh.id')
 			->innerJoin('mh.idClinic', 'cl', 'cl.id = mh.idClinic')
-			->where('mh.numberMedicalHistory =:medicalHistoryNumber AND cl.nameUrl=:clinicNameUrl')
+			->where('mh.medicalHistoryNumber =:medicalHistoryNumber AND cl.nameUrl=:clinicNameUrl')
 			->setParameter('clinicNameUrl', $clinicNameUrl)
 			->setParameter('medicalHistoryNumber', $medicalHistoryNumber)
 			->getQuery()
@@ -75,7 +75,7 @@ class MedicalHistoryRepository extends \Doctrine\ORM\EntityRepository {
 		$em=$this->getEntityManager();
 		$medicalHistory = $this->createQueryBuilder('mh')
 			->innerJoin('mh.clinic', 'cl', 'cl.id = mh.clinic')
-			->where('mh.numberMedicalHistory =:medicalHistoryNumber AND cl.nameUrl=:clinicNameUrl')
+			->where('mh.medicalHistoryNumber =:medicalHistoryNumber AND cl.nameUrl=:clinicNameUrl')
 			->setParameter('clinicNameUrl', $clinicNameUrl)
 			->setParameter('medicalHistoryNumber', $medicalHistoryNumber)
 			->getQuery()
@@ -113,7 +113,7 @@ class MedicalHistoryRepository extends \Doctrine\ORM\EntityRepository {
 		for( $i=1 ; $i < $countTypeGender+1; $i++ ){
 			$gender = $typeGender_repo->findOneById($i)->getType();
 			$userTypeGender = $this->createQueryBuilder('mh')
-					->select('mh.numberMedicalHistory','tg.type')
+					->select('mh.medicalHistoryNumber','tg.type')
 					->innerJoin('mh.gender','tg', 'tg.id = mh.gender')
 					->innerJoin('mh.clinic', 'cl', 'cl.id = mh.clinic')
 					->where('cl.nameUrl=:clinicNameUrl AND tg.id =:gender')
@@ -137,16 +137,16 @@ class MedicalHistoryRepository extends \Doctrine\ORM\EntityRepository {
 		$max_min = ['min'=>'ASC', 'max'=>'DESC'];
 		foreach ($max_min as $type => $value){
 			$query = $this->createQueryBuilder('mh')
-						->select('mh.numberMedicalHistory')
+						->select('mh.medicalHistoryNumber')
 						->innerJoin('mh.clinic', 'cl', 'cl.id = mh.clinic')
 						->where('cl.nameUrl=:clinicNameUrl')
-						->orderBy('mh.numberMedicalHistory', $value)
+						->orderBy('mh.medicalHistoryNumber', $value)
 						->setParameter('clinicNameUrl', $clinicNameUrl)
 						->setMaxResults(1)
 						->getQuery()
 						->getResult();
 			if(!empty($query)){
-				$max_min[$type] = $query[0]['numberMedicalHistory'];
+				$max_min[$type] = $query[0]['medicalHistoryNumber'];
 			}else{
 				$max_min[$type] = 0;
 			}

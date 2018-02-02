@@ -1,0 +1,145 @@
+{# EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig'...................... #}
+	{% extends "AppBundle:Layouts:layout.html.twig"%}
+{# ......................EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig' #}
+{% block stylesheets %}
+	{# la función parent() carga todo el contenido del bloque anterior #}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset ('assets/vendors/EasyAutocomplete-1.3.5/easy-autocomplete.min.css') }}"></script>
+	<!-- CK Editor -->
+	<script src="{{ asset ('assets/vendors/ckeditor/ckeditor.js') }}"></script>
+	<script>
+		if ( location.hostname == 'sdk.ckeditor.com' ) {
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+					m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-271067-15', 'auto');
+			ga('send', 'pageview');
+		}
+	</script>
+{% endblock %}
+{% block content %}
+	<style>
+		.bootstrap-datetimepicker-widget table td, .bootstrap-datetimepicker-widget table th {
+			text-align: center;
+			border-radius: 0px;
+			/*
+			background-color:  #2B6D8D;
+			color:#fff;
+			*/
+			color:#2B6D8D;
+	 		/*https://www.jquery-az.com/bootstrap-datetimepicker-managing-with-date-and-time-in-bootstrap/*/
+		}
+	</style>
+<!-- page content -->
+	{% set doctor = report.user %}
+	{% set doctorNumber = report.user.userDataDoctor.collegeNumber %}
+	{% set medicalHistory = report.medicalHistory %}	
+	{% set clinicView = report.medicalHistory.clinic %}
+		<div class="right_col" role="main">
+			<div class="clearfix"></div>
+			<div class="row">
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+					<div class="x_panel" >
+						<div class="x_title">
+							<h3 style="display:inline-block;">Informe</h3><small> ( {{report.medicalHistory.medicalHistoryNumber}} / {{report.registrationDate|date('Y_m_d')}} )</small>
+							<div style="display:block;margin-top:4px;" class="pull-right">
+								<a class="btn btn-success"
+									href="{{ path("report_view", {'clinicNameUrl': clinicView.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber, 'registrationDate': report.registrationDate|date('Y_m_d') } ) }}">
+									<i class="fa fa-mail-reply-all m-right-xs"></i>
+									Volver al informe
+								</a>								
+							
+								{#}
+								
+								{% if medicalHistoryNumber != medicalHistoryData.min %}
+									<a class="btn btn-success" href="{{ path("medical_history_edit", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber-1} ) }}">
+										<i class="fa fa-backward m-right-xs"></i>
+									</a>
+								{% endif %}
+								{% if medicalHistoryNumber !=medicalHistoryData.max %}
+									<a class="btn btn-success" href="{{ path("medical_history_edit", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber+1} ) }}">
+										<i class="fa fa-forward m-right-xs"></i>
+									</a>
+								{% endif %}
+								#}
+							</div>
+						</div>
+						<div class="x_content">
+							<div class="row control-label form-horizontal form-label-left">
+								{{ form_start(form, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
+									<div class="form-group" style="margin-bottom:0px;">
+										<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">Fecha
+										</label>
+										<div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+											{# Script al final de la plantilla que gestiona 'datetimepicker' de Bootstrap #}
+											<div class='input-group date' id='datetimepicker_birthday'>
+												{{form_widget(form.registrationDate, { 'class': 'form-control' })}}
+												<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+												</span>
+											</div>
+										</div>
+										<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">Paciente</label>
+										<div class="col-lg-8 col-md-4 col-sm-4 col-xs-12">
+											<input type="text" class="form-control" id="medicalHistoryDataComplete" name="medicalHistoryDataComplete" value="">
+											<div id="suggesstion-box"></div>
+											<!-- http://phppot.com/jquery/jquery-ajax-autocomplete-country-example/ -->
+										</div>
+									</div>
+									<!-- Separador -->
+									<div class="clearfix"></div>
+									<div class="divider-dashed" style="margin-top:0px;"></div>
+									<div class="form-group">
+										<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">RAZÓN DE LA CONSULTA</label>
+										<div class="col-lg-11 col-md-10 col-sm-10 col-xs-12"style="margin-bottom:10px;">{{form_widget(form.reasonConsultation)}}</div>
+										<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">DIAGNÓSTICO</label>
+										<div class="col-lg-11 col-md-10 col-sm-10 col-xs-12"style="margin-bottom:10px;">{{form_widget(form.diagnostic)}}</div>
+										<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">TRATAMIENTO</label>
+										<div class="col-lg-11 col-md-10 col-sm-10 col-xs-12" style="margin-bottom:10px;">{{form_widget(form.treatment)}}</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="divider-dashed"></div>									
+									{{form_widget(form.submit, { 'label': 'Actualizar' })}}
+								{{ form_end(form) }}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<!-- /page content -->
+{% endblock %}
+{% block javascriptsFinal %}
+	{{ parent() }}
+    <script src="{{ asset ('assets/vendors/moment/min/moment.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/fullcalendar/locale/es.js') }}"></script>
+	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.3/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript">
+		// El selector JQuery hace referencia a todos los id con 'datetimepicker' 
+		$('[id ^= datetimepicker]').datetimepicker({
+		//$('#datetimepicker_birthday').datetimepicker({
+			format: 'DD/MM/YYYY',
+			locale: 'es',
+			pickTime: false,
+			icons: {
+		//		time: "fa fa-clock-o",
+				date: "fa fa-calendar",
+		//		up: "fa fa-arrow-up",
+		//		down: "fa fa-arrow-down"
+			}
+		});
+	</script>
+	<script data-sample="reasonConsultation">
+		CKEDITOR.replace( 'report_reasonConsultation', {
+    		customConfig: "{{ asset ('assets/js/custom/ckeditor_config_report.js') }}"
+		});
+		CKEDITOR.replace( 'report_diagnostic', {
+    		customConfig: "{{ asset ('assets/js/custom/ckeditor_config_report.js') }}"
+		});
+		CKEDITOR.replace( 'report_treatment', {
+    		customConfig: "{{ asset ('assets/js/custom/ckeditor_config_report.js') }}"
+		});
+	</script>	
+{% endblock %}								

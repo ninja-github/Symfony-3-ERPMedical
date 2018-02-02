@@ -1,0 +1,85 @@
+{# EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig'...................... #}
+	{% extends "AppBundle:Layouts:layout.html.twig"%}
+{# ......................EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig' #}
+{% block stylesheets %}
+	{# la función parent() carga todo el contenido del bloque anterior #}
+	{{ parent() }}
+	<!-- Datatables -->
+	<link href="{{ asset ('assets/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
+	<link href="{{ asset ('assets/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
+	<link href="{{ asset ('assets/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}" rel="stylesheet">
+	<link href="{{ asset ('assets/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
+	<link href="{{ asset ('assets/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
+	<link href="{{ asset ('assets/vendors/ionicons.com/2.0.1/css/ionicons.min.css') }}" rel="stylesheet">
+ {% endblock %}
+{% block content %}
+<!-- page content -->
+	<div class="right_col" role="main">
+		<div class="clearfix"></div>
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="x_panel" >
+					<div class="x_title">
+						<h3 style="display:inline-block;">Listado de Informes</h3>
+					</div>
+					<div class="x_content">
+						<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+							<thead>
+								<tr>
+									<th style="text-align: center;">Informe</th>
+									<th>Nombre</th>
+									<th>DNI</th>
+									<th>Móvil</th>
+									<th>Fijo</th>
+									<th style="text-align: center;"><i class="ionicons ion-male" style="text-align: center;"></i> / <i class="ionicons ion-female" style="text-align: center;"></i></th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for report in reportList %}
+									{# DEFINO VARIABLES ................................................................... #}
+										{% set registrationDate = report.registrationDate | date("Y_m_d") %}
+										{% set clinicNameUrl = report.medicalHistory.clinic.nameUrl %}
+										{% set medicalHistoryNumber = report.medicalHistory.medicalHistoryNumber %}	
+									{# ................................................................... DEFINO VARIABLES #}
+									<tr  {% if report.medicalHistory.patientRisk != NULL %} class="danger"{% endif %}>
+										<td><a href="{{ path("report_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber, 'registrationDate': registrationDate } ) }}">{{report.medicalHistory.medicalHistoryNumber}} / {{registrationDate}}</a></td>
+										<td><a href="{{ path("report_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber, 'registrationDate': registrationDate } ) }}">{{report.medicalHistory.surname | title}}, {{report.medicalHistory.name | title}}</a></td>
+										<td><a href="{{ path("report_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber, 'registrationDate': registrationDate } ) }}">{{report.medicalHistory.dni}}</a></td>
+										<td><a href="{{ path("report_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber, 'registrationDate': registrationDate } ) }}">{{report.medicalHistory.phoneMobile}}</a></td>
+										<td><a href="{{ path("report_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber, 'registrationDate': registrationDate } ) }}">{{report.medicalHistory.phoneHome}}</a></td>
+										<td style="text-align: center;">
+											<a href="{{ path("report_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber, 'registrationDate': registrationDate } ) }}">
+												{% if report.medicalHistory.gender == "Hombre" %}
+													<i class="ionicons ion-male"></i>
+												{% elseif report.medicalHistory.gender == "Mujer" %}
+													<i class="ionicons ion-female" ></i>
+												{% endif %}
+											</a>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<!-- /page content -->
+{% endblock %}
+{% block javascriptsFinal %}
+	{{ parent() }}
+	<!-- Datatables -->
+	<script src="{{ asset ('assets/vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+	<script src="{{ asset ('assets/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+	<script src="{{ asset ('assets/vendors/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+	<script src="{{ asset ('assets/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js') }}"></script>
+	<script src="{{ asset ('assets/vendors/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
+	<script src="{{ asset ('assets/vendors/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+	<script src="{{ asset ('assets/vendors/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+	<script src="{{ asset ('assets/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
+	<script src="{{ asset ('assets/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
+	<script src="{{ asset ('assets/vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+	<script src="{{ asset ('assets/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script>
+	<script src="{{ asset ('assets/vendors/datatables.net-scroller/js/dataTables.scroller.min.js') }}"></script>
+{% endblock %}

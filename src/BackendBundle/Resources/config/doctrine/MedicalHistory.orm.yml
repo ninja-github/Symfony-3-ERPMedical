@@ -33,12 +33,12 @@ BackendBundle\Entity\MedicalHistory:
 # /id #################################################################
 # fields ##############################################################
     fields:
-        numberMedicalHistory:
+        medicalHistoryNumber:
             type: integer
             nullable: true
             options:
                 unsigned: false
-            column: number_medical_history
+            column: medical_history_number
         name:
             type: string
             nullable: true
@@ -212,7 +212,7 @@ BackendBundle\Entity\MedicalHistory:
             cascade: {  }
             fetch: LAZY
             mappedBy: null
-            inversedBy: null
+            inversedBy: medicalHistoryList
             joinColumns:
                 clinic:
                     referencedColumnName: id

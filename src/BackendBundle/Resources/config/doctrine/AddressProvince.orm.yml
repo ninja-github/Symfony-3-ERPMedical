@@ -1,10 +1,13 @@
 BackendBundle\Entity\AddressProvince:
     type: entity
     table: address_province
+# indexes #############################################################       
     indexes:
         ccaa:
             columns:
-                - id_address_ccaa
+                - ccaa
+# /indexes ############################################################                
+# id ##################################################################                 
     id:
         id:
             type: integer
@@ -14,6 +17,8 @@ BackendBundle\Entity\AddressProvince:
             id: true
             generator:
                 strategy: IDENTITY
+# /id #################################################################
+# fields ##############################################################                 
     fields:
         province:
             type: string
@@ -21,6 +26,8 @@ BackendBundle\Entity\AddressProvince:
             length: 45
             options:
                 fixed: false
+# /fields #############################################################
+# manyToOne ###########################################################                 
     manyToOne:
         ccaa:
             targetEntity: AddressCcaa
@@ -32,4 +39,7 @@ BackendBundle\Entity\AddressProvince:
                 ccaa:
                     referencedColumnName: id
 #            orphanRemoval: false
+# /manyToOne ##########################################################
+# oneToMany ########################################################### 
+# /oneToMany ########################################################## 
     lifecycleCallbacks: {  }

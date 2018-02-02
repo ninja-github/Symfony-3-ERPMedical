@@ -15,6 +15,7 @@
 	use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 	use Symfony\Component\Form\Extension\Core\Type\DateType;
 	use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+	use Symfony\Component\Form\Extension\Core\Type\TextType;	
 	use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 	use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 /**************************************************************************************************************/
@@ -25,6 +26,8 @@ class TracingType extends AbstractType {
 		$userPermission = $options['allow_extra_fields'];
 		$clinicNameUrl = $options['attr']['clinicNameUrl'];
 		$idTracing = $options['attr']['idTracing'];
+		$userName = $options['attr']['userName'];
+		if($userName == NULL){
 		$builder
 			->add('date', DateType::class, array(
 					'required'=>false,
@@ -35,12 +38,19 @@ class TracingType extends AbstractType {
             ->add('tracing', TextareaType::class, array(
 				'required'=>false,
 				'attr'=>array('class'=>'form-control', 'style' => 'margin-bottom:13px; height: 150px;')));
+        }
+		if($userName != NULL){
+			$builder
+				->add('googleCalendarEvent', HiddenType::class, array(
+					'required'=>false,
+					'attr'=>array('class' => 'form-control','id'=>'editId')));
+		};
 		if($idTracing != NULL){
 			$builder
 				->add('id', HiddenType::class, array(
 					'required'=>false,
 					'attr'=>array('class' => 'form-control')));
-		}
+		};
 /*
 		$builder
             ->add('idUser', EntityType::class,array(

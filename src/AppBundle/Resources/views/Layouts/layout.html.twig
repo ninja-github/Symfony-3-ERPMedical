@@ -70,41 +70,100 @@
 								<div class="menu_section">
 									<h3>General</h3>
 									<ul class="nav side-menu">
-										<li>
-											<a><i class="fa fa-h-square"></i>Historias Clinicas<span class="fa fa-chevron-down"></span></a>
-											<ul class="nav child_menu">
+										{# HISTORIAS CLÍNICAS .....................................................................................#}
+											{% if permissionLoggedUser.medicalHistoryList == true or permissionLoggedUser.medicalHistoryCreate == true %}
 												<li>
-													<a href="{{ path("medical_history_list", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">
-														Listado
-													</a>
+													<a><i class="fa fa-h-square"></i>Historias Clinicas<span class="fa fa-chevron-down"></span></a>
+													<ul class="nav child_menu">
+														{% if permissionLoggedUser.medicalHistoryList == true %}													
+															<li>
+																<a href="{{ path("medical_history_list", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">
+																	Listado
+																</a>
+															</li>
+														{% endif %}													
+														{% if permissionLoggedUser.medicalHistoryCreate == true %}
+															<li>
+																<a href="{{ path("medical_history_create", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">
+																	Nueva Historia
+																</a>
+															</li>
+														{% endif %}
+													</ul>
 												</li>
-												{% if permissionLoggedUser.medicalHistoryCreate == true %}
-													<li>
-														<a href="{{ path("medical_history_create", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">
-															Nueva Historia
-														</a>
-													</li>
-												{% endif %}
-											</ul>
-										</li>
-										<li>
-												<a><i class="fa fa-folder-open"></i>Estudios<span class="fa fa-chevron-down"></span></a>
-											<ul class="nav child_menu">
+											{% endif %}
+										{#  ..................................................................................... HISTORIAS CLÍNICAS #}	
+										{# ESTUDIO ORTOPODOLÓGICO ...................................................................................#}														
+											{% if permissionLoggedUser.orthopodologyHistoryList == true or permissionLoggedUser.orthopodologyHistoryCreate == true %}
 												<li>
-													<a href="{{ path("orthopodology_history_list", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">Listado
-													</a>
+													<a><i class="fa fa-folder-open"></i>Estudios<span class="fa fa-chevron-down"></span></a>
+													<ul class="nav child_menu">
+														{% if permissionLoggedUser.orthopodologyHistoryList == true %}						
+															<li>
+																<a href="{{ path("orthopodology_history_list", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">Listado
+																</a>
+															</li>
+														{% endif %}	
+														{#}										
+														{% if permissionLoggedUser.orthopodologyHistoryCreate == true %}
+															<li>
+																<a href="{{ path("orthopodology_history_create", {clinicNameUrl:ClinicsUser.nameUrl,medicalHistoryNumber:"without_MedicalHistoryNumber" } ) }}">
+																	Nueva Estudio
+																</a>
+															</li>
+														{% endif %}
+														#}
+													</ul>
 												</li>
-												{% if permissionLoggedUser.orthopodologyHistoryCreate == true %}
+											{% endif %}
+										{# ................................................................................... ESTUDIO ORTOPODOLÓGICO #}											
+										{% if permissionLoggedUser.reportList == true or permissionLoggedUser.reportCreate == true %}
+											<li>
+												<a><i class="fa fa-file-text-o"></i>Informes<span class="fa fa-chevron-down"></span></a>
+												<ul class="nav child_menu">
+													{% if permissionLoggedUser.reportList == true %}										
+														<li>
+															<a href="{{ path("report_list", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">Listado
+															</a>
+														</li>
+													{% endif %}												
+													{% if permissionLoggedUser.reportCreate == true %}
+														<li>
+															<a href="{{ path("report_create", {clinicNameUrl:ClinicsUser.nameUrl,medicalHistoryNumber:"without_MedicalHistoryNumber" } ) }}">
+																Nueva Informe
+															</a>
+														</li>
+													{% endif %}
+												</ul>
+											</li>
+										{% endif %}
+										{% if permissionLoggedUser.invoiceList == true or permissionLoggedUser.invoiceCreate == true %}
+											<li>
+												<a><i class="fa fa-bank"></i>Contabilidad<span class="fa fa-chevron-down"></span></a>
+												<ul class="nav child_menu">
 													<li>
-														<a href="{{ path("orthopodology_history_create", {clinicNameUrl:ClinicsUser.nameUrl,medicalHistoryNumber:"without_MedicalHistoryNumber" } ) }}">
-															Nueva Estudio
+														<a >
+															Contabilidad
 														</a>
-													</li>
-												{% endif %}
-											</ul>
-										</li>
+													</li>													
+													{% if permissionLoggedUser.invoiceList == true %}												
+														<li>
+															<a href="{{ path("invoice_list", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">Listado Facturas
+															</a>
+														</li>
+													{% endif %}
+													{% if permissionLoggedUser.invoiceCreate == true %}
+														<li>
+															<a href="{{ path("invoice_create", {clinicNameUrl:ClinicsUser.nameUrl,medicalHistoryNumber:"without_MedicalHistoryNumber" } ) }}">
+																Nueva Factura
+															</a>
+														</li>
+													{% endif %}
+												</ul>
+											</li>
+										{% endif %}																													
 										<li>
-											<a href="{{ path("schedule_home") }}">
+											<a href="{{ path("schedule_home", {clinicNameUrl:ClinicsUser.nameUrl,userName:app.user.userName}) }}">
 												<i class="fa fa-calendar"></i>
 												Agenda
 												<span class="fa fa-chevron-down"></span>
@@ -218,11 +277,11 @@
 		<div class="container">
 			<div id="status" style="position: fixed;bottom: 30px;z-index: 200;right: 10px;">
 				{% for message in app.session.flashbag().get('status') %}
-					<div class="alert alert-{{message['type']}} alert-dismissible fade in"  role="alert">
-						<button type="button" class="close" data-dismiss="alert" aria-label="Close">	<span aria-hidden="true">×</span>
-						</button>
-						{{message['description']}}
-					</div>
+						<div class="alert alert-{{message['type']}} alert-dismissible fade in"  role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">	<span aria-hidden="true">×</span>
+							</button>
+							{{message['description']}}
+						</div>
 				{% endfor %}
 			</div>
 		</div>

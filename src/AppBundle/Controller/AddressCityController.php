@@ -19,7 +19,7 @@ class AddressCityController extends Controller {
 	public function __construct(){ $this->session = new Session(); }
 /**************************************************************************************************************/
 /* MÉTODO AJAX BUSCAR CIUDAD **********************************************************************************/
-	public function searchAction(Request $request) {
+	public function searchCityAction(Request $request) {
 		// Guardamos dentro de la variable $cityInformation el dato que nos llega por POST
 		$cityInformation = $request->get('cityInformation');
 		// Busco dentro de la BD el dato
@@ -29,7 +29,7 @@ class AddressCityController extends Controller {
 		return new Response(json_encode($result)); // codificamos la respuesta en JSON
 	}
 /**************************************************************************************************************/
-/* MÉTODO PARA LISTAR USUARIOS ********************************************************************************/
+/* MÉTODO PARA LISTAR CIUDADES ********************************************************************************/
 	public function addressCityListAction(Request $request) {
 		$em = $this->getDoctrine()->getManager();
 		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/

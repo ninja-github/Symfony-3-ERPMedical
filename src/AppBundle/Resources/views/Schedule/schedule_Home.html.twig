@@ -5,134 +5,480 @@
 	{# la función parent() carga todo el contenido del bloque anterior #}
 	{{ parent() }}
     <!-- FullCalendar -->
-    <link href="{{ asset ('assets/vendors/fullcalendar/dist/fullcalendar.min.css') }}" rel="stylesheet">
-    <link href="{{ asset ('assets/vendors/fullcalendar/dist/fullcalendar.print.css') }}" rel="stylesheet" media="print">
+	<link href="{{ asset ('assets/vendors/fullcalendar/dist/fullcalendar.min.css') }}" rel="stylesheet">
+	<link href="{{ asset ('assets/vendors/fullcalendar/dist/fullcalendar.print.css') }}" rel="stylesheet" media="print">
+	<!-- bootstrap-daterangepicker -->
+	<link href="{{ asset ('assets/vendors/bootstrap-daterangepicker/daterangepicker.css') }}" rel="stylesheet" media="print">
+	<!-- bootstrap-datetimepicker -->
+	<link href="{{ asset ('assets/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css') }}" rel="stylesheet" media="print"> 
+	<!-- autoComplete -->	
+	<link rel="stylesheet" href="{{ asset ('assets/vendors/EasyAutocomplete-1.3.5/easy-autocomplete.min.css') }}">
+	<!-- MDTimePicker -->	
+		<!--
+		<link rel="stylesheet" href="{{ asset ('assets/vendors/Material-Time-Picker-Plugin-jQuery-MDTimePicker/mdtimepicker.css') }}">	
+	<!-- /MDTimePicker -->
+	<!-- clockpicker-gh-pages -->
+
+		<link rel="stylesheet" type="text/css" href="{{ asset ('assets/vendors/clockpicker-gh-pages/dist/bootstrap-clockpicker.min.css') }}">	
+	<!-- /clockpicker-gh-pages -->
 {% endblock %}    
 {% block content %}
-			<!-- page content -->
-				<div class="right_col" role="main">
-					<div class="clearfix"></div>
-					<div class="row">
-						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-							<div class="x_panel" >
-								<div class="x_title">
-									<h3 style="display:inline-block;">Agenda</h3>
-									<div style="display:block;margin-top:4px;" class="pull-right">
-										<a class="btn btn-success"
-											href="">
-											<i class="fa fa-mail-reply-all m-right-xs"></i>
-											Listado
-										</a>
-									</div>
-									<div class="clearfix"></div>
-									<!-- calendar modal -->
-										<div id="CalenderModalNew" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-											<div class="modal-dialog">
-												<div class="modal-content">
-													<div class="modal-header">
-														<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-														<h4 class="modal-title" id="myModalLabel">Nueva Entrada</h4>
-													</div>
-													<div class="modal-body">
-														<div id="testmodal" style="padding: 5px 20px;">
-															<form id="antoform" class="form-horizontal calender" role="form">
-																<div class="form-group">
-																	<label class="col-sm-3 control-label">Título</label>
-																	<div class="col-sm-9">
-																		<input type="text" class="form-control" id="title" name="title">
-																	</div>
-																</div>
-																<div class="form-group">
-																	<label class="col-sm-3 control-label">Descripción</label>
-																	<div class="col-sm-9">
-																		<textarea class="form-control" style="height:55px;" id="descr" name="descr"></textarea>
-																	</div>
-																</div>
-															</form>
-														</div>
-													</div>
-													<div class="modal-footer">
-														<button type="button" class="btn btn-default antoclose" data-dismiss="modal">Cerrar</button>
-														<button type="button" class="btn btn-primary antosubmit">Guardar Cambios</button>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div id="CalenderModalEdit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-											<div class="modal-dialog">
-												<div class="modal-content">
-													<div class="modal-header">
-														<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-														<h4 class="modal-title" id="myModalLabel2">Editar</h4>
-													</div>
-													<div class="modal-body">
-														<div id="testmodal2" style="padding: 5px 20px;">
-															<form id="antoform2" class="form-horizontal calender" role="form">
-																<div class="form-group">
-																	<label class="col-sm-3 control-label">Título</label>
-																	<div class="col-sm-9">
-																		<input type="text" class="form-control" id="title2" name="title2">
-																	</div>
-																</div>
-	              												<div class="form-group">
-																	<label class="col-sm-3 control-label">Descripción</label>
-																	<div class="col-sm-9">
-																		<textarea class="form-control" style="height:55px;" id="descr2" name="descr"></textarea>
-																	</div>
-																</div>
-															</form>
-														</div>
-													</div>
-													<div class="modal-footer">
-														<button type="button" class="btn btn-default antoclose2" data-dismiss="modal">Cerrar</button>
-														<button type="button" class="btn btn-primary antosubmit2">Guardar Cambios</button>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div id="fc_create" data-toggle="modal" data-target="#CalenderModalNew"></div>
-										<div id="fc_edit" data-toggle="modal" data-target="#CalenderModalEdit"></div>
-									<!-- /calendar modal -->
-								</div>
-								<div class="x_content row">
-									<div class="col-md-12 col-sm-12 col-xs-12 profile_left" style="padding-right:0px;">	
-										<div id='calendar'></div>
-									</div>
-									<div class="clearfix"></div>
-									<div class="divider-dashed"></div>									
-									<div class="col-md-12 col-sm-12 col-xs-12" style="padding-right:0px;">
-										<div class="pull-left">
-											<a class="btn btn-success"
-												href="">
-												<i class="fa fa-edit m-right-xs"></i>
-												Editar Historia
-											</a>
-										</div>
-										<div class="pull-right">
-											<a class="btn btn-success"
-												href="">
-												<i class="fa fa-plus-square m-right-xs"></i>
-												Estudio
-											</a>
-											<a class="btn btn-success"
-												href="">
-												<i class="fa fa-plus-square m-right-xs"></i>
-												Seguimiento
-											</a>
-										</div>
-									</div>
-								</div>
+	<style>
+		.bootstrap-datetimepicker-widget table td, .bootstrap-datetimepicker-widget table th {
+			text-align: center;
+			border-radius: 0px;
+			/*background-color:  #2B6D8D;
+			color:#fff;*/
+			color:#2B6D8D;
+	 		/*https://www.jquery-az.com/bootstrap-datetimepicker-managing-with-date-and-time-in-bootstrap/*/
+		}
+	</style>
+	<!-- page content -->
+		<div class="right_col" role="main">
+			<div class="clearfix"></div>
+			<div class="row">
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+					<div class="x_panel" >
+						<div class="x_title">
+							<h3 style="display:inline-block;">Agenda</h3>
+							<div class="clearfix"></div>
+						</div>
+						<div class="x_content row">
+							<div class="col-md-12 col-sm-12 col-xs-12 profile_left" style="padding-right:0px;">	
+								<div id='calendar'></div>
 							</div>
 						</div>
-						<br />
 					</div>
 				</div>
-			<!-- /page content -->									
+				<br />
+			</div>
+		</div>
+	<!-- /page content -->				
+	<!-- Modal - calendar Event Edit -->
+		<div id="CalendarModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<!-- Modal Header -->
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">&times;</span>
+								<span class="sr-only">Close</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">Modificar Cita</h4>
+						</div>
+					<!-- Modal Header -->
+					<!-- Modal Body -->
+						<div class="modal-body"  style="padding-bottom:0px;">
+							<div class="row control-label form-horizontal form-label-left" style="height: calc(100% - 50px);">
+								{{ form_start(form_tracingGoogleCalendar, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
+									<div class="col-md-12 col-sm-12 col-xs-12 pull-left">
+										<div class="form-group">
+											<label class="col-lg-2 col-md-2 col-sm-2 col-xs-12 control-label" style="padding-top: 0px;">Cita</label>
+											<div class='col-lg-4 col-md-4 col-sm-4 col-xs-12 control-label' style="padding-top: 0px;">
+												<div class='input-group clockpicker pull-center' id='myDatepickerStart' style="margin-bottom: 0px;">
+													<input id="myDatepickerInputStart" type='text' class="form-control" name="dateStartEvent" value=""/>
+													<span class="input-group-addon">
+														<span class="glyphicon glyphicon-calendar"></span>
+													</span>
+												</div>
+											</div>
+											<div class='col-lg-3 col-md-3 col-sm-3 col-xs-6 control-label' style="padding-top: 0px;" >
+												<div class="input-group clockpicker pull-center" id="myTimepickerStart" data-placement="bottom" data-align="top" data-autoclose="true" style="margin-bottom: 0px;">
+													<input id="myTimepickerInputStart" type='text' class="form-control floating-label" name="timeStartEvent" value="" data-placement="bottom" data-align="top" data-autoclose="true"/>
+													<span class="input-group-addon">
+														<span class="glyphicon glyphicon-time"></span>
+													</span>
+												</div>
+											</div>
+											<div class='col-lg-3 col-md-3 col-sm-3 col-xs-6' style="padding-top: 0px;" >
+												<div class="input-group clockpicker pull-center" id="myTimepickerEnd" data-placement="bottom" data-align="top" data-autoclose="true" style="margin-bottom: 0px;">
+													<input id="myTimepickerInputEnd" type='text' class="form-control floating-label" name="timeEndEvent"  value="" data-placement="bottom" data-align="top" data-autoclose="true"/>
+													<span class="input-group-addon">
+														<span class="glyphicon glyphicon-time"></span>
+													</span>
+												</div>
+											</div>
+										</div>										
+										<div class="form-group">
+											<label class="col-lg-2 col-md-2 col-sm-2 col-xs-12 control-label">Título</label>
+											<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+												<input type="text" class="form-control" id="title" name="title" value="">
+											</div>
+										</div>
+			    						<div class="form-group">
+											<label class="col-lg-2 col-md-2 col-sm-2 col-xs-12 control-label">Descripción</label>
+											<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+												<textarea class="form-control" style="height:150px;" id="description" name="description" value=""></textarea>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-lg-2 col-md-2 col-sm-2 col-xs-12 control-label">Paciente</label>
+											<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+												<input type="text" class="form-control" id="medicalHistoryDataComplete" name="medicalHistoryDataComplete" value="">
+												<a id="urlMedicalHistory">
+													<span class="input-group-addon">
+														<span class="fa fa-h-square"></span>
+													</span>
+												</a>
+												<div id="suggesstion-box"></div>
+												<!-- http://phppot.com/jquery/jquery-ajax-autocomplete-country-example/ -->
+											</div>
+										</div>														
+										<div class="form-group">
+											<!-- inputs hidden -->
+												<input type="hidden" class="form-control" id="idTracing" name="idTracing" value="">
+												<input type="hidden" class="form-control" id="clinicaNameUrl" name="clinicaNameUrl" value="">
+												<input type="hidden" class="form-control" id="medicalHistoryNumber" name="medicalHistoryNumber" value="">
+												<input type="hidden" class="form-control" id="tracing_googleCalendarEvent" name="tracing_googleCalendarEvent" value="">
+											<!-- /inputs hidden -->
+											<!-- google calendar id event hidden -->
+												{{ form_row(form_tracingGoogleCalendar.googleCalendarEvent) }}
+											<!-- /google calendar id event hidden -->
+											<!-- Enviar Nuevo Evento -->
+												<div class="modal-footer" style="padding-bottom:0px;">
+													{{ form_row(form_tracingGoogleCalendar.submit, { 'label': 'Evento' }) }}
+												</div>
+											<!-- /enviar Nuevo Evento -->
+										</div>
+									</div>
+								{{ form_end(form_tracingGoogleCalendar) }}
+								<!-- Activa Modal - Nuevo Seguimiento -->
+									<button class="btn btn-danger" data-toggle="modal" data-target="#removeEvent" style="position: relative;top: -35px;left: 25px;">Eliminar</button>
+								<!-- /activa Modal - nuevo Seguimiento -->													
+		            		</div>
+		            	</div>
+					<!-- Modal Body -->
+				</div>
+			</div>
+		</div>
+	<!-- /modal - calendar Event Edit -->
+	<!-- Modal - calendar Event Remove -->
+		<div id="removeEvent" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<!-- Modal Header -->
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">&times;</span>
+								<span class="sr-only">Close</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">Eliminar Evento</h4>
+						</div>
+					<!-- Modal Header -->
+					<!-- Modal Body -->
+						<div class="modal-body"  style="padding-bottom:0px;">
+							<div class="row control-label form-horizontal form-label-left" style="height: calc(100% - 50px);">
+								<form method="get" action="{{ path('schedule_event_remove', { 'clinicNameUrl': app.request.attributes.get('clinicNameUrl'), 'userName':app.request.attributes.get('userName') } ) }}">
+									<!-- inputs hidden -->
+										<input type="hidden" class="form-control" id="tracing_googleCalendarEvent" name="idEvent" value="">
+										<input type="hidden" class="form-control" id="tracing_googleCalendarEvent" name="idEvent" value="">	
+									<!-- /inputs hidden -->
+									<!-- Eliminar Evento -->
+										<button class="btn btn-danger">Eliminar</button>
+									<!-- /eliminar Evento -->
+								</form>	
+		            		</div>
+		            	</div>
+					<!-- Modal Body -->
+				</div>					
+			</div>
+		</div>
+	<!-- /modal - calendar Event Edit -->
 {% endblock %}
 {% block javascriptsFinal %}
 	{# la función parent() carga todo el contenido del bloque anterior #}
-		{{ parent() }}
+	{{ parent() }}
     <!-- FullCalendar -->
     <script src="{{ asset ('assets/vendors/moment/min/moment.min.js') }}"></script>
-    <script src="{{ asset ('assets/vendors/fullcalendar/dist/fullcalendar.min.js') }}"></script>
-{% endblock %}		
+	<script src="{{ asset ('assets/vendors/fullcalendar/dist/fullcalendar.min.js') }}"></script>
+	<script src="{{ asset ('assets/vendors/fullcalendar/locale/es.js') }}"></script>
+	<!-- bootstrap-daterangepicker -->
+	<script src="{{ asset ('assets/vendors/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+	<!-- bootstrap-datetimepicker -->    
+	<script src="{{ asset ('assets/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
+	<!-- clockpicker-gh-pages -->
+		<!-- https://weareoutman.github.io/clockpicker/ -->
+		<script type="text/javascript" src="{{ asset ('assets/vendors/clockpicker-gh-pages/dist/bootstrap-clockpicker.min.js') }}"></script>
+		<script type="text/javascript">
+			$("[id*=myTimepicker]").clockpicker()
+				.find('input').change(function(){
+					console.log(this.value);
+				});
+			var input = $("[id*=myTimepicker]").clockpicker({
+				placement: 'bottom',
+				align: 'left',
+				autoclose: true,
+				'default': 'now'
+			});
+
+			$('.clockpicker-with-callbacks').clockpicker({
+					donetext: 'Done',
+					init: function() { 
+						console.log("colorpicker initiated");
+					},
+					beforeShow: function() {
+						console.log("before show");
+					},
+					afterShow: function() {
+						console.log("after show");
+					},
+					beforeHide: function() {
+						console.log("before hide");
+					},
+					afterHide: function() {
+						console.log("after hide");
+					},
+					beforeHourSelect: function() {
+						console.log("before hour selected");
+					},
+					afterHourSelect: function() {
+						console.log("after hour selected");
+					},
+					beforeDone: function() {
+						console.log("before done");
+					},
+					afterDone: function() {
+						console.log("after done");
+					}
+				})
+				.find('input').change(function(){
+					console.log(this.value);
+				});
+
+			// Manually toggle to the minutes view
+			$('#check-minutes').click(function(e){
+				// Have to stop propagation here
+				e.stopPropagation();
+				input.clockpicker('show')
+						.clockpicker('toggleView', 'minutes');
+			});
+			if (/mobile/i.test(navigator.userAgent)) {
+				$('input').prop('readOnly', true);
+			}
+		</script>
+		<script type="text/javascript" src="{{ asset ('assets/vendors/clockpicker-gh-pages/assets/js/highlight.min.js') }}"></script>
+		<script type="text/javascript">
+			hljs.configure({tabReplace: '    '});
+			hljs.initHighlightingOnLoad();
+		</script>
+	<!-- /clockpicker-gh-pages -->
+	<!-- autoComplete -->
+		<script src="{{ asset ('assets/vendors/EasyAutocomplete-1.3.5/jquery.easy-autocomplete.min.js') }}"></script>	
+	<!-- /autoComplete -->
+	<!-- searchPatient -->
+		<!-- Necesaria librería autoComplete -->
+		<script src="{{ asset ('assets/js/custom/searchMedicalHistory.js') }}"></script>
+	<!-- searchPatient -->	
+	<script type="text/javascript">
+		$('#myDatepickerInputStart').datetimepicker({
+			format: 'DD/MM/YYYY',
+			locale:'es',
+
+		});
+		$('#myTimepickerInputStart').datetimepicker({
+			format: 'HH:mm',
+			locale:'es'
+		});	
+		$('#myTimepickerInputEnd').datetimepicker({
+			format: 'HH:mm',
+			locale:'es'
+		});
+		$('#calendar').fullCalendar({
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'month,agendaWeek,agendaDay'
+			},
+			businessHours: {
+		    // days of week. an array of zero-based day of week integers (0=Sunday)
+		    dow: [ 1, 2, 3, 4 ,5,6], // Monday - Thursday
+		    start: '08:00', // a start time (10am in this example)
+		    end: '21:00', // an end time (6pm in this example)
+			},
+			minTime:"07:00:00",
+			maxTime:"22:00:00",
+			locale: 'es',	// Es necesario el archivo que gestione el idioma local
+			editable: true,
+			eventLimit: true, // allow "more" link when too many events
+			selectable: true,
+			selectHelper: true,
+			// Función para nuevo evento
+			select: function(start, end) {
+				$('#CalendarModal #myDatepickerInputStart').val(moment(start).format('DD/MM/YYYY'));
+				$('#CalendarModal #myTimepickerInputStart').val(moment(start).format('HH:mm'));
+				$('#CalendarModal #myTimepickerInputEnd').val(moment(end).format('HH:mm'));
+				$('#CalendarModal #title').val('');
+				$('#CalendarModal #description').val('');
+				$('#CalendarModal').modal('show');
+			},
+			eventRender: function(event, element) {
+				element.bind('dblclick', function() {
+					// Cambiamos el formato de DateTime
+					var start = new Date(event.start);
+					var startDate_utc = new Date(
+						start.getUTCFullYear(), 
+						start.getUTCMonth(), 
+						start.getUTCDate(),  
+						start.getUTCHours(), 
+						start.getUTCMinutes(), 
+						start.getUTCSeconds()
+						);
+					startDate_utc = moment(startDate_utc).format('DD/MM/YYYY');
+					var startHour_utc = new Date(
+						start.getUTCFullYear(), 
+						start.getUTCMonth(), 
+						start.getUTCDate(),  
+						start.getUTCHours(), 
+						start.getUTCMinutes(), 
+						start.getUTCSeconds()
+						);
+					startHour_utc = moment(startHour_utc).format('HH:mm');					
+					var end = new Date(event.end);
+					var endHour_utc = new Date(
+						end.getUTCFullYear(), 
+						end.getUTCMonth(), 
+						end.getUTCDate(),  
+						end.getUTCHours(), 
+						end.getUTCMinutes(), 
+						end.getUTCSeconds()
+						);
+					endHour_utc = moment(endHour_utc).format('HH:mm');
+					$('#removeEvent #tracing_googleCalendarEvent').val(event.id);
+					$('#CalendarModal #tracing_googleCalendarEvent').val(event.id);
+					$('#CalendarModal #removeEvent').val(event.id);
+					$('#CalendarModal #title').val(event.title);
+					$('#CalendarModal #description').val(event.description);
+					$('#CalendarModal #myDatepickerInputStart').val(startDate_utc);
+					$('#CalendarModal #myTimepickerInputStart').val(startHour_utc);
+					$('#CalendarModal #myTimepickerInputEnd').val(endHour_utc);
+					$('#CalendarModal #medicalHistoryDataComplete').val(event.medicalHistoryDataComplete);
+					$('#CalendarModal #idTracing').val(event.idTracing);
+					$('#CalendarModal #urlMedicalHistory').attr('href', '/'+event.clinicaNameUrl+'/medicalhistory/'+event.medicalHistoryNumber);
+					$('#CalendarModal #clinicaNameUrl').val(event.clinicaNameUrl);
+					$('#CalendarModal #medicalHistoryNumber').val(event.medicalHistoryNumber);	
+				//	$('#CalendarModal #color').val(event.color);
+					$('#CalendarModal').modal('show');
+				});
+			},
+			eventDrop: function(event, delta, revertFunc) { // si changement de position
+				edit(event);
+			},
+			eventResize: function(event,dayDelta,minuteDelta,revertFunc) { // si changement de longueur
+				edit(event);
+			},
+			events:[
+				{% for items in eventsGoogleCalendar.items %}
+					{
+						id: '{{items.id}}',
+						title:'{{items.summary}}',
+						description:'{{items.description}}',
+						start:'{{items.start.dateTime | date("Y-m-d")}}T{{items.start.dateTime | date("H:i:s","Europe/Paris")}}',
+						end:'{{items.end.dateTime | date("Y-m-d")}}T{{items.end.dateTime | date("H:i:s","Europe/Paris")}}',
+						idTracing:'{% if eventsDataBase[items.id] is defined %} {{eventsDataBase[items.id].id}} {% endif %}',
+						medicalHistoryDataComplete:'{% if eventsDataBase[items.id] is defined %}{{eventsDataBase[items.id].medicalHistory.MedicalHistoryDataComplete}}{% endif %}',
+						clinicaNameUrl:'{% if eventsDataBase[items.id] is defined %}{{eventsDataBase[items.id].medicalHistory.clinic.nameUrl}}{% endif %}',
+						medicalHistoryNumber:'{% if eventsDataBase[items.id] is defined %}{{eventsDataBase[items.id].medicalHistory.medicalHistoryNumber}}{% endif %}'
+					},			
+				{% endfor %}
+			]
+		});
+		function edit(event){
+			DateStart = event.start.format('DD-MM-YYYY');
+			TimeStart = event.start.format('HH:mm:ss');
+			if(event.end){
+				TimeEnd = event.end.format('HH:mm:ss');
+			}else{
+				TimeEnd = TimeStart;
+			}
+			id =  event.id;
+			var Event = [];
+			Event[0] = id;
+			Event[1] = DateStart;
+			Event[2] = TimeStart;
+			Event[3] = TimeEnd;
+			Event[4] = event.clinicaNameUrl;
+			$.ajax({
+			 url: '/schedule_event_edit',
+			 type: "POST",
+			 data: {Event:Event},
+			 success: function(response) {
+				var status = document.getElementById('status');
+						status.innerHTML = 	response;
+						window.setTimeout(function() {
+							$(".alert").fadeTo(500, 0).slideUp(500, function(){
+								$(this).remove();
+							});
+						}, 3000);
+				}
+			});
+		}
+	</script>
+
+ {% endblock %}		
+ {% block extra %}
+ 	{#}
+	<!-- calendar modal Edit PRUEBA MAL-->	
+		<!--<div id="CalenderModalEdit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+						<h4 class="modal-title" id="myModalLabel2">Editar</h4>
+					</div>
+					<div class="modal-body">
+						<div id="testmodal2" style="padding: 5px 20px;">
+							<form id="antoform2" class="form-horizontal calender" role="form">
+								<div class="form-group">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Paciente</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" id="editPatient" name="title" value="">
+										</div>
+									</div>
+									<label class="col-sm-2 control-label">Cita</label>
+									<div class='col-sm-5'>
+										<div class='input-group date' id='myDatepickerStart'>
+											<input id="myDatepickerInputStart" type='text' class="form-control" value=""/>
+											<span class="input-group-addon">
+												<span class="glyphicon glyphicon-calendar"></span>
+											</span>
+										</div>
+									</div>
+									<div class='col-sm-5'>
+										<div class='input-group date' id='myDatepickerEnd'>
+											<input id="myDatepickerInputEnd" type='text' class="form-control" value=""/>
+											<span class="input-group-addon">
+												<span class="glyphicon glyphicon-calendar"></span>
+											</span>
+										</div>
+									</div>
+								</div>										
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Título</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="editTitle" name="title" value="">
+									</div>
+								</div>
+	    						<div class="form-group">
+									<label class="col-sm-2 control-label">Descripción</label>
+									<div class="col-sm-10">
+										<textarea class="form-control" style="height:55px;" id="editDescription" name="description" value=""></textarea>
+									</div>
+								</div>
+								<!-- google calendar id event hidden -->
+									<input id="editId" type="hidden" class="form-control" name="id" value="">
+								<!-- /google calendar id event hidden -->
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default antoclose2" data-dismiss="modal">Cerrar</button>
+									<button type="button" class="btn btn-primary antosubmit2">Guardar Cambios</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="fc_create" data-toggle="modal" data-target="#CalenderModalNew"></div>
+		<div id="fc_edit" data-toggle="modal" data-target="#CalenderModalEdit"></div>
+	<!-- /calendar modal Edit PRUEBA MAL -->#}
+ {% endblock %}

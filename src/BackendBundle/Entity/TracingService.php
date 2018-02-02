@@ -37,6 +37,9 @@ class TracingService {
 	private $tracing;
 	public function setTracing(\BackendBundle\Entity\Tracing $tracing = null) { $this->tracing = $tracing; return $this; }
 	public function getTracing() { return $this->tracing; }
+	private $invoice;
+	public function setInvoice(\BackendBundle\Entity\Invoice $invoice = null) { $this->invoice = $invoice; return $this; }
+	public function getInvoice() { return $this->invoice; }
 	private $service;
 	public function setService(\BackendBundle\Entity\Service $service = null) { $this->service = $service; return $this; }
     public function getService() { return $this->service; }
@@ -47,4 +50,3 @@ class TracingService {
     public function setUserModifier(\BackendBundle\Entity\User $userModifier = null) { $this->userModifier = $userModifier; return $this; }
     public function getUserModifier() { return $this->userModifier; }
 }
-

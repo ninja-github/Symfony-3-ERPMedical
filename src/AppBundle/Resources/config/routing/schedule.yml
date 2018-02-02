@@ -1,7 +1,13 @@
 # ROUTING PARA EL SCHEDULE
 schedule_home:
-    path: /schedule
+    path: /{clinicNameUrl}/{userName}/schedule
     defaults: { _controller: AppBundle:Schedule:home }
 schedule_config:
-    path: /schedule_config
-    defaults: { _controller: AppBundle:Schedule:config }    
+    path: /schedule_config/{userId}
+    defaults: { _controller: AppBundle:Schedule:config, userId: null }
+schedule_event_edit:
+    path: /schedule_event_edit
+    defaults: { _controller: AppBundle:Schedule:editTimeEventAjax }
+schedule_event_remove:
+    path: /{clinicNameUrl}/{userName}/schedule/remove
+    defaults: { _controller: AppBundle:Schedule:removeEvent }

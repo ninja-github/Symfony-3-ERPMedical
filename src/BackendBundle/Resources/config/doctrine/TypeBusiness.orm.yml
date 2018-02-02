@@ -1,0 +1,33 @@
+BackendBundle\Entity\TypeBusiness:
+    type: entity
+    table: type_business
+    uniqueConstraints:
+        type:
+            columns:
+                - type
+        translate:
+            columns:
+                - translate
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        type:
+            type: string
+            nullable: false
+            length: 60
+            options:
+                fixed: false
+        translate:
+            type: string
+            nullable: false
+            length: 60
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

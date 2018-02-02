@@ -9,19 +9,19 @@
 	use Symfony\Component\HttpFoundation\Response;			// Permite usar el método Response, usado en AJAX
 	use Symfony\Component\HttpFoundation\Session\Session;	// Permite usar sesiones, usado en FLASHBAG
 	use Symfony\Component\Validator\Constraints\DateTime;
-/* Añadimos la LIBRERIA Html2Pdf ************************************************************************/
+/* Añadimos la LIBRERIA Html2Pdf ******************************************************************************/
 	use Spipu\Html2Pdf\Html2Pdf;    // Objeto Base de Html2Pdf
 /* Añadimos las ENTIDADES que usaremos ************************************************************************/	
 	use BackendBundle\Entity\MedicalHistory;		// Da acceso a la Entidad Historia Médica
 	use BackendBundle\Entity\MedicalHistoryDoc;		// Da acceso a la Entidad Historia Médica Doc
-	use BackendBundle\Entity\Tracing;		// Da acceso a la Entidad Historia Médica
+	use BackendBundle\Entity\Tracing;				// Da acceso a la Entidad Tracing
 	use BackendBundle\Entity\Clinic;				// Da acceso a la Entidad Clinica
 	use BackendBundle\Entity\ClinicUser;			// Da acceso a la Entidad ClinicaUser
 	use BackendBundle\Entity\AddressCity;			// Da acceso a la Entidad AddressCity
 /* Añadimos los FORMULARIOS que usaremos **********************************************************************/
-	use AppBundle\Form\MedicalHistoryType;			// Da acceso al Formulario MedicalHistoryPatientType
-	use AppBundle\Form\MedicalHistoryDocType;		// Da acceso al Formulario MedicalHistoryPatientType
-	use AppBundle\Form\TracingType;		// Da acceso al Formulario MedicalHistoryPatientType
+	use AppBundle\Form\MedicalHistoryType;			// Da acceso al Formulario MedicalHistoryType
+	use AppBundle\Form\MedicalHistoryDocType;		// Da acceso al Formulario MedicalHistoryDocType
+	use AppBundle\Form\TracingType;					// Da acceso al Formulario TracingType
 /**************************************************************************************************************/
 class MedicalHistoryController extends Controller{
 /* OBJETO SESSIÓN - Para activar las sesiones inicializamos la variable e incluimos en ella el objeto Session()
@@ -30,45 +30,42 @@ class MedicalHistoryController extends Controller{
 	public function __construct(){ $this->session = new Session(); }
 /**************************************************************************************************************/
 /* MÉTODO PARA LISTAR USUARIOS ********************************************************************************/
-	public function medicalHistoriesListAction(Request $request, $clinicNameUrl = null, $searchMedicalHistory = null){
+	public function medicalHistoryListAction(Request $request, $clinicNameUrl = null, $searchMedicalHistory = null){
 		/* si existe el objeto User nos rediriges a home            */
 		if( !is_object($this->getUser()) ){ return $this->redirect('home'); }
 		/******************************************************************************************************/
 		/* CARGA INICIAL **************************************************************************************/
 			$em = $this->getDoctrine()->getManager();
-			$userlogged = $this->getUser();	// extraemos el usuario de la sessión
+			$userLogged = $this->getUser();	// extraemos el usuario de la sessión
 		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
-			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userlogged, $request);
+			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userLogged, $request);
 		/******************************************************************************************************/
 		/* EXTRAE PERMISOS DEL USUARIO  ***********************************************************************/
-			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userlogged);
+			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userLogged);
 		/******************************************************************************************************/
 		/* PERMISO ACCESO *************************************************************************************/
+			$permissionDenied = false;			
 			$clinicView= $em->getRepository("BackendBundle:Clinic")->findOneByNameUrl($clinicNameUrl);
-			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userlogged));
-			if($clinicUserCorrect == NULL && $permissionLoggedUser->getClinicViewOther() == false ){return $this->redirectToRoute('homepage');}
+			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userLogged));
+			if( $clinicUserCorrect == NULL && $permissionLoggedUser->getClinicViewOther() == false ){
+				$status = ['type'=>'danger','description'=>'No tiene permisos suficientes para visualizar un listado de Historias Médicas ajenas a su Clínica.'];
+				// generamos los mensajes FLASH (necesario activar las sesiones)
+				$this->session->getFlashBag()->add("status", $status);				
+				$permissionDenied = true;
+			}
+			if( $permissionLoggedUser->getMedicalHistoryList() == false ){
+				$status = ['type'=>'danger','description'=>'No tiene permisos suficientes para visualizar un listado de Historias Médicas.'];
+				// generamos los mensajes FLASH (necesario activar las sesiones)
+				$this->session->getFlashBag()->add("status", $status);				
+				$permissionDenied = true;
+			}
+			if ($permissionDenied){ return $this->redirectToRoute('homepage'); }
 		/******************************************************************************************************/
-		/* CARGO LOS REPOSITORIOS  ****************************************************************************/
-			$medicalHistory_repo = $em->getRepository("BackendBundle:MedicalHistory");
-			$clinic_repo = $em->getRepository("BackendBundle:Clinic");
-		/******************************************************************************************************/
-		/* REALIZO LAS CONSULTAS NECESARIAS A LA BD MEDIANTE LOS REPOSITORIOS *********************************/
-			$medicalHistories = $medicalHistory_repo->findByClinic($clinic_repo->findOneByNameUrl($clinicNameUrl));
-		/******************************************************************************************************/		
-		/* PAGINADOR DE HISTORIAS  ****************************************************************************/
-			// No se usará ahora mismo, más tarde quizás
-			$paginator = $this->get('knp_paginator');
-			$pagination = $paginator->paginate(
-											$medicalHistories,
-											$request->query->getInt('page',1),
-											10);
-		/******************************************************************************************************/ 
 		/* CARGAMOS LA VISTA CON SUS VARIABLES ****************************************************************/  
 			return $this->render('AppBundle:MedicalHistory:medicalHistory_List.html.twig',
 				array(
 					'permissionLoggedUser'=>$permissionLoggedUser,
-					'medicalHistoriesPagination'=>$pagination,
-					'medicalHistories'=>$medicalHistories
+					'clinicView'=>$clinicView
 				)
 			);
 		/******************************************************************************************************/ 		
@@ -78,17 +75,30 @@ class MedicalHistoryController extends Controller{
 	public function medicalHistoryViewAction(Request $request, $clinicNameUrl = null, $medicalHistoryNumber = null){
 		/* CARGA INICIAL **************************************************************************************/
 			$em = $this->getDoctrine()->getManager();
-			$userlogged = $this->getUser();	// extraemos el usuario de la sessión
+			$userLogged = $this->getUser();	// extraemos el usuario de la sessión
 		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
-			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userlogged, $request);
+			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userLogged, $request);
 		/******************************************************************************************************/
 		/* EXTRAE PERMISOS DEL USUARIO  ***********************************************************************/
-			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userlogged);
+			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userLogged);
 		/******************************************************************************************************/
 		/* PERMISO ACCESO *************************************************************************************/
+			$permissionDenied = false;			
 			$clinicView= $em->getRepository("BackendBundle:Clinic")->findOneByNameUrl($clinicNameUrl);
-			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userlogged));
-			if( $clinicUserCorrect ==NULL && $permissionLoggedUser->getClinicViewOther() == false ){return $this->redirectToRoute('homepage');}
+			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userLogged));
+			if( $clinicUserCorrect == NULL && $permissionLoggedUser->getClinicViewOther() == false ){
+				$status = ['type'=>'danger','description'=>'No tiene permisos suficientes para VISUALIZAR una Historia Médica ajena a su Clínica.'];
+				// generamos los mensajes FLASH (necesario activar las sesiones)
+				$this->session->getFlashBag()->add("status", $status);				
+				$permissionDenied = true;
+			}
+			if( $permissionLoggedUser->getMedicalHistoryView() == false ){
+				$status = ['type'=>'danger','description'=>'No tiene permisos suficientes para VISUALIZAR una Historia Médica.'];
+				// generamos los mensajes FLASH (necesario activar las sesiones)
+				$this->session->getFlashBag()->add("status", $status);				
+				$permissionDenied = true;
+			}
+			if ($permissionDenied){ return $this->redirectToRoute('homepage'); }			
 		/******************************************************************************************************/
 		/* CARGO LOS REPOSITORIOS  ****************************************************************************/
 			$medicalHistory_repo = $em->getRepository("BackendBundle:MedicalHistory");
@@ -107,19 +117,19 @@ class MedicalHistoryController extends Controller{
 			$medicalHistory = $medicalHistory_repo->findOneBy(
 				array(
 					'clinic'=>$clinic,
-					'numberMedicalHistory'=>$medicalHistoryNumber));
+					'medicalHistoryNumber'=>$medicalHistoryNumber));
 			$medicalHistoryDocList = $medicalHistoryDoc_repo->findByMedicalHistory($medicalHistory);
 			/* $medicalHistoryData -> Devuelve el número mínimo, máximo y número total */
 			$medicalHistoryData = array(
-				'min'=>$medicalHistory_repo->findOneBy(['clinic'=>$clinic],['numberMedicalHistory'=>'ASC'])->getNumberMedicalHistory(),
-				'max'=>$medicalHistory_repo->findOneBy(['clinic'=>$clinic],['numberMedicalHistory'=>'DESC'])->getNumberMedicalHistory()
+				'min'=>$medicalHistory_repo->findOneBy(['clinic'=>$clinic],['medicalHistoryNumber'=>'ASC'])->getMedicalHistoryNumber(),
+				'max'=>$medicalHistory_repo->findOneBy(['clinic'=>$clinic],['medicalHistoryNumber'=>'DESC'])->getMedicalHistoryNumber()
 			);
 			// Extraemos $tracingMedicalHistoryList para ordenarlos por Fecha
 			$tracingMedicalHistoryList = $tracing_repo->findBy(['medicalHistory'=>$medicalHistory],['date'=>'DESC']);
 		/******************************************************************************************************/		
 		/* FORMULARO NUEVO SEGUIMIENTO ************************************************************************/
 			$tracingNew = new Tracing();
-			$attr = array('clinicNameUrl'=>$clinicNameUrl, 'medicalHistoryNumber'=>$medicalHistoryNumber, 'idTracing'=>NULL);
+			$attr = array('clinicNameUrl'=>$clinicNameUrl, 'medicalHistoryNumber'=>$medicalHistoryNumber, 'idTracing'=>NULL, 'userName'=> NULL);
 			$form_medicalHistoryTracing = $this->createForm(TracingType::class, $tracingNew,
 				array(
 					'allow_extra_fields'=> $permissionLoggedUser,
@@ -138,7 +148,7 @@ class MedicalHistoryController extends Controller{
 								$tracingNew->setDate($form_medicalHistoryTracing->get("date")->getData());
 							}
 							$tracingNew->setTracing($form_medicalHistoryTracing->get("tracing")->getData());
-							$tracingNew->setUser($userlogged);
+							$tracingNew->setUser($userLogged);
 							if(!isset($registrationDate) or $registrationDate==null){
 								$TypeTracing = $typeTracing_repo->findOneByType('medical_history');
 							}else{
@@ -146,16 +156,15 @@ class MedicalHistoryController extends Controller{
 							}
 							$tracingNew->setTypeTracing($TypeTracing);
 							$tracingNew->setOrthopodologyHistory( NULL );
-							$medicalHistory = $medicalHistory_repo->getMedicalHistoryObject( $clinicNameUrl, $medicalHistoryNumber );
 							$tracingNew->setMedicalHistory($medicalHistory);
 							// persistimos los datos dentro de Doctirne
 							$em->persist($tracingNew);
 							// guardamos los datos persistidos dentro de la BD
 							$flush = $em->flush();
 							// Si se guardan correctamente los datos en la BD
-							$status = ['type'=>'success','description'=>'Se ha creado un nuevo seguimiento para la Historia Clínica número '.$medicalHistoryNumber];
+							$status = ['type'=>'success','description'=>'Se ha creado un nuevo seguimiento para la Historia Clínica número '.$medicalHistoryNumber];		
 						}else{
-							$status = [	'type'=>'danger','description'=>'No se ha creado un nuevo seguimiento correctamente'];
+							$status = [	'type'=>'danger','description'=>'No se ha creado un nuevo seguimiento correctamente'];							
 						}
 					/*******************************************************************************************/
 				}elseif(array_key_exists('id', $request->request->get('tracing'))) {
@@ -166,19 +175,18 @@ class MedicalHistoryController extends Controller{
 							$tracingEdit = $tracing_repo->findOneById($idTracing);
 							$tracingEdit->setDate($form_medicalHistoryTracing->get("date")->getData());
 							$tracingEdit->setTracing($form_medicalHistoryTracing->get("tracing")->getData());
-							$tracingEdit->setUser($userlogged);
+							$tracingEdit->setUser($userLogged);
 							$tracingEdit->setTypeTracing( $tracingEdit->getTypeTracing() );
 							$tracingEdit->setOrthopodologyHistory( NULL );
-							$medicalHistory = $medicalHistory_repo->getMedicalHistoryObject( $clinicNameUrl, $medicalHistoryNumber );
 							$tracingEdit->setMedicalHistory($medicalHistory);
 							// persistimos los datos dentro de Doctirne
 							$em->persist($tracingEdit);
 							// guardamos los datos persistidos dentro de la BD
 							$flush = $em->flush();
 							// Si se guardan correctamente los datos en la BD
-							$status = ['type'=>'success','description'=>'Se ha editado el seguimiento para la Historia Clínica número '.$medicalHistoryNumber];
+							$status = ['type'=>'success','description'=>'Se ha editado el seguimiento para la Historia Clínica número '.$medicalHistoryNumber];			
 						}else{
-							$status = [	'type'=>'danger','description'=>'No se ha editado el seguimiento correctamente'];
+							$status = [	'type'=>'danger','description'=>'No se ha editado el seguimiento correctamente'];				
 						}
 					/*******************************************************************************************/
 				}
@@ -193,7 +201,7 @@ class MedicalHistoryController extends Controller{
 			$tracingMedicalHistoryListForm = array();
 			if( !empty($tracingMedicalHistoryList) ){
 				foreach($tracingMedicalHistoryList as $tracingMedicalHistoryDate => $tracingEdit){
-					$attr = array('clinicNameUrl'=>$clinicNameUrl, 'medicalHistoryNumber'=>$medicalHistoryNumber, 'idTracing'=>"NO NULL");
+					$attr = array('clinicNameUrl'=>$clinicNameUrl, 'medicalHistoryNumber'=>$medicalHistoryNumber, 'idTracing'=>"NO NULL", 'userName'=> NULL);
 					$form_medicalHistoryTracingEdit = $this->createForm(TracingType::class,
 						$tracingEdit,
 						array(
@@ -279,39 +287,46 @@ class MedicalHistoryController extends Controller{
 	public function medicalHistoryCreateAction(Request $request, $clinicNameUrl = null){
 		/* CARGA INICIAL **************************************************************************************/
 			$em = $this->getDoctrine()->getManager();
-			$userlogged = $this->getUser();	// extraemos el usuario de la sessión
+			$userLogged = $this->getUser();	// extraemos el usuario de la sessión
 		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
-			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userlogged, $request);
+			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userLogged, $request);
 		/* EXTRAE PERMISOS DEL USUARIO  ***********************************************************************/
-			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userlogged);
+			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userLogged);
 		/******************************************************************************************************/
 		/* PERMISO ACCESO *************************************************************************************/
+			$permissionDenied = false;			
 			$clinicView= $em->getRepository("BackendBundle:Clinic")->findOneByNameUrl($clinicNameUrl);
-			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userlogged));
-			if( ( $clinicUserCorrect ==NULL && $permissionLoggedUser->getClinicViewOther() == false )
-				or  $permissionLoggedUser->getMedicalHistoryCreate() == false){return $this->redirectToRoute('homepage');}
+			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userLogged));
+			if( $clinicUserCorrect == NULL && $permissionLoggedUser->getClinicViewOther() == false ){
+				$status = ['type'=>'danger','description'=>'No tiene permisos suficientes para CREAR Historias Médicas ajenas a su Clínica.'];
+				// generamos los mensajes FLASH (necesario activar las sesiones)
+				$this->session->getFlashBag()->add("status", $status);				
+				$permissionDenied = true;
+			}
+			if( $permissionLoggedUser->getMedicalHistoryCreate() == false ){
+				$status = ['type'=>'danger','description'=>'No tiene permisos suficientes para CREAR Historias Médicas.'];
+				// generamos los mensajes FLASH (necesario activar las sesiones)
+				$this->session->getFlashBag()->add("status", $status);				
+				$permissionDenied = true;
+			}			
+			if ($permissionDenied){ return $this->redirectToRoute('homepage'); }				
 		/******************************************************************************************************/
 		/* CARGO LOS REPOSITORIOS  ****************************************************************************/
-			// Búsquedas en la entidad Clinic
 			$clinic_repo = $em->getRepository("BackendBundle:Clinic");
+			$medicalHistory_repo = $em->getRepository("BackendBundle:MedicalHistory");			
 		/******************************************************************************************************/
 		/* REALIZO LAS CONSULTAS NECESARIAS A LA BD MEDIANTE LOS REPOSITORIOS *********************************/
-			$clinic = $clinic_repo->findOneByNameUrl($clinicNameUrl);
-			$idClinic = $clinic_repo->findOneByNameUrl($clinicNameUrl)->getId();
-			// Búsquedas en la entidad medicalHistory
-			$medicalHistory_repo = $em->getRepository("BackendBundle:MedicalHistory");
 			$MedicalHistoryClinicalData = $medicalHistory_repo->getMedicalHistoryClinicalDataQuery($clinicNameUrl);
 			if($MedicalHistoryClinicalData['max']==0){
 				$medicalHistoryNumber = 101;
 			}else{
 				$medicalHistoryNumber = $MedicalHistoryClinicalData['max']+1;
 			}
-			// $maxNumberMedicalHistory = count ( $medicalHistory_repo->findOnBy( array('idClinic'=>$idClinic) ) );
 		/******************************************************************************************************/
 		/* FORMULARO NUEVA HISTORIA ***************************************************************************/
 			// Creamos el Objeto MedicalHistory con la información
 			$medicalHistory = new MedicalHistory();
-			$attr = array('clinicNameUrl'=>$clinicNameUrl);
+			$attr = array('clinicNameUrl'=>$clinicNameUrl, 'userLoggedId'=>$userLogged->getId());
 			// Creamos el formulario, junto a sus atributos necesarios
 			$form = $this->createForm(MedicalHistoryType::class,
 				$medicalHistory,
@@ -333,6 +348,11 @@ class MedicalHistoryController extends Controller{
 				}else{
 					$addresCity_repo = $em->getRepository('BackendBundle:AddressCity');
 					$addressCity = $addresCity_repo->findOneById( $addresCity_repo->idCityExtractAllInformation($addressCityRequest) );
+					if($addressCity == NULL){
+						$status = ['type'=>'danger','description'=>'No se ha encontrado la ciudad'];
+						// generamos los mensajes FLASH (necesario activar las sesiones)
+						$this->session->getFlashBag()->add("status", $status);
+					}
 					$requestOld = $request->request->all();
 					$requestOld['medical_history']['city'] = $addressCity;
 				}
@@ -358,7 +378,7 @@ class MedicalHistoryController extends Controller{
 				if($form->isValid()){			
 					$em = $this->getDoctrine()->getManager();
 					// Hacemos la consulta
-					$medicalHistory->setNumberMedicalHistory($medicalHistoryNumber);
+					$medicalHistory->setMedicalHistoryNumber($medicalHistoryNumber);
 					$medicalHistory->setName($form->get("name")->getData());
 					$medicalHistory->setSurname($form->get("surname")->getData());
 					$medicalHistory->setNickName($form->get("nickname")->getData());
@@ -378,7 +398,7 @@ class MedicalHistoryController extends Controller{
 					$medicalHistory->setSupplementaryTest($form->get("supplementaryTest")->getData());
 					$medicalHistory->setDiagnostic($form->get("diagnostic")->getData());
 					/* Introducimos el Objeto Clinic a partir de la Url */
-					$medicalHistory->setClinic($clinic);
+					$medicalHistory->setClinic($clinicView);
 					$medicalHistory->setCity($form->get("city")->getData());
 					/* **********************************************************************************************/
 					if( $form->has('registrationDate') && $form->get("registrationDate")->getData() != NULL ){
@@ -390,7 +410,7 @@ class MedicalHistoryController extends Controller{
 					if( $form->has('userRegisterer') && $form->get("userRegisterer")->getData() != NULL ){
 						$medicalHistory->setUserRegisterer( $form->get("userRegisterer")->getData() );
 					}else{
-						$medicalHistory->setUserRegisterer( $userlogged );
+						$medicalHistory->setUserRegisterer( $userLogged );
 					}
 					/**********************************************************************************************/
 					if( $form->has('modificationDate') && $form->get("modificationDate")->getData() != NULL ){
@@ -402,7 +422,7 @@ class MedicalHistoryController extends Controller{
 					if( $form->has('userModifier') && $form->get("userModifier")->getData() != NULL){
 						$medicalHistory->setUserModifier( $form->get("userModifier")->getData() );
 					}else{
-						$medicalHistory->setUserModifier( $userlogged );
+						$medicalHistory->setUserModifier( $userLogged );
 					}
 					/**********************************************************************************************/
 					// persistimos los datos dentro de Doctirne
@@ -411,11 +431,14 @@ class MedicalHistoryController extends Controller{
 					$flush = $em->flush();
 					// Si se guardan correctamente los datos en la BD
 					$status = ['type'=>'success','description'=>'Se ha creado una nueva Historia Clínica'];
+					// generamos los mensajes FLASH (necesario activar las sesiones)
+					$this->session->getFlashBag()->add("status", $status);
 				}else{
-					$status = [	'type'=>'danger','description'=>'No se ha creado la nueva Historia Clínica correctamente'];
+					$status = ['type'=>'danger','description'=>'No se ha creado la nueva Historia Clínica correctamente'];
+					// generamos los mensajes FLASH (necesario activar las sesiones)
+					$this->session->getFlashBag()->add("status", $status);
 				}
-				// generamos los mensajes FLASH (necesario activar las sesiones)
-				$this->session->getFlashBag()->add("status", $status);
+				
 				return $this->redirectToRoute('medical_history_view',
 					array('clinicNameUrl'=>$clinicNameUrl, 'medicalHistoryNumber'=>$medicalHistoryNumber ));
 			}
@@ -433,15 +456,15 @@ class MedicalHistoryController extends Controller{
 	public function medicalHistoryEditAction(Request $request, $clinicNameUrl = null, $medicalHistoryNumber = null){
 		/* CARGA INICIAL **************************************************************************************/
 			$em = $this->getDoctrine()->getManager();
-			$userlogged = $this->getUser();	// extraemos el usuario de la sessión
+			$userLogged = $this->getUser();	// extraemos el usuario de la sessión
 		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
-			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userlogged, $request);
+			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userLogged, $request);
 		/* EXTRAE PERMISOS DEL USUARIO  ***********************************************************************/
-			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userlogged);
+			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userLogged);
 		/******************************************************************************************************/
 		/* PERMISO ACCESO *************************************************************************************/
 			$clinicView= $em->getRepository("BackendBundle:Clinic")->findOneByNameUrl($clinicNameUrl);
-			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userlogged));
+			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userLogged));
 			if( ( $clinicUserCorrect ==NULL && $permissionLoggedUser->getClinicViewOther() == false )
 				or  $permissionLoggedUser->getMedicalHistoryEdit() == false){return $this->redirectToRoute('homepage');}
 		/******************************************************************************************************/
@@ -452,13 +475,13 @@ class MedicalHistoryController extends Controller{
 			$medicalHistory = $medicalHistory_repo->findOneBy(
 				array(
 					'clinic'=> $em->getRepository("BackendBundle:Clinic")->findOneByNameUrl($clinicNameUrl),
-					'numberMedicalHistory'=>$medicalHistoryNumber
+					'medicalHistoryNumber'=>$medicalHistoryNumber
 				)
 			);
 			$medicalHistoryData = $medicalHistory_repo->getMedicalHistoryClinicalDataQuery( $clinicNameUrl );
 		/******************************************************************************************************/
 		/* FORMULARO EDITAR HISTORIA **************************************************************************/
-			$attr = array('clinicNameUrl'=>$clinicNameUrl);
+			$attr = array('clinicNameUrl'=>$clinicNameUrl, 'userLoggedId'=>$userLogged->getId());
 			// Creamos el formulario
 			$form = $this->createForm(MedicalHistoryType::class,
 				$medicalHistory,
@@ -580,15 +603,15 @@ class MedicalHistoryController extends Controller{
 	public function medicalHistoryPdfAction(Request $request, $clinicNameUrl = null, $medicalHistoryNumber = null){
 		/* CARGA INICIAL **************************************************************************************/
 			$em = $this->getDoctrine()->getManager();
-			$userlogged = $this->getUser();	// extraemos el usuario de la sessión
+			$userLogged = $this->getUser();	// extraemos el usuario de la sessión
 		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
-			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userlogged, $request);
+			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userLogged, $request);
 		/* EXTRAE PERMISOS DEL USUARIO  ***********************************************************************/
-			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userlogged);
+			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userLogged);
 		/******************************************************************************************************/
 		/* PERMISO ACCESO *************************************************************************************/
 			$clinicView= $em->getRepository("BackendBundle:Clinic")->findOneByNameUrl($clinicNameUrl);
-			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userlogged));
+			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userLogged));
 			if( ( $clinicUserCorrect ==NULL && $permissionLoggedUser->getClinicViewOther() == false )
 				or  $permissionLoggedUser->getMedicalHistoryEdit() == false){return $this->redirectToRoute('homepage');}
 		/******************************************************************************************************/
@@ -600,7 +623,7 @@ class MedicalHistoryController extends Controller{
 			$medicalHistory = $medicalHistory_repo->findOneBy(
 				array(
 					'clinic'=> $em->getRepository("BackendBundle:Clinic")->findOneByNameUrl($clinicNameUrl),
-					'numberMedicalHistory'=>$medicalHistoryNumber
+					'medicalHistoryNumber'=>$medicalHistoryNumber
 				)
 			);
 			$tracingMedicalHistoryList = $tracing_repo->findBy(['medicalHistory'=>$medicalHistory],['date'=>'DESC']);
@@ -642,7 +665,7 @@ class MedicalHistoryController extends Controller{
 		);
 		$html2pdf = new Html2Pdf('P','A4','es','true','UTF-8');
 		$html2pdf->writeHTML($html);
-//		$pdf->writeHTML("<h1>HolaMundo</h1>");
+	//	$pdf->writeHTML("<h1>HolaMundo</h1>");
 		$html2pdf->Output('PdfGeneradoPHP.pdf');
 		return new Response(
 				$html2pdf->getOutPutFromHtml($html),
@@ -680,5 +703,28 @@ class MedicalHistoryController extends Controller{
     // Devolvemos la vista con la información generado por el paginador
     return $this->render('AppBundle:User:users.html.twig', array('pagination'=>$pagination));
   }
+/**************************************************************************************************************/
+/* MÉTODO AJAX BUSCAR HISTORIA MÉDICA *************************************************************************/
+	public function searchMedicalHistoryAction(Request $request) {
+		$session = $request->getSession();
+		$clinicNameUrl = "podologia_priego";
+		//$clinicNameUrl = $session->get('clinicUserLogged')['nameUrl'];
+		$em = $this->getDoctrine()->getManager();
+		/* CARGO LOS REPOSITORIOS  ****************************************************************************/
+			$medicalHistory_repo = $em->getRepository("BackendBundle:MedicalHistory");
+			$clinic_repo = $em->getRepository("BackendBundle:Clinic");		
+		/******************************************************************************************************/
+		/* REALIZO LAS CONSULTAS NECESARIAS A LA BD MEDIANTE LOS REPOSITORIOS *********************************/
+			// Realizamos las consultas // funciones Repositorio usadas, ver 'src\BackendBundle\Repository'
+			$clinic = $clinic_repo->findOneByNameUrl($clinicNameUrl);
+			$medicalHistoryList = $medicalHistory_repo->findBy(['clinic'=>$clinic]);
+		/******************************************************************************************************/
+		$result = array();
+		foreach ($medicalHistoryList as $key => $value) {
+				$medicalHistory = $medicalHistoryList[$key];
+				$result[$key] = $medicalHistory->getMedicalHistoryDataComplete().' - '.$medicalHistory->getPhoneMobile().' - '.$medicalHistory->getPhoneHome();
+		}	
+		return new Response(json_encode($result)); // codificamos la respuesta en JSON
+	}
 /**************************************************************************************************************/
 }

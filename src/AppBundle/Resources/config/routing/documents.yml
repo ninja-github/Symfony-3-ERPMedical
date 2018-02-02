@@ -7,4 +7,4 @@ medical_history_doc_remove:
 # ROUTING PARA LISTAR LAS HISTORIAS CLÍNICAS
 orthopodology_history_doc_remove:
     path: /{clinicNameUrl}/medicalhistory/{medicalHistoryNumber}/orthopodologyhistory/{registrationDate}/removedoc/{idDoc}
-    defaults: { _controller: AppBundle:MedicalHistoryDoc:orthopodologyHistoryDocRemove }
+    defaults: { _controller: AppBundle:OrthopodologyHistoryDoc:orthopodologyHistoryDocRemove }

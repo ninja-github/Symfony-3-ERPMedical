@@ -4,10 +4,10 @@ $(function () {
 			format:'DD/MM/YYYY',
 			locale:'es',
 			icons: {
-				time: "fa fa-clock-o",
+//				time: "fa fa-clock-o",
 				date: "fa fa-calendar",
-				up: "fa fa-arrow-up",
-				down: "fa fa-arrow-down"
+//				up: "fa fa-arrow-up",
+//				down: "fa fa-arrow-down"
 			}
 		}).find('input:first').on("blur",function () {
 			// check if the date is correct. We can accept dd-mm-yyyy and yyyy-mm-dd.

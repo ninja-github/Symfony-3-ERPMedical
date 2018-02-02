@@ -16,6 +16,7 @@
 {# ............................INCLUIMOS EL JAVASCRIPT QUE VERIFICA SI EL NICK EXISTE #}
 {% block content %}
 <!-- page content -->
+	{% set medicalHistoryList = clinicView.medicalHistoryList %}
 	<div class="right_col" role="main">
 		<div class="clearfix"></div>
 		<div class="row">
@@ -40,18 +41,19 @@
 								</tr>
 							</thead>
 							<tbody>
-								{% for medicalHistory in medicalHistories %}
+
+								{% for medicalHistory in medicalHistoryList %}
 								{# No se usará la paginación por ahora
 								{% for medicalHistory in medicalHistoriesPagination %}
 								#}
 									<tr {% if medicalHistory.patientRisk != NULL %} class="danger"{% endif %}>
-										<td style="text-align: center;"><a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory} ) }}">{{medicalHistory.numberMedicalHistory}}</a></td>
-										<td><a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory} ) }}">{{medicalHistory.surname| title}}, {{medicalHistory.name| title}}</a></td>
-										<td><a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory} ) }}">{{medicalHistory.dni}}</a></td>
-										<td><a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory} ) }}">{{medicalHistory.phoneMobile}}</a></td>
-										<td><a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory} ) }}">{{medicalHistory.phoneHome}}</a></td>
+										<td style="text-align: center;"><a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}">{{medicalHistory.medicalHistoryNumber}}</a></td>
+										<td><a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}">{{medicalHistory.surname| title}}, {{medicalHistory.name| title}}</a></td>
+										<td><a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}">{{medicalHistory.dni}}</a></td>
+										<td><a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}">{{medicalHistory.phoneMobile}}</a></td>
+										<td><a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}">{{medicalHistory.phoneHome}}</a></td>
 										<td style="text-align: center;">
-											<a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.numberMedicalHistory} ) }}">
+											<a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}">
 												{% if medicalHistory.gender == "Hombre" %}
 													<i class="ionicons ion-male"></i>
 												{% elseif medicalHistory.gender == "Mujer" %}

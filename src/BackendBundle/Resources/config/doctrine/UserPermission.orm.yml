@@ -1,15 +1,21 @@
 BackendBundle\Entity\UserPermission:
     type: entity
+    # repository ######################################################     
     repositoryClass: BackendBundle\Repository\UserPermissionRepository
     table: user_permission
+# indexes #############################################################
     indexes:
         user:
             columns:
                 - user
+# /indexes ############################################################ 
+# uniqueConstraints####################################################
     uniqueConstraints:
         user_2:
             columns:
                 - user
+# /uniqueConstraints###################################################               
+# id ##################################################################
     id:
         id:
             type: integer
@@ -19,8 +25,22 @@ BackendBundle\Entity\UserPermission:
             id: true
             generator:
                 strategy: IDENTITY
+# /id #################################################################
+# fields ##############################################################                
     fields:
-# USER ###########################################################
+    # USER ############################################################
+        userList:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: user_list
+        userView:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: user_view
         userCreate:
             type: boolean
             nullable: false
@@ -51,14 +71,26 @@ BackendBundle\Entity\UserPermission:
             options:
                 default: '0'
             column: user_permission
-# /USER ##########################################################
-# CLINIC #########################################################
         clinicViewOther:
             type: boolean
             nullable: false
             options:
                 default: '0'
-            column: clinic_view_other
+            column: clinic_view_other            
+    # /USER ###########################################################
+    # CLINIC ##########################################################
+        clinicList:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: clinic_list
+        clinicView:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: clinic_view
         clinicCreate:
             type: boolean
             nullable: false
@@ -77,8 +109,20 @@ BackendBundle\Entity\UserPermission:
             options:
                 default: '0'
             column: clinic_remove
-# /CLINIC ########################################################
-# MEDICAL HISTORY ################################################
+    # /CLINIC #########################################################
+    # MEDICAL HISTORY #################################################
+        medicalHistoryList:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: medical_history_list
+        medicalHistoryView:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: medical_history_view
         medicalHistoryCreate:
             type: boolean
             nullable: false
@@ -121,8 +165,20 @@ BackendBundle\Entity\UserPermission:
             options:
                 default: '0'
             column: medical_history_user_modifier_edit
-# /MEDICAL HISTORY ###############################################
-# MEDICAL HISTORY DOC ############################################
+    # /MEDICAL HISTORY ################################################
+    # MEDICAL HISTORY DOC #############################################
+        medicalHistoryDocList:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: medical_history_doc_list
+        medicalHistoryDocView:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: medical_history_doc_view
         medicalHistoryDocCreate:
             type: boolean
             nullable: false
@@ -165,8 +221,20 @@ BackendBundle\Entity\UserPermission:
             options:
                 default: '0'
             column: medical_history_doc_user_modifier_edit
-# /MEDICAL HISTORY DOC ###########################################
-# ORTHOPODOLOGY HISTORY ##########################################
+    # /MEDICAL HISTORY DOC ############################################
+    # ORTHOPODOLOGY HISTORY ###########################################
+        orthopodologyHistoryList:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: orthopodology_history_list
+        orthopodologyHistoryView:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: orthopodology_history_view
         orthopodologyHistoryCreate:
             type: boolean
             nullable: false
@@ -209,8 +277,20 @@ BackendBundle\Entity\UserPermission:
             options:
                 default: '0'
             column: orthopodology_history_user_modifier_edit
-# /ORTHOPODOLOGY HISTORY #########################################
-# ORTHOPODOLOGY HISTORY DOC ######################################
+    # /ORTHOPODOLOGY HISTORY ##########################################
+    # ORTHOPODOLOGY HISTORY DOC #######################################
+        orthopodologyHistoryDocList:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: orthopodology_history_doc_list
+        orthopodologyHistoryDocView:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: orthopodology_history_doc_view
         orthopodologyHistoryDocCreate:
             type: boolean
             nullable: false
@@ -253,8 +333,84 @@ BackendBundle\Entity\UserPermission:
             options:
                 default: '0'
             column: orthopodology_history_doc_user_modifier_edit
-# /ORTHOPODOLOGY HISTORY DOC #####################################
-# SERVICE ########################################################
+    # /ORTHOPODOLOGY HISTORY DOC ######################################
+    # REPORT ##########################################################
+        reportList:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: report_list
+        reportView:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: report_view            
+        reportCreate:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: report_create            
+        reportEdit:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: report_edit
+        reportRemove:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: report_remove                        
+    # /REPORT #########################################################
+    # INVOICE #########################################################
+        invoiceList:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: invoice_list
+        invoiceView:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: invoice_view
+        invoiceCreate:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: invoice_create
+        invoiceEdit:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: invoice_edit
+        invoiceRemove:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: invoice_remove
+    # /INVOICE ########################################################
+    # SERVICE #########################################################
+        serviceList:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: service_list
+        serviceView:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: service_view
         serviceCreate:
             type: boolean
             nullable: false
@@ -273,8 +429,52 @@ BackendBundle\Entity\UserPermission:
             options:
                 default: '0'
             column: service_remove
-# /SERVICE #######################################################
-# TRACING ########################################################
+    # /SERVICE ########################################################
+    # SCHEDULE ########################################################
+        scheduleList:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: schedule_list
+        scheduleView:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: schedule_view
+        scheduleCreate:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: schedule_create
+        scheduleEdit:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: schedule_edit
+        scheduleRemove:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: schedule_remove
+    # /SCHEDULE #######################################################
+    # TRACING #########################################################
+        tracingList:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: tracing_list
+        tracingView:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: tracing_view
         tracingCreate:
             type: boolean
             nullable: false
@@ -293,8 +493,20 @@ BackendBundle\Entity\UserPermission:
             options:
                 default: '0'
             column: tracing_remove
-# /TRACING #######################################################
-# TRACING SERVICE ################################################
+    # /TRACING ########################################################
+    # TRACING SERVICE #################################################
+        tracingServiceList:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: tracing_service_list
+        tracingServiceView:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: tracing_service_view
         tracingServiceCreate:
             type: boolean
             nullable: false
@@ -313,8 +525,8 @@ BackendBundle\Entity\UserPermission:
             options:
                 default: '0'
             column: tracing_service_remove
-# /TRACING SERVICE ###############################################
-# ADMIN ##########################################################
+    # /TRACING SERVICE ################################################
+    # ADMIN ###########################################################
         adminSectionAccess:
             type: boolean
             nullable: false
@@ -327,7 +539,9 @@ BackendBundle\Entity\UserPermission:
             options:
                 default: '0'
             column: admin_general_data_access
-# /ADMIN #########################################################
+    # /ADMIN ##########################################################
+# /fields #############################################################
+# manyToOne ########################################################### 
     manyToOne:
         user:
             targetEntity: User
@@ -339,4 +553,7 @@ BackendBundle\Entity\UserPermission:
                 user:
                     referencedColumnName: id
             orphanRemoval: false
+# /manyToOne ##########################################################
+# oneToMany ########################################################### 
+# /oneToMany ##########################################################      
     lifecycleCallbacks: {  }

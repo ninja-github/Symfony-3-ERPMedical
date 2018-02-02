@@ -99,14 +99,14 @@ BackendBundle\Entity\Service:
                 updated_service:
                     referencedColumnName: id
             orphanRemoval: false
-        typeTax:
-            targetEntity: TypeTax
+        typeTaxService:
+            targetEntity: TypeTaxService
             cascade: {  }
             fetch: LAZY
             mappedBy: null
             inversedBy: null
             joinColumns:
-                type_tax:
+                type_tax_service:
                     referencedColumnName: id
             orphanRemoval: false
         userModifier:

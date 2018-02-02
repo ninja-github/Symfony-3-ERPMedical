@@ -162,9 +162,9 @@ class TracingServiceController extends Controller{
 		$tracingService->setTracing($tracing);
 		$tracingService->setService($service);
 		$tracingService->setDescription($valueDescription);
-		if($valuePrice === NULL && $service != NULL){
+		if($valuePrice == "" && $service != NULL){
 			$valuePrice = $service->getMaximumPrice();
-		}elseif($valuePrice === NULL && $service === NULL ){
+		}elseif($valuePrice == NULL && $service == NULL ){
 			$valuePrice = 0;
 		}
 		$tracingService->setPrice($valuePrice);

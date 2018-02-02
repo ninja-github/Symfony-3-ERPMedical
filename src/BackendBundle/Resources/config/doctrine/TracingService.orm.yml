@@ -8,6 +8,9 @@ BackendBundle\Entity\TracingService:
         service:
             columns:
                 - service
+        invoice:
+            columns:
+                - invoice                
         user_registerer:
             columns:
                 - user_registerer
@@ -57,6 +60,16 @@ BackendBundle\Entity\TracingService:
                 tracing:
                     referencedColumnName: id
             orphanRemoval: false
+        invoice:
+            targetEntity: Invoice
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                invoice:
+                    referencedColumnName: id
+            orphanRemoval: false           
         service:
             targetEntity: Service
             cascade: {  }

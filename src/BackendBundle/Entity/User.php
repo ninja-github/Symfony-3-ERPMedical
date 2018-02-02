@@ -19,10 +19,13 @@
 	use Symfony\Component\Security\Core\User\UserInterface;
 /**************************************************************************************************************/
 class User implements UserInterface, \Serializable {
+	private $userDataDoctor;
+	public function getUserDataDoctor() { return $this->userDataDoctor; }
 	private $clinicList;
 	public function getClinicList() { return $this->clinicList; }
 	public function __construct() {
-		$this->clinicList = new ArrayCollection(); 		
+		$this->clinicList = new ArrayCollection(); 	
+		$this->userDataDoctor = new ArrayCollection(); 
 	}
 /* Id de la Tabla *********************************************************************************************/
 	private $id;
@@ -32,6 +35,12 @@ class User implements UserInterface, \Serializable {
 	private $userName;
 	public function setUserName($userName) { $this->userName = $userName; return $this; }
 	public function getUserName() { return $this->userName; }
+/**************************************************************************************************************/
+/* isActive *******************************************************************************************************/
+	private $isActive = '1'; 
+	public function setIsActive($isActive) { $this->isActive = $isActive; return $this; } 
+	public function getIsActive() { return $this->isActive; } 
+/**************************************************************************************************************/
 /* name *******************************************************************************************************/
 	private $name;
 	public function setName($name) { $this->name = $name; return $this; }
@@ -104,5 +113,28 @@ class User implements UserInterface, \Serializable {
 	 */
 	public function __toString(){ return $this->user;  }
 /**************************************************************************************************************/
-}
 
+    /**
+     * Add clinicList
+     *
+     * @param \BackendBundle\Entity\ClinicUser $clinicList
+     *
+     * @return User
+     */
+    public function addClinicList(\BackendBundle\Entity\ClinicUser $clinicList)
+    {
+        $this->clinicList[] = $clinicList;
+
+        return $this;
+    }
+
+    /**
+     * Remove clinicList
+     *
+     * @param \BackendBundle\Entity\ClinicUser $clinicList
+     */
+    public function removeClinicList(\BackendBundle\Entity\ClinicUser $clinicList)
+    {
+        $this->clinicList->removeElement($clinicList);
+    }
+}

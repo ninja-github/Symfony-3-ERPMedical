@@ -9,11 +9,13 @@
  * VER src\BackendBundle\Entity\User.php
  */
 	use Symfony\Component\Validator\Constraints as Assert;
+	use Doctrine\Common\Collections\ArrayCollection;
+	use Doctrine\Common\Collections\Collection;	
 /**************************************************************************************************************/
 class ClinicUser {
 /* Id de la Tabla *********************************************************************************************/
-    private $id;
-    public function getId() { return $this->id; }
+	private $id;
+	public function getId() { return $this->id; }
 /**************************************************************************************************************/
 /* registrationDate *******************************************************************************************/
 	private $registrationDate;
@@ -45,12 +47,11 @@ class ClinicUser {
 	public function setUserModifier(\BackendBundle\Entity\User $userModifier = null) { $this->userModifier = $userModifier; return $this; }
 	public function getUserModifier() { return $this->userModifier; }
 /**************************************************************************************************************/
-    /*
+	/*
      * la función __toString(){ return $this->gender;  } permite
      * listar los campos cuando referenciemos la tabla
      */
- //   public $cityAll = $this->getCp().", ".$this->getCp().", ".$this->getCp();
-    public function __toString(){ return (string)$this->user; }
+	// public $cityAll = $this->getCp().", ".$this->getCp().", ".$this->getCp();
+	public function __toString(){ return (string)$this->user; }
 /**************************************************************************************************************/
 }
-

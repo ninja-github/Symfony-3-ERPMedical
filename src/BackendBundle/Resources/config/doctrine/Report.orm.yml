@@ -1,0 +1,78 @@
+BackendBundle\Entity\Report:
+    type: entity
+    # repository ######################################################     
+    repositoryClass: BackendBundle\Repository\ReportRepository        
+    table: report
+# indexes #############################################################       
+    indexes:
+        user:
+            columns:
+                - user
+        medical_history:
+            columns:
+                - medical_history
+# /indexes ############################################################ 
+# uniqueConstraints#################################################### 
+# /uniqueConstraints###################################################               
+# id ##################################################################                 
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+# /id #################################################################
+# fields ##############################################################                
+    fields:
+        registrationDate:
+            type: datetime
+            nullable: false
+        reasonConsultation:
+            type: text
+            nullable: false
+            length: 65535
+            options:
+                fixed: false
+            column: reason_consultation
+        diagnostic:
+            type: text
+            nullable: false
+            length: 65535
+            options:
+                fixed: false
+        treatment:
+            type: text
+            nullable: false
+            length: 65535
+            options:
+                fixed: false
+# /fields #############################################################
+# manyToOne ###########################################################                 
+    manyToOne:
+        user:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user:
+                    referencedColumnName: id
+            orphanRemoval: false
+        medicalHistory:
+            targetEntity: MedicalHistory
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                medical_history:
+                    referencedColumnName: id
+            orphanRemoval: false
+# /manyToOne ##########################################################
+# oneToMany ###########################################################  
+# /oneToMany ##########################################################             
+    lifecycleCallbacks: {  }

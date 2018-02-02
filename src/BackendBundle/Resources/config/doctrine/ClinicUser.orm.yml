@@ -1,7 +1,9 @@
 BackendBundle\Entity\ClinicUser:
     type: entity
     table: clinic_user
+    # repository ######################################################       
     repositoryClass: BackendBundle\Repository\ClinicUserRepository    
+# indexes #############################################################     
     indexes:
         clinic:
             columns:
@@ -15,6 +17,8 @@ BackendBundle\Entity\ClinicUser:
         user:
             columns:
                 - user
+# /indexes ############################################################ 
+# uniqueConstraints####################################################                 
     id:
         id:
             type: integer

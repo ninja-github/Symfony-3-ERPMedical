@@ -260,4 +260,3 @@ class OrthopodologyHistoryDoc
     public function getTypeDoc() { return $this->typeDoc; }
 /**************************************************************************************************************/    
 }
-

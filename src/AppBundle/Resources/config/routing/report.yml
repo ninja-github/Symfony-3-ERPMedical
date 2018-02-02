@@ -1,0 +1,16 @@
+# ROUTING PARA LISTAR INFORMES
+report_list:
+    path: /{clinicNameUrl}/report
+    defaults: { _controller: AppBundle:Report:reportList }
+# ROUTING PARA CREAR UN NUEVO INFORME
+report_create:
+    path: /{clinicNameUrl}/medicalhistory/{medicalHistoryNumber}/report/create/
+    defaults: { _controller: AppBundle:Report:reportCreate }
+# ROUTING PARA VER UN INFORME
+report_view:
+    path: /{clinicNameUrl}/medicalhistory/{medicalHistoryNumber}/report/{registrationDate}
+    defaults: { _controller: AppBundle:Report:reportView }   
+# ROUTING PARA EDITAR UN INFORME
+report_edit:
+    path: /{clinicNameUrl}/medicalhistory/{medicalHistoryNumber}/report/{registrationDate}/edit/
+    defaults: { _controller: AppBundle:Report:reportEdit }        

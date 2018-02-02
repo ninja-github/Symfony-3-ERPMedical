@@ -27,16 +27,16 @@ class OrthopodologyHistoryController extends Controller{
 	public function orthopodologyHistoriesListAction(Request $request, $clinicNameUrl = null){
 		/* CARGA INICIAL **************************************************************************************/
 			$em = $this->getDoctrine()->getManager();
-			$userlogged = $this->getUser();	// extraemos el usuario de la sessión
+			$userLogged= $this->getUser();	// extraemos el usuario de la sessión
 		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
-			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userlogged, $request);
+			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userLogged, $request);
 		/******************************************************************************************************/
 		/* EXTRAE PERMISOS DEL USUARIO  ***********************************************************************/
-			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userlogged);
+			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userLogged);
 		/******************************************************************************************************/
 		/* PERMISO ACCESO *************************************************************************************/
-			$clinicView= $em->getRepository("BackendBundle:Clinic")->findOneByNameUrl($clinicNameUrl);		
-			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userlogged));
+			$clinicView = $em->getRepository("BackendBundle:Clinic")->findOneByNameUrl($clinicNameUrl);		
+			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userLogged));
 			if( $clinicUserCorrect ==NULL && $permissionLoggedUser->getClinicViewOther() == false ){return $this->redirectToRoute('homepage');}
 		/******************************************************************************************************/
 		/* CARGO LOS REPOSITORIOS  ****************************************************************************/
@@ -48,15 +48,14 @@ class OrthopodologyHistoryController extends Controller{
 			 * src\AppBundle\Repository\OrthopodologyHistoryRepository.php definido dentro del ORM
 			 * src\BackendBundle\Resources\config\OrthopodologyHistory.orm.yml
 			 */
-			$orthopodologyHistories = $orthopodologyHistory_repo->getListOrthopodologyHistory($clinicNameUrl);
+			$orthopodologyHistoryList = $orthopodologyHistory_repo->getOrthopodologyHistoryListOfClinic($clinicNameUrl);
 		/******************************************************************************************************/
 		/* CARGAMOS LA VISTA CON SUS VARIABLES ****************************************************************/
 			// Enviamos el formulario y su vista a la plantilla TWIG
 			return $this->render('AppBundle:OrthopodologyHistory:orthopodologyHistory_List.html.twig',
 				array(
 					'permissionLoggedUser'=>$permissionLoggedUser,
-					'orthopodologyHistories'=>$orthopodologyHistories,
-					'clinicNameUrl'=>$clinicNameUrl
+					'orthopodologyHistoryList'=>$orthopodologyHistoryList
 				)
 			);
 		/******************************************************************************************************/
@@ -66,18 +65,24 @@ class OrthopodologyHistoryController extends Controller{
 	public function orthopodologyHistoryViewAction(Request $request, $clinicNameUrl, $medicalHistoryNumber, $registrationDate){
 		/* CARGA INICIAL **************************************************************************************/
 			$em = $this->getDoctrine()->getManager();
-			$userlogged = $this->getUser();	// extraemos el usuario de la sessión
+			$userLogged = $this->getUser();	// extraemos el usuario de la sessión
 		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
-			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userlogged, $request);
+			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userLogged, $request);
 		/******************************************************************************************************/
 		/* EXTRAE PERMISOS DEL USUARIO  ***********************************************************************/
-			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userlogged);
+			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userLogged);
 		/******************************************************************************************************/
 		/* PERMISO ACCESO *************************************************************************************/
 			$clinicView= $em->getRepository("BackendBundle:Clinic")->findOneByNameUrl($clinicNameUrl);		
-			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userlogged));
-			if( $clinicUserCorrect == NULL || $permissionLoggedUser->getOrthopodologyHistoryCreate() == false ){
-				$status = [	'type'=>'danger', 'description'=>'No tienes permiso para eliminar el Estudio Ortopodológico'];
+			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userLogged));
+			if( $clinicUserCorrect == NULL && $permissionLoggedUser->getClinicViewOther() == false ){
+				$status = [	'type'=>'danger', 'description'=>'No tienes permiso para ver el estudios Ortopodológicos de otra clínica'];
+				// generamos los mensajes FLASH (necesario activar las sesiones)
+				$this->session->getFlashBag()->add("status", $status);
+				return $this->redirectToRoute('homepage');
+			};
+			if( $permissionLoggedUser->getOrthopodologyHistoryView() == false ){
+				$status = [	'type'=>'danger', 'description'=>'No tienes permiso para ver el estudio Ortopodológico'];
 				$this->session->getFlashBag()->add("status", $status);	// generamos los mensajes FLASH (necesario activar las sesiones)
 				return $this->redirectToRoute(
 					'medical_history_view',
@@ -101,7 +106,7 @@ class OrthopodologyHistoryController extends Controller{
 			/* REPOSITORY - La función getMedicalHistory($clinicNameUrl, $medicalHistoryNumber) y getOrthopodologyHistory($clinicNameUrl, $medicalHistoryNumber, $registrationDate) se encuentran dentro de src\AppBundle\Repository\MedicalHistoryRepository.php y src\AppBundle\Repository\OrthopodologyHistoryRepository.php definido dentro del ORM src\BackendBundle\Resources\config\MedicalHistory.orm.yml y src\BackendBundle\Resources\config\OrthopodologyHistory.orm.yml */
 			$typeTracing = $typeTracing_repo->findOneByType('orthopodology_history');
 			$clinic = $clinic_repo->findOneByNameUrl($clinicNameUrl);
-			$medicalHistory = $medicalHistory_repo->findOneBy(array('numberMedicalHistory'=>$medicalHistoryNumber, 'clinic'=>$clinic));
+			$medicalHistory = $medicalHistory_repo->findOneBy(array('medicalHistoryNumber'=>$medicalHistoryNumber, 'clinic'=>$clinic));
 			$orthopodologyHistories = $orthopodologyHistories_repo->findBy(array('medicalHistory'=>$medicalHistory));
 			foreach ($orthopodologyHistories as $key=>$clave){
 				if ($clave->getRegistrationDate()->format('Y_m_d') == $registrationDate ){
@@ -112,7 +117,7 @@ class OrthopodologyHistoryController extends Controller{
 			$tracingOrthopodologyHistoryList = $tracing_repo->findBy(['orthopodologyHistory'=>$orthopodologyHistory],['date'=>'DESC']);
 		/* FORMULARO NUEVO SEGUIMIENTO ************************************************************************/
 			$tracingNew = new Tracing();
-			$attr = array('clinicNameUrl'=>$clinicNameUrl, 'medicalHistoryNumber'=>$medicalHistoryNumber, 'idTracing'=>NULL);
+			$attr = array('clinicNameUrl'=>$clinicNameUrl, 'medicalHistoryNumber'=>$medicalHistoryNumber, 'idTracing'=>NULL, 'userName'=> NULL);
 			$form_orthopodologyHistoryTracing = $this->createForm(TracingType::class, $tracingNew,
 				array(
 					'allow_extra_fields'=> $permissionLoggedUser,
@@ -131,7 +136,7 @@ class OrthopodologyHistoryController extends Controller{
 								$tracingNew->setDate($form_orthopodologyHistoryTracing->get("date")->getData());
 							}
 							$tracingNew->setTracing($form_orthopodologyHistoryTracing->get("tracing")->getData());
-							$tracingNew->setUser($userlogged);
+							$tracingNew->setUser($userLogged);
 							if(!isset($registrationDate) or $registrationDate==null){
 								$TypeTracing = $typeTracing_repo->findOneByType('medical_history');
 							}else{
@@ -159,7 +164,7 @@ class OrthopodologyHistoryController extends Controller{
 							$tracingEdit = $tracing_repo->findOneById($idTracing);
 							$tracingEdit->setDate($form_orthopodologyHistoryTracing->get("date")->getData());
 							$tracingEdit->setTracing($form_orthopodologyHistoryTracing->get("tracing")->getData());
-							$tracingEdit->setUser($userlogged);
+							$tracingEdit->setUser($userLogged);
 							$tracingEdit->setTypeTracing( $tracingEdit->getTypeTracing() );
 							$tracingEdit->setOrthopodologyHistory( $tracingEdit->getOrthopodologyHistory() );
 							$medicalHistory = $medicalHistory_repo->getMedicalHistoryObject( $clinicNameUrl, $medicalHistoryNumber );
@@ -186,7 +191,7 @@ class OrthopodologyHistoryController extends Controller{
 			$tracingOrthopodologyHistoryListForm = array();
 			if( !empty($tracingOrthopodologyHistoryList) ){
 				foreach($tracingOrthopodologyHistoryList as $tracingMedicalHistoryDate => $tracingEdit){
-					$attr = array('clinicNameUrl'=>$clinicNameUrl, 'medicalHistoryNumber'=>$medicalHistoryNumber, 'idTracing'=>"NO NULL");
+					$attr = array('clinicNameUrl'=>$clinicNameUrl, 'medicalHistoryNumber'=>$medicalHistoryNumber, 'idTracing'=>"NO NULL", 'userName'=> NULL);
 					$form_orthopodologyHistoryTracingEdit = $this->createForm(TracingType::class,
 						$tracingEdit,
 						array(
@@ -274,16 +279,16 @@ class OrthopodologyHistoryController extends Controller{
 		if( !is_object($this->getUser()) ){ return $this->redirect('home'); }
 		/* CARGA INICIAL **************************************************************************************/
 			$em = $this->getDoctrine()->getManager();
-			$userlogged = $this->getUser();	// extraemos el usuario de la sessión
+			$userLogged = $this->getUser();	// extraemos el usuario de la sessión
 		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
-			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userlogged, $request);
+			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userLogged, $request);
 		/******************************************************************************************************/
 		/* EXTRAE PERMISOS DEL USUARIO  ***********************************************************************/
-			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userlogged);
+			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userLogged);
 		/******************************************************************************************************/
 		/* PERMISO ACCESO *************************************************************************************/
 			$clinicView= $em->getRepository("BackendBundle:Clinic")->findOneByNameUrl($clinicNameUrl);		
-			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userlogged));
+			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userLogged));
 			if( $clinicUserCorrect == NULL || $permissionLoggedUser->getOrthopodologyHistoryCreate() == false ){
 				$status = [	'type'=>'danger', 'description'=>'No tienes permiso para eliminar el Estudio Ortopodológico'];
 				$this->session->getFlashBag()->add("status", $status);	// generamos los mensajes FLASH (necesario activar las sesiones)
@@ -303,14 +308,14 @@ class OrthopodologyHistoryController extends Controller{
 		$medicalHistory =  $medicalHistory_repo->findOneBy(
 			array(
 				'clinic'=>$clinic,
-				'numberMedicalHistory'=>$medicalHistoryNumber
+				'medicalHistoryNumber'=>$medicalHistoryNumber
 			)
 		);
 		/******************************************************************************************************/
 		/* FORMULARO NUEVA HISTORIA ***************************************************************************/
 			// Creamos el Objeto orthopodologyHistory con la información
 			$orthopodologyHistory = new orthopodologyHistory();
-			$attr = ['medicalHistoryNumber'=>$medicalHistoryNumber, 'clinicNameUrl'=>$clinicNameUrl];
+			$attr = array('medicalHistoryNumber'=>$medicalHistoryNumber, 'clinicNameUrl'=>$clinicNameUrl, 'userLoggedId'=>$userLogged->getId() );
 			// Creamos el formulario
 			$form = $this->createForm(OrthopodologyHistoryType::class, $orthopodologyHistory,
 				array( 'allow_extra_fields'=> $permissionLoggedUser, 'attr'=>$attr
@@ -494,7 +499,7 @@ class OrthopodologyHistoryController extends Controller{
 					if( $medicalHistoryNumber == 'without_MedicalHistoryNumber' ){
 						$orthopodologyHistory->setMedicalHistory( $form->get("medicalHistory")->getData() );
 						// Como no tenemos $medicalHistoryNumber definido seleccionamos el del formulario
-						$medicalHistoryNumber = $form->get("medicalHistory")->getData()->getNumberMedicalHistory();
+						$medicalHistoryNumber = $form->get("medicalHistory")->getData()->getMedicalHistoryNumber();
 					}else{
 						$orthopodologyHistory->setMedicalHistory($medicalHistory);
 					}
@@ -528,16 +533,16 @@ class OrthopodologyHistoryController extends Controller{
 	public function orthopodologyHistoryEditAction(Request $request, $clinicNameUrl, $medicalHistoryNumber, $registrationDate){
 		/* CARGA INICIAL **************************************************************************************/
 			$em = $this->getDoctrine()->getManager();
-			$userlogged = $this->getUser();	// extraemos el usuario de la sessión
+			$userLogged = $this->getUser();	// extraemos el usuario de la sessión
 		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
-			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userlogged, $request);
+			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userLogged, $request);
 		/******************************************************************************************************/
 		/* EXTRAE PERMISOS DEL USUARIO  ***********************************************************************/
-			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userlogged);
+			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userLogged);
 		/******************************************************************************************************/
 		/* PERMISO ACCESO *************************************************************************************/
 			$clinicView= $em->getRepository("BackendBundle:Clinic")->findOneByNameUrl($clinicNameUrl);		
-			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userlogged));
+			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userLogged));
 			if( $clinicUserCorrect == NULL || $permissionLoggedUser->getOrthopodologyHistoryEdit() == false ){
 				$status = [	'type'=>'danger', 'description'=>'No tienes permiso para eliminar el Estudio Ortopodológico'];
 				$this->session->getFlashBag()->add("status", $status);	// generamos los mensajes FLASH (necesario activar las sesiones)
@@ -562,7 +567,7 @@ class OrthopodologyHistoryController extends Controller{
 			$medicalHistory = $medicalHistory_repo->findOneBy(
 				array(
 					'clinic'=>$clinic_repo->findOneByNameUrl($clinicNameUrl),
-					'numberMedicalHistory'=>$medicalHistoryNumber
+					'medicalHistoryNumber'=>$medicalHistoryNumber
 				)
 			);
 			$orthopodologyHistories = $orthopodologyHistory_repo->findBy(array('medicalHistory'=>$medicalHistory));
@@ -573,7 +578,7 @@ class OrthopodologyHistoryController extends Controller{
 			}
 		/******************************************************************************************************/
 		/* FORMULARO EDITAR HISTORIA **************************************************************************/
-			$attr = ['medicalHistoryNumber'=>$medicalHistoryNumber, 'clinicNameUrl'=>$clinicNameUrl];
+			$attr = array('medicalHistoryNumber'=>$medicalHistoryNumber, 'clinicNameUrl'=>$clinicNameUrl, 'userLoggedId'=>$userLogged->getId());
 			// Creamos el formulario
 			$form = $this->createForm(OrthopodologyHistoryType::class, $orthopodologyHistory,
 				array( 'allow_extra_fields'=> $permissionLoggedUser, 'attr'=>$attr
@@ -725,7 +730,7 @@ class OrthopodologyHistoryController extends Controller{
 					if( $medicalHistoryNumber == 'without_MedicalHistoryNumber' ){
 						$orthopodologyHistory->setMedicalHistory( $form->get("medicalHistory")->getData() );
 						// Como no tenemos $medicalHistoryNumber definido seleccionamos el del formulario
-						$medicalHistoryNumber = $form->get("medicalHistory")->getData()->getNumberMedicalHistory();
+						$medicalHistoryNumber = $form->get("medicalHistory")->getData()->getMedicalHistoryNumber();
 					}else{
 						$orthopodologyHistory->setMedicalHistory($medicalHistory);
 					}
@@ -761,16 +766,16 @@ class OrthopodologyHistoryController extends Controller{
 	public function orthopodologyHistoryRemoveAction(Request $request, $clinicNameUrl, $medicalHistoryNumber, $registrationDate){
 		/* CARGA INICIAL **************************************************************************************/
 			$em = $this->getDoctrine()->getManager();
-			$userlogged = $this->getUser();	// extraemos el usuario de la sessión
+			$userLogged = $this->getUser();	// extraemos el usuario de la sessión
 		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
-			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userlogged, $request);
+			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userLogged, $request);
 		/******************************************************************************************************/
 		/* EXTRAE PERMISOS DEL USUARIO  ***********************************************************************/
-			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userlogged);
+			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userLogged);
 		/******************************************************************************************************/
 		/* PERMISO ACCESO *************************************************************************************/
 			$clinicView= $em->getRepository("BackendBundle:Clinic")->findOneByNameUrl($clinicNameUrl);		
-			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userlogged));
+			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userLogged));
 			if( $clinicUserCorrect == NULL || $permissionLoggedUser->getOrthopodologyHistoryRemove() == false ){
 				$status = [	'type'=>'danger', 'description'=>'No tienes permiso para eliminar el Estudio Ortopodológico'];
 				$this->session->getFlashBag()->add("status", $status);	// generamos los mensajes FLASH (necesario activar las sesiones)
@@ -793,7 +798,7 @@ class OrthopodologyHistoryController extends Controller{
 			$medicalHistory = $medicalHistory_repo->findOneBy(
 				array(
 					'clinic'=>$clinic_repo->findOneByNameUrl($clinicNameUrl),
-					'numberMedicalHistory'=>$medicalHistoryNumber
+					'medicalHistoryNumber'=>$medicalHistoryNumber
 				)
 			);
 			$orthopodologyHistories = $orthopodologyHistory_repo->findBy(array('medicalHistory'=>$medicalHistory));

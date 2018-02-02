@@ -1,0 +1,95 @@
+BackendBundle\Entity\Business:
+    type: entity
+    table: business
+# indexes ############################################################# 
+    indexes:
+        city:
+            columns:
+                - city
+        type_business:
+            columns:
+                - type_business
+        clinic:
+            columns:
+                - clinic                
+# /indexes ############################################################ 
+# uniqueConstraints#################################################### 
+    uniqueConstraints:
+        business_name:
+            columns:
+                - business_name
+# /uniqueConstraints###################################################                 
+# id ##################################################################                 
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+# /id #################################################################
+# fields ##############################################################                  
+    fields:
+        businessName:
+            type: string
+            nullable: false
+            length: 60
+            options:
+                fixed: false
+            column: business_name
+        cif:
+            type: string
+            nullable: true
+            length: 11
+            options:
+                fixed: false
+            column: CIF
+        address:
+            type: string
+            nullable: true
+            length: 200
+            options:
+                fixed: false
+        registrationDate:
+            type: datetime
+            nullable: false
+            column: registration_date
+# /fields #############################################################
+# manyToOne ###########################################################             
+    manyToOne:
+        city:
+            targetEntity: AddressCity
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                city:
+                    referencedColumnName: id
+            orphanRemoval: false
+        typeBusiness:
+            targetEntity: TypeBusiness
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                type_business:
+                    referencedColumnName: id
+            orphanRemoval: false
+        clinic:
+            targetEntity: Clinic
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: businessList
+            joinColumns:
+                clinic:
+                    referencedColumnName: id
+            orphanRemoval: false            
+# /manyToOne ##########################################################
+# oneToMany ########################################################### 
+# /oneToMany ##########################################################             
+    lifecycleCallbacks: {  }

@@ -28,21 +28,27 @@ class UserRepository extends \Doctrine\ORM\EntityRepository {
 	}
 /*************************************************************************************************/
 /* OBTIENE LOS USUARIOS DE UNA CLÍNICA ***********************************************************/
-	public function getUserListOfClinic($clinicNameUrl){
+	public function getUserListOfClinic($clinicNameUrl, $userLoggedId){
 		$em=$this->getEntityManager();
 		$clinic_repo = $em->getRepository('BackendBundle:Clinic');
-		$idClinic = $clinic_repo->findOneBy(array('nameUrl'=>$clinicNameUrl));
+		$clinic = $clinic_repo->findOneBy(array('nameUrl'=>$clinicNameUrl));
 		$clinicUser_repo = $em->getRepository('BackendBundle:ClinicUser');
-		$userListOfClinic = $clinicUser_repo->findBy(array('clinic'=>$idClinic));
-		$userList = array();
+		$userListOfClinic = $clinicUser_repo->findBy(array('clinic'=>$clinic));
+		// genero un array con los id de los usuarios de la clínica
+		$userIdList = array();
 		foreach($userListOfClinic as $user){
-			array_push($userList, $user->getUser()->getId());
+			array_push($userIdList, $user->getUser()->getId());
 		}
+		if (in_array($userLoggedId, $userIdList)){
+			unset($userIdList[array_search($userLoggedId, $userIdList)]);
+			array_unshift($userIdList, $userLoggedId);
+		}
+		// Genero listado
 		$user_repo = $em->getRepository('BackendBundle:User');
-		$user = $user_repo->createQueryBuilder('u')
-			->where("u.id IN (:userList)")
-			->setParameter('userList', $userList);
-		return $user;
+		$userList = $user_repo->createQueryBuilder('u')
+			->where("u.id IN (:userIdList)")
+			->setParameter('userIdList', $userIdList);
+		return $userList;	
 	}
 /*************************************************************************************************/
 }

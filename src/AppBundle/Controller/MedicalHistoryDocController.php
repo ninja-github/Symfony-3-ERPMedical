@@ -21,22 +21,43 @@ class MedicalHistoryDocController extends Controller{
 	public function medicalHistoryDocRemoveAction( Request $request, $clinicNameUrl, $medicalHistoryNumber, $idDoc ) {
 		/* CARGA INICIAL **************************************************************************************/
 			$em = $this->getDoctrine()->getManager();
-			$userlogged = $this->getUser();	// extraemos el usuario de la sessión
+			$userLogged = $this->getUser();	// extraemos el usuario de la sessión
 		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
-			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userlogged, $request);
+			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userLogged, $request);
 		/******************************************************************************************************/
 		/* EXTRAE PERMISOS DEL USUARIO  ***********************************************************************/
-			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userlogged);
+			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userLogged);
 		/******************************************************************************************************/
 		/* PERMISO ACCESO *************************************************************************************/
+			$permissionDenied = false;			
 			$clinicView= $em->getRepository("BackendBundle:Clinic")->findOneByNameUrl($clinicNameUrl);
-			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userlogged));
-			if( $clinicUserCorrect == NULL && $permissionLoggedUser->getClinicViewOther() == false ){return $this->redirectToRoute('homepage');}
+			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userLogged));
+			if( $clinicUserCorrect == NULL && $permissionLoggedUser->getClinicViewOther() == false ){
+				$status = ['type'=>'danger','description'=>'No tiene permisos suficientes para CREAR Historias Médicas ajenas a su Clínica.'];
+				// generamos los mensajes FLASH (necesario activar las sesiones)
+				$this->session->getFlashBag()->add("status", $status);				
+				$permissionDenied = true;
+			}
+			if ($permissionLoggedUser->getMedicalHistoryDocRemove()){
+								}else{
+				$status = [	'type'=>'danger','description'=>'No dispones de permisos suficientes para eliminar el documento.'];
+				// generamos los mensajes FLASH (necesario activar las sesiones)
+				$this->session->getFlashBag()->add("status", $status);				
+				$permissionDenied = true;
+			}
+			if ($permissionDenied){ return $this->redirectToRoute('homepage'); }				
 		/******************************************************************************************************/
-		if ($permissionLoggedUser->getMedicalHistoryDocRemove()){
-			$clinic = $em->getRepository("BackendBundle:Clinic")->findOneByNameUrl($clinicNameUrl);
-			$medicalHistory = $em->getRepository("BackendBundle:MedicalHistory")->findOneBy(array('numberMedicalHistory'=>$medicalHistoryNumber,  'clinic'=> $clinic));
-			$medicalHistoryDoc = $em->getRepository("BackendBundle:MedicalHistoryDoc")->findOneBy(array('id'=>$idDoc,  'medicalHistory'=> $medicalHistory));
+		/* CARGO LOS REPOSITORIOS  ****************************************************************************/
+			$clinic_repo = $em->getRepository("BackendBundle:Clinic");
+			$medicalHistory_repo = $em->getRepository("BackendBundle:MedicalHistory");
+			$medicalHistoryDoc_repo = $em->getRepository("BackendBundle:MedicalHistoryDoc");
+		/******************************************************************************************************/
+		/* REALIZO LAS CONSULTAS NECESARIAS A LA BD MEDIANTE LOS REPOSITORIOS *********************************/
+			$clinic = $clinic_repo->findOneByNameUrl($clinicNameUrl);
+			$medicalHistory = $medicalHistory_repo->findOneBy(array('medicalHistoryNumber'=>$medicalHistoryNumber,  'clinic'=> $clinic));
+			$medicalHistoryDoc = $medicalHistoryDoc_repo->findOneBy(array('id'=>$idDoc,  'medicalHistory'=> $medicalHistory));
+		/******************************************************************************************************/
+			// Localizado el documento, lo eliminamos			
 			$em->remove($medicalHistoryDoc);
 			// persistimos la eliminación dentro de la bD
 			$flush = $em->flush();
@@ -44,16 +65,19 @@ class MedicalHistoryDocController extends Controller{
 			if($flush == null){
 				$file_name = $medicalHistoryDoc->getDoc();
 				unlink ( 'uploads/clinics/'.$clinicNameUrl.'/medicalHistory/'.$medicalHistoryNumber.'/'.$file_name );
-				$status = [	'type'=>'success','description'=>'El documento se ha borrado'];
+				$status = [	'type'=>'success','description'=>'El documento se ha borrado correctamente.'];
 			}else{
-				$status = [	'type'=>'danger','description'=>'El documento no se ha borrado'];
+				$status = [	'type'=>'danger','description'=>'El documento no se ha borrado correctamente.'];
 			}
-		}else{
-			$status = [	'type'=>'danger','description'=>'No dispones de permisos suficientes'];
-		}
-		// generamos los mensajes FLASH (necesario activar las sesiones)
-		$this->session->getFlashBag()->add("status", $status);
-		return $this->redirectToRoute('medical_history_view', array('clinicNameUrl'=>$clinicNameUrl, 'medicalHistoryNumber'=>$medicalHistoryNumber));
+			// generamos los mensajes FLASH (necesario activar las sesiones)
+			$this->session->getFlashBag()->add("status", $status);
+		/******************************************************************************************************/
+		/* CARGAMOS LA VISTA CON SUS VARIABLES ****************************************************************/		
+			return $this->redirectToRoute('medical_history_view', array(
+				'clinicNameUrl'=>$clinicNameUrl, 
+				'medicalHistoryNumber'=>$medicalHistoryNumber
+			));
+		/******************************************************************************************************/			
 	}
-/*********************************************************************/
+/**************************************************************************************************************/
 }

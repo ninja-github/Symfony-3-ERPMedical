@@ -78,7 +78,7 @@
 											<!-- Google Calendar -->
 												<div data-toggle="tooltip" data-placement="top" title="GoogleCalendar" style="display:inline;">
 													<a class="btn btn-success"
-														href="{{ path("schedule_config") }}">
+														href="{{ path("schedule_config", {userId: user.id} ) }}">
 														<i class="fa fa-calendar m-right-xs"></i>
 													</a>
 												</div>		
@@ -170,9 +170,6 @@
 			</div>
 		{% endif %}
 	<!-- /modal Editar Usuario -->
-
-
-
 	<!-- Modal Permisos -->
 		{% if permissionLoggedUser.userPermission == true %}
 			<div class="modal fade" id="userPermission" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -731,6 +728,9 @@
 			</div>
 		{% endif %}
 	<!-- /modal Permisos -->
+	<!-- Modal Google Calendar -->
+	
+	<!-- /modal Google Calendar -->
 {% endblock %}
 {% block javascriptsFinal %}
 	{{ parent() }}

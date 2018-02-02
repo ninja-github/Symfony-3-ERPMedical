@@ -21,6 +21,16 @@ class UserPermission {
 	public function getUser() { return $this->user; }
 /**************************************************************************************************************/
 /* USER *******************************************************************************************************/
+	/* userList ***********************************************************************************************/
+		private $userList = '0';
+		public function setUserList($userList) { $this->userList = $userList; return $this; } 
+		public function getUserList() { return $this->userList; }
+	/**********************************************************************************************************/
+	/* userView ***********************************************************************************************/		
+		private $userView = '0';
+		public function setUserView($userView) { $this->userView = $userView; return $this; } 
+		public function getUserView() { return $this->userView; }
+	/**********************************************************************************************************/
 	/* userCreate *********************************************************************************************/
 		private $userCreate = '0';
 		public function setUserCreate($userCreate) { $this->userCreate = $userCreate; return $this; }
@@ -46,12 +56,22 @@ class UserPermission {
 		public function setUserPermission($userPermission) { $this->userPermission = $userPermission; return $this; }
 		public function getUserPermission() { return $this->userPermission; }
 	/**********************************************************************************************************/
-/**************************************************************************************************************/
-/* CLINIC *****************************************************************************************************/
 	/* clinicViewOther ****************************************************************************************/
 		private $clinicViewOther = '0';
 		public function setClinicViewOther($clinicViewOther) { $this->clinicViewOther = $clinicViewOther; return $this; }
 		public function getClinicViewOther() { return $this->clinicViewOther; }
+	/**********************************************************************************************************/	
+/**************************************************************************************************************/
+/* CLINIC *****************************************************************************************************/
+	/* clinicList *******************************************************************************************/		
+		private $clinicList = '0';
+		public function setClinicList($clinicList) { $this->clinicList = $clinicList; return $this; } 
+		public function getClinicList() { return $this->clinicList; } 
+	/**********************************************************************************************************/
+	/* clinicCreate *******************************************************************************************/		
+		private $clinicView = '0';
+		public function setClinicView($clinicView) { $this->clinicView = $clinicView; return $this; } 
+		public function getClinicView() { return $this->clinicView; } 
 	/**********************************************************************************************************/
 	/* clinicCreate *******************************************************************************************/
 		private $clinicCreate = '0';
@@ -70,6 +90,16 @@ class UserPermission {
 	/**********************************************************************************************************/
 /**************************************************************************************************************/
 /* MEDICALHISTORY *********************************************************************************************/
+	/* medicalHistoryList ***********************************************************************************/		
+		private $medicalHistoryList = '0';
+		public function setMedicalHistoryList($medicalHistoryList) { $this->medicalHistoryList = $medicalHistoryList; return $this; } 
+		public function getMedicalHistoryList() { return $this->medicalHistoryList; } 	
+	/**********************************************************************************************************/		
+	/* medicalHistoryView *************************************************************************************/
+		private $medicalHistoryView = '0';
+		public function setMedicalHistoryView($medicalHistoryView) { $this->medicalHistoryView = $medicalHistoryView; return $this; } 
+		public function getMedicalHistoryView() { return $this->medicalHistoryView; } 	
+	/**********************************************************************************************************/
 	/* medicalHistoryCreate ***********************************************************************************/
 		private $medicalHistoryCreate = '0';
 		public function setMedicalHistoryCreate($medicalHistoryCreate) { $this->medicalHistoryCreate = $medicalHistoryCreate; return $this; }
@@ -107,6 +137,16 @@ class UserPermission {
 	/**********************************************************************************************************/
 /**************************************************************************************************************/
 /* MEDICALHISTORYDOC ******************************************************************************************/
+	/* medicalHistoryDocList **********************************************************************************/
+		private $medicalHistoryDocList = '0';
+		public function setMedicalHistoryDocList($medicalHistoryDocList) { $this->medicalHistoryDocList = $medicalHistoryDocList; return $this; } 
+		public function getMedicalHistoryDocList() { return $this->medicalHistoryDocList; }	
+	/**********************************************************************************************************/
+	/* medicalHistoryDocList **********************************************************************************/	
+		private $medicalHistoryDocView = '0';
+		public function setMedicalHistoryDocView($medicalHistoryDocView) { $this->medicalHistoryDocView = $medicalHistoryDocView; return $this; } 
+		public function getMedicalHistoryDocView() { return $this->medicalHistoryDocView; }	
+	/**********************************************************************************************************/
 	/* medicalHistoryDocCreate ********************************************************************************/
 		private $medicalHistoryDocCreate = '0';
 		public function setMedicalHistoryDocCreate($medicalHistoryDocCreate) { $this->medicalHistoryDocCreate = $medicalHistoryDocCreate; return $this; }
@@ -144,6 +184,16 @@ class UserPermission {
 	/**********************************************************************************************************/
 /**************************************************************************************************************/
 /* ORTHOPODOLOGYHISTORY ***************************************************************************************/
+	/* orthopodologyHistoryList *****************************************************************************/
+		private $orthopodologyHistoryList = '0';
+		public function setOrthopodologyHistoryList($orthopodologyHistoryList) { $this->orthopodologyHistoryList = $orthopodologyHistoryList; return $this; }
+		public function getOrthopodologyHistoryList() { return $this->orthopodologyHistoryList; }
+	/**********************************************************************************************************/
+	/* orthopodologyHistoryView *****************************************************************************/
+		private $orthopodologyHistoryView = '0';
+		public function setOrthopodologyHistoryView($orthopodologyHistoryView) { $this->orthopodologyHistoryView = $orthopodologyHistoryView; return $this; }
+		public function getOrthopodologyHistoryView() { return $this->orthopodologyHistoryView; }
+	/**********************************************************************************************************/	
 	/* orthopodologyHistoryCreate *****************************************************************************/
 		private $orthopodologyHistoryCreate = '0';
 		public function setOrthopodologyHistoryCreate($orthopodologyHistoryCreate) { $this->orthopodologyHistoryCreate = $orthopodologyHistoryCreate; return $this; }
@@ -181,6 +231,16 @@ class UserPermission {
 	/**********************************************************************************************************/
 /**************************************************************************************************************/
 /* ORTHOPODOLOGYHISTORYDOC ************************************************************************************/
+	/* orthopodologyHistoryDocList ****************************************************************************/
+		private $orthopodologyHistoryDocList = '0';
+		public function setOrthopodologyHistoryDocList($orthopodologyHistoryDocList) { $this->orthopodologyHistoryDocList = $orthopodologyHistoryDocList; return $this; } 
+		public function getOrthopodologyHistoryDocList() { return $this->orthopodologyHistoryDocList; } 
+	/**********************************************************************************************************/  
+	/* orthopodologyHistoryDocView ****************************************************************************/	  	
+		private $orthopodologyHistoryDocView = '0'; 
+		public function setOrthopodologyHistoryDocView($orthopodologyHistoryDocView) { $this->orthopodologyHistoryDocView = $orthopodologyHistoryDocView; return $this; } 
+		public function getOrthopodologyHistoryDocView() { return $this->orthopodologyHistoryDocView; } 	
+	/**********************************************************************************************************/  
 	/* orthopodologyHistoryDocCreate **************************************************************************/
 		private $orthopodologyHistoryDocCreate = '0';
 		public function setOrthopodologyHistoryDocCreate($orthopodologyHistoryDocCreate) { $this->orthopodologyHistoryDocCreate = $orthopodologyHistoryDocCreate; return $this; }
@@ -217,7 +277,70 @@ class UserPermission {
 		public function getOrthopodologyHistoryDocUserModifierEdit() { return $this->orthopodologyHistoryDocUserModifierEdit; }
 	/**********************************************************************************************************/
 /**************************************************************************************************************/
+/* REPORT ****************************************************************************************************/
+	/* reportList ******************************************************************************************/
+		private $reportList = '0';
+		public function setReportList($reportList) { $this->reportList = $reportList; return $this; }
+		public function getReportList() { return $this->reportList; }
+	/**********************************************************************************************************/
+	/* reportView ******************************************************************************************/
+		private $reportView = '0';
+		public function setReportView($reportView) { $this->reportView = $reportView; return $this; }
+		public function getReportView() { return $this->reportView; }
+	/**********************************************************************************************************/	
+	/* reportCreate ******************************************************************************************/
+		private $reportCreate = '0';
+		public function setReportCreate($reportCreate) { $this->reportCreate = $reportCreate; return $this; }
+		public function getReportCreate() { return $this->reportCreate; }
+	/**********************************************************************************************************/
+	/* reportEdit ********************************************************************************************/
+		private $reportEdit = '0';
+		public function setReportEdit($reportEdit) { $this->reportEdit = $reportEdit; return $this; }
+		public function getReportEdit() { return $this->reportEdit; }
+	/**********************************************************************************************************/
+	/* reportRemove ******************************************************************************************/
+		private $reportRemove = '0';
+		public function setReportRemove($reportRemove) { $this->reportRemove = $reportRemove; return $this; }
+		public function getReportRemove() { return $this->reportRemove; }
+	/**********************************************************************************************************/	
+/**************************************************************************************************************/
+/* INVOICE ****************************************************************************************************/
+	/* invoiceList ******************************************************************************************/
+		private $invoiceList = '0';
+		public function setInvoiceList($invoiceList) { $this->invoiceList = $invoiceList; return $this; }
+		public function getInvoiceList() { return $this->invoiceList; }
+	/**********************************************************************************************************/
+	/* invoiceView ******************************************************************************************/
+		private $invoiceView = '0';
+		public function setInvoiceView($invoiceView) { $this->invoiceView = $invoiceView; return $this; }
+		public function getInvoiceView() { return $this->invoiceView; }
+	/**********************************************************************************************************/	
+	/* invoiceCreate ******************************************************************************************/
+		private $invoiceCreate = '0';
+		public function setInvoiceCreate($invoiceCreate) { $this->invoiceCreate = $invoiceCreate; return $this; }
+		public function getInvoiceCreate() { return $this->invoiceCreate; }
+	/**********************************************************************************************************/
+	/* invoiceEdit ********************************************************************************************/
+		private $invoiceEdit = '0';
+		public function setInvoiceEdit($invoiceEdit) { $this->invoiceEdit = $invoiceEdit; return $this; }
+		public function getInvoiceEdit() { return $this->invoiceEdit; }
+	/**********************************************************************************************************/
+	/* invoiceRemove ******************************************************************************************/
+		private $invoiceRemove = '0';
+		public function setInvoiceRemove($invoiceRemove) { $this->invoiceRemove = $invoiceRemove; return $this; }
+		public function getInvoiceRemove() { return $this->invoiceRemove; }
+	/**********************************************************************************************************/	
+/**************************************************************************************************************/
 /* SERVICE ****************************************************************************************************/
+	/* serviceList ********************************************************************************************/
+		private $serviceList = '0';
+		public function setServiceList($serviceList) { $this->serviceList = $serviceList; return $this; } 
+		public function getServiceList() { return $this->serviceList; }
+	/**********************************************************************************************************/
+	/* serviceView ********************************************************************************************/
+		private $serviceView = '0';
+		public function setServiceView($serviceView) { $this->serviceView = $serviceView; return $this; } 
+		public function getServiceView() { return $this->serviceView; }	
 	/* serviceCreate ******************************************************************************************/
 		private $serviceCreate = '0';
 		public function setServiceCreate($serviceCreate) { $this->serviceCreate = $serviceCreate; return $this; }
@@ -234,7 +357,43 @@ class UserPermission {
 		public function getServiceRemove() { return $this->serviceRemove; }
 	/**********************************************************************************************************/
 /**************************************************************************************************************/
+/* SCHEDULE ***************************************************************************************************/
+	/* serviceList ********************************************************************************************/
+		private $scheduleList = '0';
+		public function setScheduleList($scheduleList) { $this->scheduleList = $scheduleList; return $this; } 
+		public function getScheduleList() { return $this->scheduleList; }
+	/**********************************************************************************************************/
+	/* serviceView ********************************************************************************************/
+		private $scheduleView = '0';
+		public function setScheduleView($scheduleView) { $this->scheduleView = $scheduleView; return $this; } 
+		public function getScheduleView() { return $this->scheduleView; }	
+	/* serviceCreate ******************************************************************************************/
+		private $scheduleCreate = '0';
+		public function setScheduleCreate($scheduleCreate) { $this->scheduleCreate = $scheduleCreate; return $this; }
+		public function getScheduleCreate() { return $this->scheduleCreate; }
+	/**********************************************************************************************************/
+	/* serviceEdit ********************************************************************************************/
+		private $scheduleEdit = '0';
+		public function setScheduleEdit($scheduleEdit) { $this->scheduleEdit = $scheduleEdit; return $this; }
+		public function getScheduleEdit() { return $this->scheduleEdit; }
+	/**********************************************************************************************************/
+	/* serviceRemove ******************************************************************************************/
+		private $scheduleRemove = '0';
+		public function setScheduleRemove($scheduleRemove) { $this->scheduleRemove = $scheduleRemove; return $this; }
+		public function getScheduleRemove() { return $this->scheduleRemove; }
+	/**********************************************************************************************************/
+/**************************************************************************************************************/
 /* TRACING ****************************************************************************************************/
+	/* tracingList ********************************************************************************************/
+		private $tracingList = '0';
+		public function setTracingList($tracingList) { $this->tracingList = $tracingList; return $this; }
+		public function getTracingList() { return $this->tracingList; }
+	/**********************************************************************************************************/
+	/* tracingView ********************************************************************************************/
+		private $tracingView = '0';
+		public function setTracingView($tracingView) { $this->tracingView = $tracingView; return $this; }
+		public function getTracingView() { return $this->tracingView; }
+	/**********************************************************************************************************/
 	/* tracingCreate ******************************************************************************************/
 		private $tracingCreate = '0';
 		public function setTracingCreate($tracingCreate) { $this->tracingCreate = $tracingCreate; return $this; }
@@ -251,18 +410,28 @@ class UserPermission {
 		public function getTracingRemove() { return $this->tracingRemove; }
 	/**********************************************************************************************************/
 /**************************************************************************************************************/
-/* TRACING SERVICE ****************************************************************************************************/
-	/* tracingServiceCreate ******************************************************************************************/
+/* TRACING SERVICE ********************************************************************************************/
+	/* tracingServiceList ***********************************************************************************/
+		private $tracingServiceList = '0';
+		public function setTracingServiceList($tracingServiceList) { $this->tracingServiceList = $tracingServiceList; return $this; }
+		public function getTracingServiceList() { return $this->tracingServiceList; }
+	/**********************************************************************************************************/
+	/* tracingServiceView *************************************************************************************/
+		private $tracingServiceView = '0';
+		public function setTracingServiceView($tracingServiceView) { $this->tracingServiceView = $tracingServiceView; return $this; }
+		public function getTracingServiceView() { return $this->tracingServiceView; }
+	/**********************************************************************************************************/
+	/* tracingServiceCreate ***********************************************************************************/
 		private $tracingServiceCreate = '0';
 		public function setTracingServiceCreate($tracingServiceCreate) { $this->tracingServiceCreate = $tracingServiceCreate; return $this; }
 		public function getTracingServiceCreate() { return $this->tracingServiceCreate; }
 	/**********************************************************************************************************/
-	/* tracingServiceEdit ********************************************************************************************/
+	/* tracingServiceEdit *************************************************************************************/
 		private $tracingServiceEdit = '0';
 		public function setTracingServiceEdit($tracingServiceEdit) { $this->tracingServiceEdit = $tracingServiceEdit; return $this; }
 		public function getTracingServiceEdit() { return $this->tracingServiceEdit; }
 	/**********************************************************************************************************/
-	/* tracingServiceRemove ******************************************************************************************/
+	/* tracingServiceRemove ***********************************************************************************/
 		private $tracingServiceRemove = '0';
 		public function setTracingServiceRemove($tracingServiceRemove) { $this->tracingServiceRemove = $tracingServiceRemove; return $this; }
 		public function getTracingServiceRemove() { return $this->tracingServiceRemove; }
@@ -281,4 +450,3 @@ class UserPermission {
 	/**********************************************************************************************************/
 /**************************************************************************************************************/
 }
-

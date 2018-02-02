@@ -19,9 +19,25 @@ app_user:
 app_medical_history:
     resource: '@AppBundle/Resources/config/routing/medicalHistory.yml'
     prefix:   /
+# GESTOR ROUTING HISTORIAS ORTOPODOLÓGICAS
+app_orthopodology_history:
+    resource: '@AppBundle/Resources/config/routing/orthopodologyHistory.yml'
+    prefix:   /  
+# GESTOR ROUTING INFORMES
+app_report:
+    resource: '@AppBundle/Resources/config/routing/report.yml'
+    prefix:   /        
+# GESTOR ROUTING FACTURAS
+app_invoice:
+    resource: '@AppBundle/Resources/config/routing/invoice.yml'
+    prefix:   /         
 # GESTOR ROUTING CIUDADES
 app_address_city:
     resource: '@AppBundle/Resources/config/routing/addressCity.yml'
+    prefix:   /
+# GESTOR ROUTING SEGUIMIENTOS
+app_tracing:
+    resource: '@AppBundle/Resources/config/routing/tracing.yml'
     prefix:   /
 # GESTOR ROUTING SERVICIOS SEGUIMIENTOS
 app_tracing_service:
@@ -40,10 +56,6 @@ app_doc:
     resource: '@AppBundle/Resources/config/routing/documents.yml'
     prefix:   /
 # PRUEBAS
-pruebas_pdf:
-    path: /pruebas_pdf
-    defaults: { _controller: AppBundle:Pruebas:pdf }
-# PRUEBAS
-pruebas_googleCalendar:
-    path: /google_calendar
-    defaults: { _controller: AppBundle:Pruebas:googleCalendar }    
+app_pruebas:
+    resource: '@AppBundle/Resources/config/routing/pruebas.yml'
+    prefix:   /

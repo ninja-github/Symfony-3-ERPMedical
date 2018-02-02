@@ -14,6 +14,8 @@
 class Service {
 	private $children;
 	public function getChildren(){return $this->children;}
+    public function addChild(\BackendBundle\Entity\Service $child) { $this->children[] = $child; return $this; } 
+    public function removeChild(\BackendBundle\Entity\Service $child) { $this->children->removeElement($child); }	
 	public function __construct() { $this->children = new ArrayCollection(); }
 /* Id de la Tabla *********************************************************************************************/
 	private $id;
@@ -60,9 +62,9 @@ class Service {
 	public function setUpdatedService(\BackendBundle\Entity\Service $updatedService = null) { $this->updatedService = $updatedService; return $this; } 
 	public function getUpdatedService() { return $this->updatedService; } 	
 /**************************************************************************************************************/
-	private $typeTax; 
-	public function setTypeTax(\BackendBundle\Entity\TypeTax $typeTax = null) { $this->typeTax = $typeTax; return $this; } 
-	public function getTypeTax() { return $this->typeTax; } 	
+	private $typeTaxService; 
+	public function setTypeTaxService(\BackendBundle\Entity\typeTaxService $typeTaxService = null) { $this->typeTaxService = $typeTaxService; return $this; } 
+	public function getTypeTaxService() { return $this->typeTaxService; } 	
 /**************************************************************************************************************/
 	private $userModifier; 
 	public function setUserModifier(\BackendBundle\Entity\User $UserModifier = null) { $this->userModifier = $userModifier; return $this; } 
@@ -73,4 +75,3 @@ class Service {
 	public function getUserRegisterer() { return $this->userRegisterer; }
 /**************************************************************************************************************/
 }
-

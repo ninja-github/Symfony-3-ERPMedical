@@ -1,0 +1,32 @@
+BackendBundle\Entity\UserDataDoctor:
+    type: entity
+    table: user_data_doctor
+    indexes:
+        user:
+            columns:
+                - user
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        collegeNumber:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            column: college_number
+    oneToOne:
+        user:
+            targetEntity: User
+            inversedBy: userDataDoctor
+            joinColumn:
+                name: user
+                referencedColumnName: id 
+
+    lifecycleCallbacks: {  }

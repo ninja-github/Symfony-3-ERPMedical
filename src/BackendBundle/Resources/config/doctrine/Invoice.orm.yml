@@ -1,0 +1,102 @@
+BackendBundle\Entity\Invoice:
+    type: entity
+    # repository ######################################################     
+    repositoryClass: BackendBundle\Repository\InvoiceRepository       
+    table: invoice
+# indexes #############################################################        
+    indexes:
+        medical_history:
+            columns:
+                - medical_history
+        user:
+            columns:
+                - user
+        clinic:
+            columns:
+                - clinic
+        business:
+            columns:
+                - business
+        type_tax_invoice:
+            columns:
+                - type_tax_invoice
+# /indexes ############################################################ 
+# uniqueConstraints#################################################### 
+# /uniqueConstraints###################################################               
+# id ##################################################################                 
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+# /id #################################################################
+# fields ##############################################################                
+    fields:
+        invoiceNumber:
+            type: string
+            nullable: false
+            length: 7
+            options:
+                fixed: false
+            column: invoice_number
+        note:
+            type: text
+            nullable: false
+            length: 65535
+            options:
+                fixed: false
+        registrationDate:
+            type: datetime
+            nullable: true
+            column: registration_date
+# /fields #############################################################
+# manyToOne ###########################################################             
+    manyToOne:
+        user:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user:
+                    referencedColumnName: id
+            orphanRemoval: false
+        medicalHistory:
+            targetEntity: MedicalHistory
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                medical_history:
+                    referencedColumnName: id
+            orphanRemoval: false
+        business:
+            targetEntity: Business
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                business:
+                    referencedColumnName: id
+            orphanRemoval: false
+        typeTaxInvoice:
+            targetEntity: TypeTaxInvoice
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                type_tax_invoice:
+                    referencedColumnName: id
+            orphanRemoval: false
+# /manyToOne ##########################################################
+# oneToMany ########################################################### 
+# /oneToMany ##########################################################             
+    lifecycleCallbacks: {  }

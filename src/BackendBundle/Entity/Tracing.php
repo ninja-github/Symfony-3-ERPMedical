@@ -54,5 +54,33 @@ class Tracing {
 	public function setMedicalHistory(\BackendBundle\Entity\MedicalHistory $medicalHistory = null) { $this->medicalHistory = $medicalHistory; return $this; }
 	public function getMedicalHistory() { return $this->medicalHistory; }
 /**************************************************************************************************************/
-}
+/* googleCalendarEvent *********************************************************************************************/
+	private $googleCalendarEvent;
+	public function setGoogleCalendarEvent($googleCalendarEvent) { $this->googleCalendarEvent = $googleCalendarEvent; return $this; }
+	public function getGoogleCalendarEvent() { return $this->googleCalendarEvent; }
+/**************************************************************************************************************/
 
+    /**
+     * Add tracingServiceList
+     *
+     * @param \BackendBundle\Entity\TracingService $tracingServiceList
+     *
+     * @return Tracing
+     */
+    public function addTracingServiceList(\BackendBundle\Entity\TracingService $tracingServiceList)
+    {
+        $this->tracingServiceList[] = $tracingServiceList;
+
+        return $this;
+    }
+
+    /**
+     * Remove tracingServiceList
+     *
+     * @param \BackendBundle\Entity\TracingService $tracingServiceList
+     */
+    public function removeTracingServiceList(\BackendBundle\Entity\TracingService $tracingServiceList)
+    {
+        $this->tracingServiceList->removeElement($tracingServiceList);
+    }
+}

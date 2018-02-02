@@ -16,36 +16,8 @@ use Doctrine\ORM\EntityRepository;
  *  repositoryClass: BackendBundle\Repository\OrthopodologyHistoryRepository
  */
 class OrthopodologyHistoryRepository extends \Doctrine\ORM\EntityRepository {
-/* OBTIENE LOS ESTUDIOS ORTOPODOLÓGICOS ASOCIADOS A UNA ID HISTORIA MÉDICA ***********************/
-	public function getOrthopodologyHistories ( $clinicNameUrl, $medicalHistoryNumber ){
-		$em=$this->getEntityManager();
-		$query = $this->createQueryBuilder('oh')
-			->innerJoin('oh.medicalHistory', 'mh', 'mh.id = oh.medicalHistory')
-			->innerJoin('mh.clinic', 'cl', 'cl.id = mh.clinic')			
-			->where('mh.numberMedicalHistory =:medicalHistoryNumber AND cl.nameUrl=:clinicNameUrl')
-			->setParameter('clinicNameUrl', $clinicNameUrl)
-			->setParameter('medicalHistoryNumber', $medicalHistoryNumber)
-      		->getQuery();
-		$orthopodologyHistory = $query->getResult();
-		return $orthopodologyHistory;
-	}
-/*************************************************************************************************/
-/* OBTIENE EL ESTUDIO ORTOPODOLÓGICO ASOCIADO A UN ID HISTORIA MÉDICA + FECHA DE REGISTRO ********/
-/*	public function getOrthopodologyHistory ($medicalHistoryId, $registrationDate){
-		$em=$this->getEntityManager();
-		$query = $this->createQueryBuilder('oh')
-      		->where('oh.idMedicalHistory =:medicalHistoryId')
-      		->setParameter('medicalHistoryId', $medicalHistoryId)
-      		->getQuery();
-		$orthopodologyHistories = $query->getResult();
-		foreach ($orthopodologyHistories as $orthopodologyHistory){
-			$orthopodologyHistory_RegistrationDate = $orthopodologyHistory->getRegistrationDate()->format('Y_m_d');
-			if ($orthopodologyHistory_RegistrationDate == $registrationDate){return $orthopodologyHistory;}
-		}
-	}*/
-/*************************************************************************************************/
 /* OBTIENE EL LISTADO COMPLETO DE ESTUDIOS ORTOPODOLÓGICOS ASOCIADOS A UNA CLÍNICA ***************/
-	public function getListOrthopodologyHistory($clinicNameUrl){
+	public function getOrthopodologyHistoryListOfClinic($clinicNameUrl){
 		$em=$this->getEntityManager();
 		$query = $this->createQueryBuilder('oh')
       		->innerJoin('oh.medicalHistory', 'mh', 'mh.id = oh.medicalHistory')
@@ -56,6 +28,20 @@ class OrthopodologyHistoryRepository extends \Doctrine\ORM\EntityRepository {
       		->getQuery();
 		$orthopodologyHistoriesListOfClinic = $query->getResult();
 		return $orthopodologyHistoriesListOfClinic;
+	}
+/*************************************************************************************************/
+/* OBTIENE LOS ESTUDIOS ORTOPODOLÓGICOS ASOCIADOS A UNA ID HISTORIA MÉDICA ***********************/
+	public function getOrthopodologyHistoryListOfMedicalHistory ( $clinicNameUrl, $medicalHistoryNumber ){
+		$em=$this->getEntityManager();
+		$query = $this->createQueryBuilder('oh')
+			->innerJoin('oh.medicalHistory', 'mh', 'mh.id = oh.medicalHistory')
+			->innerJoin('mh.clinic', 'cl', 'cl.id = mh.clinic')			
+			->where('mh.numberMedicalHistory =:medicalHistoryNumber AND cl.nameUrl=:clinicNameUrl')
+			->setParameter('clinicNameUrl', $clinicNameUrl)
+			->setParameter('medicalHistoryNumber', $medicalHistoryNumber)
+      		->getQuery();
+		$orthopodologyHistory = $query->getResult();
+		return $orthopodologyHistory;
 	}
 /*************************************************************************************************/
 /* OBTIENE EL ESTUDIO ORTOPODOLÓGICO ASOCIADO ****************************************************/
@@ -75,5 +61,19 @@ class OrthopodologyHistoryRepository extends \Doctrine\ORM\EntityRepository {
 			if ($orthopodologyHistory_RegistrationDate == $registrationDate){return $orthopodologyHistory;}
 		}
 	}
+/*************************************************************************************************/
+/* OBTIENE EL ESTUDIO ORTOPODOLÓGICO ASOCIADO A UN ID HISTORIA MÉDICA + FECHA DE REGISTRO ********/
+/*	public function getOrthopodologyHistory ($medicalHistoryId, $registrationDate){
+		$em=$this->getEntityManager();
+		$query = $this->createQueryBuilder('oh')
+      		->where('oh.idMedicalHistory =:medicalHistoryId')
+      		->setParameter('medicalHistoryId', $medicalHistoryId)
+      		->getQuery();
+		$orthopodologyHistories = $query->getResult();
+		foreach ($orthopodologyHistories as $orthopodologyHistory){
+			$orthopodologyHistory_RegistrationDate = $orthopodologyHistory->getRegistrationDate()->format('Y_m_d');
+			if ($orthopodologyHistory_RegistrationDate == $registrationDate){return $orthopodologyHistory;}
+		}
+	}*/
 /*************************************************************************************************/
 }

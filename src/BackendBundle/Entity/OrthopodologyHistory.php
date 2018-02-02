@@ -22,14 +22,44 @@ class OrthopodologyHistory {
 	public function __construct() {
 		$this->docList = new ArrayCollection();
 		$this->tracingList = new ArrayCollection();
-	}
+    }
 /**************************************************************************************************************/
 /* Id de la Tabla *********************************************************************************************/
     private $id;
     public function getId() { return $this->id; }
 /**************************************************************************************************************/
-/* service ****************************************************************************************************/
+/* reasonConsultation *****************************************************************************************/
     private $reasonConsultation;
+    public function setReasonConsultation($reasonConsultation) { $this->reasonConsultation = $reasonConsultation; return $this; } 
+    public function getReasonConsultation() { return $this->reasonConsultation; }   
+/**************************************************************************************************************/
+/* background *************************************************************************************************/  
+
+
+
+/**************************************************************************************************************/
+/* medicalHistory *********************************************************************************************/ 
+    private $medicalHistory;
+    public function setMedicalHistory(\BackendBundle\Entity\MedicalHistory $medicalHistory = null) { $this->medicalHistory = $medicalHistory; return $this; } 
+    public function getMedicalHistory() { return $this->medicalHistory; }
+/**************************************************************************************************************/
+/* userRegisterer *********************************************************************************************/ 
+    private $userRegisterer;
+    public function setUserRegisterer(\BackendBundle\Entity\User $userRegisterer = null) { $this->userRegisterer = $userRegisterer; return $this; } 
+    public function getUserRegisterer() { return $this->userRegisterer; }
+/**************************************************************************************************************/
+/* userModifier ***********************************************************************************************/ 
+    private $userModifier;
+    public function setUserModifier(\BackendBundle\Entity\User $userModifier = null) { $this->userModifier = $userModifier; return $this; }
+    public function getUserModifier() { return $this->userModifier; }
+/**************************************************************************************************************/
+    /*
+     * la función __toString(){ return $this->gender;  } permite
+     * listar los campos cuando referenciemos la tabla
+     */
+    public function __toString(){ return (string)$this->getMedicalHistory(); }
+/**************************************************************************************************************/
+
     private $background;
     private $articularExplorationRotaryPatternExternalLeft;
     private $articularExplorationRotaryPatternExternalRight;
@@ -278,22 +308,7 @@ class OrthopodologyHistory {
      * @var \BackendBundle\Entity\MedicalHistory
      */
 
-    public function setReasonConsultation($reasonConsultation)
-    {
-        $this->reasonConsultation = $reasonConsultation;
 
-        return $this;
-    }
-
-    /**
-     * Get reasonConsultation
-     *
-     * @return string
-     */
-    public function getReasonConsultation()
-    {
-        return $this->reasonConsultation;
-    }
 
     /**
      * Set background
@@ -1449,21 +1464,53 @@ class OrthopodologyHistory {
 	public function getRegistrationDate() { return $this->registrationDate; } 
 	public function setModificationDate($modificationDate) { $this->modificationDate = $modificationDate; return $this; } 
 	public function getModificationDate() { return $this->modificationDate; } 
-	private $medicalHistory;
-   	public function setMedicalHistory(\BackendBundle\Entity\MedicalHistory $medicalHistory = null) { $this->medicalHistory = $medicalHistory; return $this; } 
-	public function getMedicalHistory() { return $this->medicalHistory; }
-	private $userRegisterer;
-	public function setUserRegisterer(\BackendBundle\Entity\User $userRegisterer = null) { $this->userRegisterer = $userRegisterer; return $this; } 
-	public function getUserRegisterer() { return $this->userRegisterer; }
-	private $userModifier;
-	public function setUserModifier(\BackendBundle\Entity\User $userModifier = null) { $this->userModifier = $userModifier; return $this; }
-	public function getUserModifier() { return $this->userModifier; }
-/**************************************************************************************************************/
-	/*
-	 * la función __toString(){ return $this->gender;  } permite
-	 * listar los campos cuando referenciemos la tabla
-	 */
-	public function __toString(){ return (string)$this->getMedicalHistory(); }
-/**************************************************************************************************************/    
-}
+    
 
+    /**
+     * Add docList
+     *
+     * @param \BackendBundle\Entity\OrthopodologyHistoryDoc $docList
+     *
+     * @return OrthopodologyHistory
+     */
+    public function addDocList(\BackendBundle\Entity\OrthopodologyHistoryDoc $docList)
+    {
+        $this->docList[] = $docList;
+
+        return $this;
+    }
+
+    /**
+     * Remove docList
+     *
+     * @param \BackendBundle\Entity\OrthopodologyHistoryDoc $docList
+     */
+    public function removeDocList(\BackendBundle\Entity\OrthopodologyHistoryDoc $docList)
+    {
+        $this->docList->removeElement($docList);
+    }
+
+    /**
+     * Add tracingList
+     *
+     * @param \BackendBundle\Entity\Tracing $tracingList
+     *
+     * @return OrthopodologyHistory
+     */
+    public function addTracingList(\BackendBundle\Entity\Tracing $tracingList)
+    {
+        $this->tracingList[] = $tracingList;
+
+        return $this;
+    }
+
+    /**
+     * Remove tracingList
+     *
+     * @param \BackendBundle\Entity\Tracing $tracingList
+     */
+    public function removeTracingList(\BackendBundle\Entity\Tracing $tracingList)
+    {
+        $this->tracingList->removeElement($tracingList);
+    }
+}

@@ -66,10 +66,14 @@ class AddressCityRepository extends \Doctrine\ORM\EntityRepository {
 			$em=$this->getEntityManager()->getConnection();
 			$query="SELECT address_city.id FROM `address_city` WHERE address_city.cp =:cp AND address_city.city =:city";
 			$stmt = $em->prepare($query);
-			$params = array('cp'=>$cp,'city'=>$city );
-			$stmt->execute($params);
-			$id=$stmt->fetchAll();
-			return $id[0]['id'];
+			if ( isset($cp) && isset($city) ){
+				$params = array('cp'=>$cp,'city'=>$city );
+				$stmt->execute($params);
+				$id=$stmt->fetchAll();
+				return $id[0]['id'];
+			}else{
+				return NULL;
+			}
 		}else{
 			return NULL;
 		}

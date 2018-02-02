@@ -36,6 +36,11 @@ BackendBundle\Entity\User:
             options:
                 fixed: false
             column: user_name
+        isActive:            
+            type: boolean
+            nullable: false
+            options:
+                default: '1'            
         name:
             type: string
             nullable: false
@@ -114,5 +119,9 @@ BackendBundle\Entity\User:
     oneToMany:
         clinicList:
             targetEntity: ClinicUser
-            mappedBy: user                 
+            mappedBy: user
+    oneToOne:
+        userDataDoctor:
+            targetEntity: UserDataDoctor
+            mappedBy: user
     lifecycleCallbacks: {  }

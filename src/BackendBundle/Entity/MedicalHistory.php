@@ -12,15 +12,29 @@
 	use Doctrine\Common\Collections\ArrayCollection;
 /**************************************************************************************************************/
 class MedicalHistory {
-/* Listamos Historias Médicas *********************************************************************************/
+/* Variable contiene un string con todos los datos del paciente ***********************************************/
+/* Se mostrará al usar esta variable 'MedicalHistory' */
 	private $medicalHistoryDataComplete;
-	public function getMedicalHistoryDataComplete() { return (string)$this->numberMedicalHistory.' - '.$this->name.' '.$this->surname; }
+	public function getMedicalHistoryDataComplete() { return (string)$this->medicalHistoryNumber.' - '.$this->name.' '.$this->surname; }
+/**************************************************************************************************************/
+/* Listamos Documentos asociados a la Historia Médica *********************************************************/
 	private $docList;
 	public function getDocList() { return $this->docList; }
+	public function addDocList(\BackendBundle\Entity\MedicalHistoryDoc $docList) { $this->docList[] = $docList; return $this; } 
+	public function removeDocList(\BackendBundle\Entity\MedicalHistoryDoc $docList) { $this->docList->removeElement($docList); } 	
+/**************************************************************************************************************/
+/* Listamos Seguimientos asociados a la Historia Médica *******************************************************/
 	private $tracingList;
 	public function getTracingList() { return $this->tracingList; }
+	public function addTracingList(\BackendBundle\Entity\Tracing $tracingList) { $this->tracingList[] = $tracingList; return $this; } 
+	public function removeTracingList(\BackendBundle\Entity\Tracing $tracingList) { $this->tracingList->removeElement($tracingList); } 
+/**************************************************************************************************************/
+/* Listamos Estudios Orthopodológicos asociados a la Historia Médica ******************************************/
 	private $orthopodologyHistoryList;
 	public function getOrthopodologyHistoryList() { return $this->orthopodologyHistoryList; }
+	public function addOrthopodologyHistoryList(\BackendBundle\Entity\OrthopodologyHistory $orthopodologyHistoryList) { $this->orthopodologyHistoryList[] = $orthopodologyHistoryList; return $this; }
+	public function removeOrthopodologyHistoryList(\BackendBundle\Entity\OrthopodologyHistory $orthopodologyHistoryList) { $this->orthopodologyHistoryList->removeElement($orthopodologyHistoryList); }	
+/**************************************************************************************************************/
 /* CONSTRUCTOR ************************************************************************************************/
 	//Un ArrayCollection es una implementación de colección que se ajusta a la matriz PHP normal.
 	public function __construct() {
@@ -31,16 +45,16 @@ class MedicalHistory {
     }
 /**************************************************************************************************************/
 	//la función __toString(){ return $this->gender;  } permite listar los campos cuando referenciemos la tabla
-    public function __toString(){ return (string)$this->numberMedicalHistory.' - '.$this->name.' '.$this->surname; }
+    public function __toString(){ return (string)$this->medicalHistoryNumber.' - '.$this->name.' '.$this->surname; }
 /**************************************************************************************************************/
 /* Id de la Tabla *********************************************************************************************/
 	private $id;
 	public function getId() { return $this->id; }
 /**************************************************************************************************************/
-/* numberMedicalHistory ***************************************************************************************/
-	private $numberMedicalHistory;
-	public function setNumberMedicalHistory($numberMedicalHistory) { $this->numberMedicalHistory = $numberMedicalHistory; return $this; }
-	public function getNumberMedicalHistory() { return $this->numberMedicalHistory; }
+/* medicalHistoryNumber ***************************************************************************************/
+	private $medicalHistoryNumber;
+	public function setMedicalHistoryNumber($medicalHistoryNumber) { $this->medicalHistoryNumber = $medicalHistoryNumber; return $this; }
+	public function getMedicalHistoryNumber() { return $this->medicalHistoryNumber; }
 /**************************************************************************************************************/
 /* name *******************************************************************************************************/
 	private $name;
@@ -87,7 +101,7 @@ class MedicalHistory {
 	public function setBirthday($birthday) { $this->birthday = $birthday; return $this; }
 	public function getBirthday() { return $this->birthday; }
 /**************************************************************************************************************/
-/* numberMedicalHistory ***************************************************************************************/
+/* gender *****************************************************************************************************/
 	private $gender;
     public function setGender(\BackendBundle\Entity\TypeGender $type = null) { $this->gender = $type; return $this; }
     public function getGender() { return $this->gender; }
@@ -157,7 +171,7 @@ class MedicalHistory {
 	public function setTreatment($treatment) { $this->treatment = $treatment; return $this; }
 	public function getTreatment() { return $this->treatment; }
 /**************************************************************************************************************/
-/* numberMedicalHistory ***************************************************************************************/
+/* clinic *****************************************************************************************************/
 	private $clinic;
     public function setClinic(\BackendBundle\Entity\Clinic $name = null) { $this->clinic = $name; return $this; }
     public function getClinic() { return $this->clinic; }
@@ -177,10 +191,9 @@ class MedicalHistory {
 	public function setModificationDate($modificationDate) { $this->modificationDate = $modificationDate; return $this; }
 	public function getModificationDate() { return $this->modificationDate; }
 /**************************************************************************************************************/
-/* numberMedicalHistory ***************************************************************************************/
+/* userModifier ***********************************************************************************************/
 	private $userModifier;
 	public function setUserModifier(\BackendBundle\Entity\User $userModifier = null) { $this->userModifier = $userModifier; return $this; }
 	public function getUserModifier() { return $this->userModifier; }
 /**************************************************************************************************************/
 }
-

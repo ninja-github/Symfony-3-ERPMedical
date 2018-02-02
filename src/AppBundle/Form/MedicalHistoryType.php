@@ -38,6 +38,7 @@ class MedicalHistoryType extends AbstractType {
 		// Usamos la propiedad 'allow_extra_fields' pasar las variables
 		$permissionLoggedUser = $options['allow_extra_fields'];
 		$clinicNameUrl = $options['attr']['clinicNameUrl'];
+		$userLoggedId = $options['attr']['userLoggedId'];
 		$builder
 			->add('name', TextType::class, array(
 				'required'=>false,
@@ -139,8 +140,8 @@ class MedicalHistoryType extends AbstractType {
 				->add('userRegisterer', EntityType::class,array(
 					'class' => 'BackendBundle:User',
 					'choice_label' => 'user',
-					'query_builder' => function($er) use($clinicNameUrl) {
-						return $er->getUserListOfClinic($clinicNameUrl);
+					'query_builder' => function($er) use( $clinicNameUrl, $userLoggedId ) {
+						return $er->getUserListOfClinic($clinicNameUrl, $userLoggedId);
                 	},
                 	'label' => 'userName',
 					'expanded' => false,		// Muestra todas las opciones (radio buttons O checkboxes)
@@ -163,8 +164,8 @@ class MedicalHistoryType extends AbstractType {
 				->add('userModifier', EntityType::class,array(
 					'class' => 'BackendBundle:User',
 					'choice_label' => 'user',
-					'query_builder' => function($er) use($clinicNameUrl) {
-						return $er->getUserListOfClinic($clinicNameUrl);
+					'query_builder' => function($er) use( $clinicNameUrl, $userLoggedId ) {
+						return $er->getUserListOfClinic($clinicNameUrl, $userLoggedId);
                 	},
                 	'label' => 'userName',
 					'expanded'     => false,       // Muestra todas las opciones (radio buttons O checkboxes)
