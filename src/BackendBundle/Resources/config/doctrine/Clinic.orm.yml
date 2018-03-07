@@ -130,6 +130,14 @@ BackendBundle\Entity\Clinic:
 # /manyToOne ##########################################################
 # oneToMany ###########################################################               
     oneToMany:
+        # invoiceIssuedList # no se encuentra dentro de la BD, pero se define en la entidad para listar los elementos
+        invoiceIssuedList:
+            targetEntity: InvoiceIssued
+            mappedBy: clinic
+        # invoiceReceivedList # no se encuentra dentro de la BD, pero se define en la entidad para listar los elementos
+        invoiceReceivedList:
+            targetEntity: InvoiceReceived
+            mappedBy: clinic            
         # servicesList # no se encuentra dentro de la BD, pero se define en la entidad para listar los elementos
         servicesList:
             targetEntity: Service
@@ -143,6 +151,11 @@ BackendBundle\Entity\Clinic:
         businessList:
             targetEntity: Business
             # mappedBy # hace referencia a la columna de la tabla # Business # dentro de la BD relacionada con la tabla # Clinic #
+            mappedBy: clinic            
+        # docList # no se encuentra dentro de la BD, pero se define en la entidad para listar los elementos
+        documentsList:
+            targetEntity: Documents
+            # mappedBy # hace referencia a la columna de la tabla # MedicalHistoryDoc # dentro de la BD relacionada con la tabla # MedicalHistory #
             mappedBy: clinic            
 # /oneToMany ##########################################################               
     lifecycleCallbacks: {  }

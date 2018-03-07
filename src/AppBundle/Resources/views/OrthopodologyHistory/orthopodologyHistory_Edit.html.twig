@@ -1,6 +1,22 @@
 {# EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig'...................... #}
   {% extends "AppBundle:Layouts:layout.html.twig"%}
 {# ......................EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig' #}
+{% block stylesheets %}
+	{# la función parent() carga todo el contenido del bloque anterior #}
+	{{ parent() }}
+	<!-- CK Editor -->
+	<script src="{{ asset ('assets/vendors/ckeditor/ckeditor.js') }}"></script>
+	<script>
+		if ( location.hostname == 'sdk.ckeditor.com' ) {
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+					m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			ga('create', 'UA-271067-15', 'auto');
+			ga('send', 'pageview');
+		}
+	</script>	
+{% endblock %}
 {% block content %}
 	<style>
 		.bootstrap-datetimepicker-widget table td, .bootstrap-datetimepicker-widget table th {
@@ -39,6 +55,24 @@
 						</div>
 						<div class="x_content">
 							{{ form_start(form, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
+								<table id="datatable-responsive"
+										class="table table-striped table-bordered dt-responsive nowrap"
+										cellspacing="0" style="width:calc(100% - 17px);margin-left:10px;margin-right:10px;" >
+									<thead>
+										<tr>
+											<th style="text-align: center;">Pie</th>
+											<th style="text-align: center;">Altura</th>
+											<th style="text-align: center;">Peso</th>
+										<tr>
+									</thead>
+									<tbody>
+										<tr style="height:30px;">
+											<td style="text-align: center;">{{form_widget(form.shoeSize)}}</td>
+											<td style="text-align: center;">{{form_widget(form.height)}}</td>
+											<td style="text-align: center;">{{form_widget(form.weight)}}</td>					
+										<tr>
+									</tbody>
+								</table>							
 								<div class="form-group">
 									<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12" >Razón de Consulta</label>
 									<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form.reasonConsultation)}}</div>
@@ -46,205 +80,204 @@
 									<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form.background)}}</div>
 								</div>
 								<div class="clearfix"></div>
-								<table id="datatable-responsive"
-									class="table table-striped table-bordered dt-responsive nowrap"
-									cellspacing="0" style="width:calc(100% - 17px);margin-left:10px;margin-right:10px;" >
-									<thead>
-										<tr>
-											<th style="text-align: center;">Izquierdo</th>
-											<th style="text-align: center;">EXPLORACIÓN ARTICULAR</th>
-											<th style="text-align: center;">Derecho</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td style="text-align: center; padding: 8px 0px;">
-												{{form_widget(form.articularExplorationRotaryPatternExternalLeft)}}
-												/
-												{{form_widget(form.articularExplorationRotaryPatternInternalLeft)}}</td>
-											<td style="text-align: center;">PATRON ROTADOR (ext / int)</td>
-											<td style="text-align: center; padding: 8px 0px;">
-												{{form_widget(form.articularExplorationRotaryPatternExternalRight)}}
-												/
-												{{form_widget(form.articularExplorationRotaryPatternInternalRight)}}</td>
-										</tr>
-										<tr>
-											<td style="text-align: center;">
-												{{form_widget(form.articularExplorationHipLeft)}}
-											</td>
-											<td style="text-align: center;">CADERA</td>
-											<td style="text-align: center;">
-												{{form_widget(form.articularExplorationHipRight)}}
-											</td>
-										</tr>
-										<tr>
-											<td style="text-align: center;">
-												{{form_widget(form.articularExplorationKneeLeft)}}</td>
-											<td style="text-align: center;">RODILLA</td>
-											<td style="text-align: center;">
-												{{form_widget(form.articularExplorationKneeRight)}}
-											</td>
-										</tr>
-										<tr>
-											<td style="text-align: center;">
-												{{form_widget(form.articularExplorationAnkleLeft)}}</td>
-											<td style="text-align: center;">TOBILLO</td>
-												<td style="text-align: center;">
-												{{form_widget(form.articularExplorationAnkleRight)}}
-											</td>
-										</tr>
-										<tr>
-											<td style="text-align: center;">
-												{{form_widget(form.articularExplorationRetroPieLeft)}}</td>
-											<td style="text-align: center;">RETROPIÉ</td>
-											<td style="text-align: center;">
-												{{form_widget(form.articularExplorationRetroPieRight)}}
-											</td>
-										</tr>
-										<tr>
-											<td style="text-align: center;">
-												{{form_widget(form.articularExplorationBeforeFootLeft)}}</td>
-											<td style="text-align: center;">ANTEPIÉ</td>
-											<td style="text-align: center;">
-												{{form_widget(form.articularExplorationBeforeFootRight)}}
-											</td>
-										</tr>
-										<tr>
-											<td style="text-align: center;">
-												{{form_widget(form.articularExplorationFirstRadioLeft)}}</td>
-											<td style="text-align: center;">I.RADIO</td>
-											<td style="text-align: center;">
-												{{form_widget(form.articularExplorationFirstRadioRight)}}
-											</td>
-										</tr>
-										<tr>
-											<td style="text-align: center;">
-												{{form_widget(form.articularExplorationFifthRadioLeft)}}</td>
-											<td style="text-align: center;">V.RADIO</td>
-											<td style="text-align: center;">
-												{{form_widget(form.articularExplorationFifthRadioRight)}}
-											</td>
-										</tr>
-
-										<tr>
-											<td style="text-align: center;">
-												{{form_widget(form.articularExplorationCentralRadiosLeft)}}</td>
-											<td style="text-align: center;">R.CENTRALES</td>
-											<td style="text-align: center;">
-												{{form_widget(form.articularExplorationCentralRadiosRight)}}
-											</td>
-										</tr>
-										<tr>
-											<td style="text-align: center;">
-												{{form_widget(form.articularExplorationFirstFingerLeft)}}</td>
-											<td style="text-align: center;">1ºDEDO</td>
-											<td style="text-align: center;">
-												{{form_widget(form.articularExplorationFirstFingerRight)}}
-											</td>
-										</tr>
-										<tr>
-											<td style="text-align: center;">
-												{{form_widget(form.articularExplorationSmallerFingersLeft)}}</td>
-											<td style="text-align: center;">D.MENORES</td>
-											<td style="text-align: center;">
-												{{form_widget(form.articularExplorationSmallerFingersRight)}}
-											</td>
-										</tr>
-									</tbody>
-								</table>
+								<!-- Exploración articular -->
+									<table id="datatable-responsive"
+										class="table table-striped table-bordered dt-responsive nowrap"
+										cellspacing="0" style="width:calc(100% - 17px);margin-left:10px;margin-right:10px;" >
+										<thead>
+											<tr>
+												<th style="text-align: center;"><img src="{{ asset ('assets/images/feet_right.png') }}" alt="..." style="width: 25px;"></th>
+												<th style="text-align: center;">EXPLORACIÓN ARTICULAR</th>
+												<th style="text-align: center;"><img src="{{ asset ('assets/images/feet_left.png') }}" alt="..." style="width: 25px;"></th>
+											<tr>
+										</thead>
+										<tbody>
+											<!-- patrón rotador -->
+												<tr>
+													<td style="text-align: center; padding: 8px 0px;">
+														{{form_widget(form.articularExplorationRotaryPatternExternalRight)}}
+														/
+														{{form_widget(form.articularExplorationRotaryPatternInternalRight)}}
+													</td>
+													<td style="text-align: center;">PATRON ROTADOR (ext / int)</td>
+													<td style="text-align: center; padding: 8px 0px;">
+														{{form_widget(form.articularExplorationRotaryPatternExternalLeft)}}
+														/
+														{{form_widget(form.articularExplorationRotaryPatternInternalLeft)}}
+													</td>
+												</tr>
+											<!-- /patrón rotador -->
+											<!-- cadera -->
+												<tr>
+													<td style="text-align: center;">{{form_widget(form.articularExplorationHipRight)}}</td>
+													<td style="text-align: center;">CADERA</td>
+													<td style="text-align: center;">{{form_widget(form.articularExplorationHipLeft)}}</td>
+												</tr>
+											<!-- /cadera -->
+											<!-- rodilla -->
+												<tr>
+													<td style="text-align: center;">{{form_widget(form.articularExplorationKneeRight)}}</td>
+													<td style="text-align: center;">RODILLA</td>
+													<td style="text-align: center;">{{form_widget(form.articularExplorationKneeLeft)}}</td>
+												</tr>
+											<!-- /rodilla -->
+											<!-- tobillo -->
+												<tr>
+													<td style="text-align: center;">{{form_widget(form.articularExplorationAnkleRight)}}</td>
+													<td style="text-align: center;">TOBILLO</td>
+													<td style="text-align: center;">{{form_widget(form.articularExplorationAnkleLeft)}}</td>
+												</tr>
+											<!-- /tobillo -->																
+											<!-- retropie -->										
+												<tr>
+													<td style="text-align: center;">{{form_widget(form.articularExplorationRetroPieRight)}}</td>
+													<td style="text-align: center;">RETROPIÉ</td>
+													<td style="text-align: center;">{{form_widget(form.articularExplorationRetroPieLeft)}}</td>
+												</tr>
+											<!-- /retropie -->
+											<!-- antepie -->
+												<tr>
+													<td style="text-align: center;">{{form_widget(form.articularExplorationBeforeFootRight)}}</td>
+													<td style="text-align: center;">ANTEPIÉ</td>
+													<td style="text-align: center;">{{form_widget(form.articularExplorationBeforeFootLeft)}}</td>
+												</tr>
+											<!-- /antepie -->																	
+											<!-- I radio -->
+												<tr>
+													<td style="text-align: center;">{{form_widget(form.articularExplorationFirstRadioRight)}}</td>
+													<td style="text-align: center;">I.RADIO</td>
+													<td style="text-align: center;">{{form_widget(form.articularExplorationFirstRadioLeft)}}</td>
+												</tr>
+											<!-- /I radio -->
+											<!-- V radio -->
+												<tr>
+													<td style="text-align: center;">{{form_widget(form.articularExplorationFifthRadioRight)}}</td>
+													<td style="text-align: center;">V.RADIO</td>
+													<td style="text-align: center;">{{form_widget(form.articularExplorationFifthRadioLeft)}}</td>
+												</tr>
+											<!-- V radio -->																	
+											<!-- r centrales -->
+												<tr>
+													<td style="text-align: center;">{{form_widget(form.articularExplorationCentralRadiosRight)}}</td>
+													<td style="text-align: center;">R.CENTRALES</td>
+													<td style="text-align: center;">{{form_widget(form.articularExplorationCentralRadiosLeft)}}</td>
+												</tr>
+											<!-- /r centrales -->
+											<!-- 1er dedo -->
+												<tr>
+													<td style="text-align: center;">{{form_widget(form.articularExplorationFirstFingerRight)}}</td>
+													<td style="text-align: center;">1ºDEDO</td>
+													<td style="text-align: center;">{{form_widget(form.articularExplorationFirstFingerLeft)}}</td>
+												</tr>
+											<!-- /1er dedo -->
+											<!-- D menores -->											
+												<tr>
+													<td style="text-align: center;">{{form_widget(form.articularExplorationSmallerFingersRight)}}</td>
+													<td style="text-align: center;">D.MENORES</td>
+													<td style="text-align: center;">{{form_widget(form.articularExplorationSmallerFingersLeft)}}</td>
+												</tr>
+											<!-- /D menores -->
+										</tbody>
+									</table>
+								<!-- /Exploración articular -->
 								<div class="clearfix"></div>
-								<label class="control-label col-lg-1 col-md-3 col-sm-3 col-xs-12" >Torsiones</label>
-								<table id="datatable-responsive"
-									class="table table-striped table-bordered dt-responsive nowrap"
-									cellspacing="0" style="width:calc(100% - 17px);margin-left:10px;margin-right:10px;" >
-									<tbody>
-										<tr>
-											<td style="text-align: center;">
-												{{form_widget(form.torsionsFemoralLeft)}}</td>
-											<td style="text-align: center;">FEMORAL</td>
-											<td style="text-align: center;">
-												{{form_widget(form.torsionsFemoralRight)}}
-											</td>
-										</tr>
-										<tr>
-											<td style="text-align: center;">
-												{{form_widget(form.torsionsGenusLeft)}}</td>
-											<td style="text-align: center;">GENUS</td>
-											<td style="text-align: center;">
-												{{form_widget(form.torsionsGenusRight)}}
-											</td>
-										</tr>
-										<tr>
-											<td style="text-align: center;">
-												{{form_widget(form.torsionsAngleQLeft)}}</td>
-											<td style="text-align: center;">ÁNGULO Q</td>
-											<td style="text-align: center;">
-												{{form_widget(form.torsionsAngleQRight)}}
-											</td>
-										</tr>
-										<tr>
-											<td style="text-align: center;">
-												{{form_widget(form.torsionsTibialLeft)}}</td>
-											<td style="text-align: center;">TIBIAL</td>
-											<td style="text-align: center;">
-												{{form_widget(form.torsionsTibialRight)}}
-											</td>
-										</tr>
-										<tr>
-											<td style="text-align: center;">
-												{{form_widget(form.torsionsHelbingLeft)}}</td>
-											<td style="text-align: center;">HELBING</td>
-											<td style="text-align: center;">
-												{{form_widget(form.torsionsHelbingRight)}}
-											</td>
-										</tr>
-									</tbody>
-								</table>
+								<!-- Torsiones -->
+									<table id="datatable-responsive"
+										class="table table-striped table-bordered dt-responsive nowrap"
+										cellspacing="0" style="width:calc(100% - 17px);margin-left:10px;margin-right:10px;" >
+										<thead>
+											<tr>
+												<th style="text-align: center;"><img src="{{ asset ('assets/images/feet_right.png') }}" alt="..." style="width: 25px;"></th>
+												<th style="text-align: center;">TORSIONES</th>
+												<th style="text-align: center;"><img src="{{ asset ('assets/images/feet_left.png') }}" alt="..." style="width: 25px;"></th>
+											</tr>
+										</thead>
+										<tbody>
+											<!-- Femoral -->
+												<tr>
+													<td style="text-align: center;">{{form_widget(form.torsionsFemoralRight)}}</td>
+													<td style="text-align: center;">FEMORAL</td>
+													<td style="text-align: center;">{{form_widget(form.torsionsFemoralLeft)}}</td>
+												</tr>
+											<!-- /Femoral -->
+											<!-- Genus -->											
+												<tr>
+													<td style="text-align: center;">{{form_widget(form.torsionsGenusRight)}}</td>
+													<td style="text-align: center;">GENUS</td>
+													<td style="text-align: center;">{{form_widget(form.torsionsGenusLeft)}}</td>
+												</tr>
+											<!-- /genus -->
+											<!-- angulo q -->
+												<tr>
+													<td style="text-align: center;">{{form_widget(form.torsionsAngleQRight)}}</td>
+													<td style="text-align: center;">ÁNGULO Q</td>
+													<td style="text-align: center;">{{form_widget(form.torsionsAngleQLeft)}}</td>
+												</tr>
+											<!-- /angulo q -->
+											<!-- tibial -->
+												<tr>
+													<td style="text-align: center;">{{form_widget(form.torsionsTibialRight)}}</td>
+													<td style="text-align: center;">TIBIAL</td>
+													<td style="text-align: center;">{{form_widget(form.torsionsTibialLeft)}}</td>
+												</tr>
+											<!-- tibial -->
+											<!-- helbing -->
+												<tr>
+													<td style="text-align: center;">{{form_widget(form.torsionsHelbingRight)}}</td>
+													<td style="text-align: center;">HELBING</td>
+													<td style="text-align: center;">{{form_widget(form.torsionsHelbingLeft)}}</td>
+												</tr>
+											<!-- /helbing -->
+										</tbody>
+									</table>
+								<!-- /Torsiones -->
 								<div class="clearfix"></div>
 								<div class="form-group">
 									<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12" >Disimetría</label>
 									<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form.dissimmetry)}}</div>
 								</div>
 								<div class="clearfix"></div>
-								<label class="control-label col-lg-12 col-md-12 col-sm-12 col-xs-12" >Exploración Muscular</label>
-								<table id="datatable-responsive"
-									class="table table-striped table-bordered dt-responsive nowrap"
-									cellspacing="0" style="width:calc(100% - 17px);margin-left:10px;margin-right:10px;" >
-									<tbody>
-										<tr>
-											<td style="text-align: center;">
-												{{form_widget(form.muscularExplorationDorsalFlexionLeft)}}</td>
-											<td style="text-align: center;">FLEXIÓN DORSAL</td>
-											<td style="text-align: center;">
-												{{form_widget(form.muscularExplorationDorsalFlexionRight)}}
-											</td>
-										</tr>
-										<tr>
-											<td style="text-align: center;">
-												{{form_widget(form.muscularExplorationPlantarFlexionLeft)}}</td>
-											<td style="text-align: center;">FLEXIÓN PLANTAR</td>
-											<td style="text-align: center;">
-												{{form_widget(form.muscularExplorationPlantarFlexionRight)}}
-											</td>
-										</tr>
-										<tr>
-											<td style="text-align: center;">
-												{{form_widget(form.muscularExplorationEversionLeft)}}</td>
-											<td style="text-align: center;">EVERSIÓN</td>
-											<td style="text-align: center;">
-												{{form_widget(form.muscularExplorationEversionRight)}}
-											</td>
-										</tr>
-										<tr>
-											<td style="text-align: center;">
-												{{form_widget(form.muscularExplorationReversalLeft)}}</td>
-											<td style="text-align: center;">INVERSIÓN</td>
-											<td style="text-align: center;">
-												{{form_widget(form.muscularExplorationReversalRight)}}
-											</td>
-										</tr>
-									</tbody>
-								</table>
+								<!-- Exploración Muscular -->
+									<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+										<thead>
+											<tr>
+												<th style="text-align: center;"><img src="{{ asset ('assets/images/feet_right.png') }}" alt="..." style="width: 25px;"></th>
+												<th style="text-align: center;">EXPLORACIÓN MUSCULAR</th>
+												<th style="text-align: center;"><img src="{{ asset ('assets/images/feet_left.png') }}" alt="..." style="width: 25px;"></th>
+											</tr>
+										</thead>
+										<tbody>
+											<!-- Flexión dorsal -->
+												<tr>
+													<td style="text-align: center;">{{form_widget(form.muscularExplorationDorsalFlexionRight)}}</td>
+													<td style="text-align: center;">FLEXIÓN DORSAL</td>
+													<td style="text-align: center;">{{form_widget(form.muscularExplorationDorsalFlexionLeft)}}</td>
+												</tr>
+											<!-- /Flexión dorsal -->
+											<!-- Flexión puntal -->
+												<tr>
+													<td style="text-align: center;">{{form_widget(form.muscularExplorationPlantarFlexionRight)}}</td>
+													<td style="text-align: center;">FLEXIÓN PLANTAR</td>
+													<td style="text-align: center;">{{form_widget(form.muscularExplorationPlantarFlexionLeft)}}</td>
+												</tr>
+											<!-- /Flexión puntal -->
+											<!-- Eversión -->
+												<tr>
+													<td style="text-align: center;">{{form_widget(form.muscularExplorationEversionRight)}}</td>
+													<td style="text-align: center;">EVERSIÓN</td>
+													<td style="text-align: center;">{{form_widget(form.muscularExplorationEversionLeft)}}</td>
+												</tr>
+											<!-- /Eversión -->
+											<!-- Inversión -->
+												<tr>
+													<td style="text-align: center;">{{form_widget(form.muscularExplorationReversalRight)}}</td>
+													<td style="text-align: center;">INVERSIÓN</td>
+													<td style="text-align: center;">{{form_widget(form.muscularExplorationReversalLeft)}}</td>
+												</tr>
+											<!-- /Inversión -->
+										</tbody>
+									</table>
+								<!-- /Exploración Muscular -->
 								<div class="clearfix"></div>
 								<div class="form-group">
 									<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12" >Exploración Dinámica</label>
@@ -380,4 +413,31 @@
 			}
 		});
 	</script>
+	<!-- CKEditor -->
+	<script data-sample="reasonConsultation">
+		CKEDITOR.replace( 'backendbundle_orthopodologyhistory_reasonConsultation', {
+			customConfig: "{{ asset ('assets/js/custom/ckeditor_config_orthopodology_history.js') }}"
+		});
+		CKEDITOR.replace( 'backendbundle_orthopodologyhistory_background', {
+			customConfig: "{{ asset ('assets/js/custom/ckeditor_config_orthopodology_history.js') }}"
+		});		
+		CKEDITOR.replace( 'backendbundle_orthopodologyhistory_dissimmetry', {
+			customConfig: "{{ asset ('assets/js/custom/ckeditor_config_orthopodology_history.js') }}"
+		});	
+		CKEDITOR.replace( 'backendbundle_orthopodologyhistory_dinamicExploration', {
+			customConfig: "{{ asset ('assets/js/custom/ckeditor_config_orthopodology_history.js') }}"
+		});	
+		CKEDITOR.replace( 'backendbundle_orthopodologyhistory_signsFootprint', {
+			customConfig: "{{ asset ('assets/js/custom/ckeditor_config_orthopodology_history.js') }}"
+		});	
+		CKEDITOR.replace( 'backendbundle_orthopodologyhistory_suplementaryTest', {
+			customConfig: "{{ asset ('assets/js/custom/ckeditor_config_orthopodology_history.js') }}"
+		});	
+		CKEDITOR.replace( 'backendbundle_orthopodologyhistory_diagnostic', {
+			customConfig: "{{ asset ('assets/js/custom/ckeditor_config_orthopodology_history.js') }}"
+		});	
+		CKEDITOR.replace( 'backendbundle_orthopodologyhistory_treatment', {
+			customConfig: "{{ asset ('assets/js/custom/ckeditor_config_orthopodology_history.js') }}"
+		});									
+	</script>	
 {% endblock %}

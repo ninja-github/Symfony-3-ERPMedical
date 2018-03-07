@@ -39,6 +39,16 @@ BackendBundle\Entity\MedicalHistory:
             options:
                 unsigned: false
             column: medical_history_number
+        updated:
+            type: boolean
+            nullable: false
+            options:
+                default: '0' 
+        late:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false                          
         name:
             type: string
             nullable: true
@@ -166,6 +176,13 @@ BackendBundle\Entity\MedicalHistory:
             length: 512
             options:
                 fixed: false
+        insuranceCarrier:
+            type: string
+            nullable: true
+            length: 50
+            options:
+                fixed: false
+            column: insurance_carrier                               
         registrationDate:
             type: datetime
             nullable: false
@@ -231,8 +248,8 @@ BackendBundle\Entity\MedicalHistory:
 # oneToMany ###########################################################           
     oneToMany:
         # docList # no se encuentra dentro de la BD, pero se define en la entidad para listar los elementos
-        docList:
-            targetEntity: MedicalHistoryDoc
+        documentsList:
+            targetEntity: Documents
             # mappedBy # hace referencia a la columna de la tabla # MedicalHistoryDoc # dentro de la BD relacionada con la tabla # MedicalHistory #
             mappedBy: medicalHistory
         # tracingList # no se encuentra dentro de la BD, pero se define en la entidad para listar los elementos

@@ -10,12 +10,12 @@
 	use Symfony\Component\HttpFoundation\Session\Session; 	// Permite usar sesiones, usado en FLASHBAG
 /* Añadimos las ENTIDADES que usaremos ************************************************************************/
 	use BackendBundle\Entity\OrthopodologyHistory;			// Da acceso a la Entidad Usuario
-	use BackendBundle\Entity\OrthopodologyHistoryDoc;		// Da acceso a la Entidad Usuario
-	use BackendBundle\Entity\Tracing;										// Da acceso a la Entidad Usuario	
+	use BackendBundle\Entity\Documents;						// Da acceso a la Entidad Documents
+	use BackendBundle\Entity\Tracing;						// Da acceso a la Entidad Usuario	
 /* Añadimos los FORMULARIOS que usaremos **********************************************************************/
 	use AppBundle\Form\OrthopodologyHistoryType;			// Da acceso al Formulario OrthopodologyHistoryType
-	use AppBundle\Form\OrthopodologyHistoryDocType;		// Da acceso al Formulario OrthopodologyHistoryDocType
-	use AppBundle\Form\TracingType;										// Da acceso al Formulario TracingType	
+	use AppBundle\Form\DocumentsType;						// Da acceso al Formulario DocumentsType
+	use AppBundle\Form\TracingType;							// Da acceso al Formulario TracingType	
 /**************************************************************************************************************/
 class OrthopodologyHistoryController extends Controller{
 /* OBJETO SESSIÓN - Para activar las sesiones inicializamos la variable e incluimos en ella el objeto Session()
@@ -41,6 +41,9 @@ class OrthopodologyHistoryController extends Controller{
 		/******************************************************************************************************/
 		/* CARGO LOS REPOSITORIOS  ****************************************************************************/
 			$orthopodologyHistory_repo = $em->getRepository("BackendBundle:OrthopodologyHistory");
+			$medicalHistory_repo = $em->getRepository("BackendBundle:MedicalHistory");
+			$tracingService_repo = $em->getRepository("BackendBundle:TracingService"); 
+			$tracing_repo = $em->getRepository("BackendBundle:Tracing"); 
 		/******************************************************************************************************/
 		/* REALIZO LAS CONSULTAS NECESARIAS A LA BD MEDIANTE LAS ENTIDADES Y LOS REPOSITORIOS *****************/
 			/* REPOSITORY
@@ -49,13 +52,38 @@ class OrthopodologyHistoryController extends Controller{
 			 * src\BackendBundle\Resources\config\OrthopodologyHistory.orm.yml
 			 */
 			$orthopodologyHistoryList = $orthopodologyHistory_repo->getOrthopodologyHistoryListOfClinic($clinicNameUrl);
+			// un único estudio por paciente
+			$orthopodologyHistoryListOnlyOneForMedicalHistory = array();
+			$medicalHistoryNumberList = array();
+			foreach( $orthopodologyHistoryList as $orthopodologyHistory => $data ){
+				if($orthopodologyHistoryListOnlyOneForMedicalHistory == null){
+					array_push($orthopodologyHistoryListOnlyOneForMedicalHistory,$data);
+					$medicalHistoryNumber = $data->getMedicalHistory()->getMedicalHistoryNumber();
+					array_push($medicalHistoryNumberList,$medicalHistoryNumber);
+				}else{
+					$medicalHistoryNumber = $data->getMedicalHistory()->getMedicalHistoryNumber();
+					if( !in_array($medicalHistoryNumber,$medicalHistoryNumberList) ){
+						array_push($orthopodologyHistoryListOnlyOneForMedicalHistory,$data);
+						array_push($medicalHistoryNumberList,$medicalHistoryNumber);
+					}
+				}
+			}
+			// actualizo la lista a solo 1 estudio por paciente
+			$orthopodologyHistoryList = $orthopodologyHistoryListOnlyOneForMedicalHistory;
 		/******************************************************************************************************/
+		/* REALIZO LAS CONSULTAS NECESARIAS A LA BD MEDIANTE LOS REPOSITORIOS *********************************/			
+			$medicalHistoryList = $medicalHistory_repo->findAll(array('clinic'=>$clinicView));
+			foreach ($medicalHistoryList as $key => $medicalHistory){
+				$medicalHistoryNumber = $medicalHistory->getMedicalHistoryNumber();
+				$dataExtraMedicalHistoryList[$medicalHistoryNumber]['costEarnings'] = $tracing_repo->getCostEarnings($clinicNameUrl, $medicalHistoryNumber);
+			}		
 		/* CARGAMOS LA VISTA CON SUS VARIABLES ****************************************************************/
 			// Enviamos el formulario y su vista a la plantilla TWIG
 			return $this->render('AppBundle:OrthopodologyHistory:orthopodologyHistory_List.html.twig',
 				array(
 					'permissionLoggedUser'=>$permissionLoggedUser,
-					'orthopodologyHistoryList'=>$orthopodologyHistoryList
+					'orthopodologyHistoryList'=>$orthopodologyHistoryList,
+					'dataExtraMedicalHistoryList'=>$dataExtraMedicalHistoryList
 				)
 			);
 		/******************************************************************************************************/
@@ -100,6 +128,7 @@ class OrthopodologyHistoryController extends Controller{
 			$tracing_repo = $em->getRepository("BackendBundle:Tracing");
 			$typeTracing_repo = $em->getRepository("BackendBundle:TypeTracing");
 			$typeDoc_repo = $em->getRepository("BackendBundle:TypeDoc");
+			$typeContentDoc_repo = $em->getRepository("BackendBundle:TypeContentDoc");
 		/******************************************************************************************************/
 		/* REALIZO LAS CONSULTAS NECESARIAS A LA BD MEDIANTE LOS REPOSITORIOS *********************************/
 			// Realizamos las consultas
@@ -112,6 +141,12 @@ class OrthopodologyHistoryController extends Controller{
 				if ($clave->getRegistrationDate()->format('Y_m_d') == $registrationDate ){
 					$orthopodologyHistory = $clave;
 				}
+			}
+			if($medicalHistory == NULL){
+				$status = [	'type'=>'danger','description'=>'No existe estudio asociado a la historia.'];
+				// generamos los mensajes FLASH (necesario activar las sesiones)
+				$this->session->getFlashBag()->add("status", $status);
+				return $this->redirectToRoute('orthopodology_history_list', array('clinicNameUrl'=>$clinicNameUrl));
 			}
 			// Extraemos $tracingOrthopodologyHistoryList para ordenarlos por Fecha
 			$tracingOrthopodologyHistoryList = $tracing_repo->findBy(['orthopodologyHistory'=>$orthopodologyHistory],['date'=>'DESC']);
@@ -204,50 +239,56 @@ class OrthopodologyHistoryController extends Controller{
 			}
 		/******************************************************************************************************/
 		/* FORMULARO SUBIR NUEVO DOCUMENTO ********************************************************************/
-			$orthopodologyHistoryDoc = new OrthopodologyHistoryDoc();
+			$documents = new Documents();
 			$attr = array('clinicNameUrl'=>$clinicNameUrl, 'medicalHistoryNumber'=>$medicalHistoryNumber);
-			$form_orthopodologyHistoryDoc = $this->createForm(OrthopodologyHistoryDocType::class, $orthopodologyHistoryDoc,
+			$form_documents = $this->createForm(DocumentsType::class, $documents,
 				array(
 					'allow_extra_fields'=> $permissionLoggedUser,
 					'attr'=> $attr
 				)
 			);
-			$form_orthopodologyHistoryDoc->handleRequest($request);
-			if($form_orthopodologyHistoryDoc->isSubmitted()){
-				if($form_orthopodologyHistoryDoc->isValid()){
+			$form_documents->handleRequest($request);
+			if($form_documents->isSubmitted()){
+				if($form_documents->isValid()){
 					$em = $this->getDoctrine()->getManager();
 					// Upload file
-					$file = $form_orthopodologyHistoryDoc["doc"]->getData();
-					$title = str_replace( " ", "_", strtolower( $form_orthopodologyHistoryDoc["title"]->getData() ) );
-					// extraemos la extensión del fichero
-					$ext = $file->guessExtension();
-					if($ext=='jpg' || $ext=='jpeg' || $ext=='png' || $ext=='gif' || $ext=='pdf'){
-						if($ext=='jpg' || $ext=='jpeg' || $ext=='png' || $ext=='gif'){
-							$typeDoc = $typeDoc_repo->findOneByType("image");
+					$files = $form_documents["doc"]->getData();
+					$fristFile = true;
+					$numberCorrectFiles = 0;
+					foreach($files as $key=>$file){
+						$title = str_replace( " ", "_", strtolower( $form_documents["title"]->getData() ) );
+						// extraemos la extensión del fichero
+						$ext = $file->guessExtension();
+						if($ext=='jpg' || $ext=='jpeg' || $ext=='png' || $ext=='gif' || $ext=='pdf'){
+							if($ext=='jpg' || $ext=='jpeg' || $ext=='png' || $ext=='gif'){
+								$typeDoc = $typeDoc_repo->findOneByType("image");
+							}else{
+								$typeDoc = $typeDoc_repo->findOneByType("pdf");
+							}
+							// renombramos el archivo con el idUser+fecha+extensión
+							$file_name = $title.'.'.$ext;
+							// movemos el fichero
+							$file->move('uploads/clinics/'.$clinicNameUrl.'/medicalHistory/'.$medicalHistoryNumber.'/orthopodologyhistory/'.$registrationDate, $file_name);
+							$documents->setDoc($file_name);
+							$documents->setTitle($form_documents["title"]->getData());
+							$documents->setDescription($form_documents["description"]->getData());
+							$documents->setTypeDoc($typeDoc);
+							$documents->setModificationDate(new \DateTime("now"));
+							$documents->setRegistrationDate(new \DateTime("now"));
+							$documents->setUserModifier($this->getUser());
+							$documents->setUserRegisterer($this->getUser());
+							$documents->setOrthopodologyHistory($orthopodologyHistory);
+							$documents->setMedicalHistory($medicalHistory);
+							$documents->setTypeContentDoc($typeContentDoc_repo->findOneByType('medical_history_doc'));
+							// persistimos los datos dentro de Doctirne
+							$em->persist($documents);
+							// guardamos los datos persistidos dentro de la BD
+							$flush = $em->flush();
+							// Si se guardan correctamente los datos en la BD
+							$status = ['type'=>'success','description'=>'Se ha subido el documento correctamente'];
 						}else{
-							$typeDoc = $typeDoc_repo->findOneByType("pdf");
+							$status = [	'type'=>'danger','description'=>'No se ha subido el documento correctamente. Por favor, revisa la extensión del documento'];
 						}
-						// renombramos el archivo con el idUser+fecha+extensión
-						$file_name = $title.'.'.$ext;
-						// movemos el fichero
-						$file->move('uploads/clinics/'.$clinicNameUrl.'/medicalHistory/'.$medicalHistoryNumber.'/orthopodologyhistory/'.$registrationDate, $file_name);
-						$orthopodologyHistoryDoc->setDoc($file_name);
-						$orthopodologyHistoryDoc->setTitle($form_orthopodologyHistoryDoc["title"]->getData());
-						$orthopodologyHistoryDoc->setDescription($form_orthopodologyHistoryDoc["description"]->getData());
-						$orthopodologyHistoryDoc->setTypeDoc($typeDoc);
-						$orthopodologyHistoryDoc->setModificationDate(new \DateTime("now"));
-						$orthopodologyHistoryDoc->setRegistrationDate(new \DateTime("now"));
-						$orthopodologyHistoryDoc->setUserModifier($this->getUser());
-						$orthopodologyHistoryDoc->setUserRegisterer($this->getUser());
-						$orthopodologyHistoryDoc->setOrthopodologyHistory($orthopodologyHistory);
-						// persistimos los datos dentro de Doctirne
-						$em->persist($orthopodologyHistoryDoc);
-						// guardamos los datos persistidos dentro de la BD
-						$flush = $em->flush();
-						// Si se guardan correctamente los datos en la BD
-						$status = ['type'=>'success','description'=>'Se ha subido el documento correctamente'];
-					}else{
-						$status = [	'type'=>'danger','description'=>'No se ha subido el documento correctamente. Por favor, revisa la extensión del documento'];
 					}
 				}else{
 					$status = [	'type'=>'danger','description'=>'No se ha subido el documento correctamente'];
@@ -267,7 +308,7 @@ class OrthopodologyHistoryController extends Controller{
 					'orthopodologyHistory'=>$orthopodologyHistory,
 					'tracingOrthopodologyHistoryList'=>$tracingOrthopodologyHistoryList,
 					'form_orthopodologyHistoryTracing'=>$form_orthopodologyHistoryTracing->createView(),
-					'form_orthopodologyHistoryDoc'=>$form_orthopodologyHistoryDoc->createView(),
+					'form_documents'=>$form_documents->createView(),
 					'form_tracingOrthopodologyHistoryList'=>$tracingOrthopodologyHistoryListForm
 			));
 		/******************************************************************************************************/
@@ -466,7 +507,7 @@ class OrthopodologyHistoryController extends Controller{
 					$orthopodologyHistory->setTreatment(
 							$form->get("treatment")->getData());
 					/* **********************************************************************************************/
-					if( $form->has('registrationDate' && $form->get("registrationDate")->getData() != null) ){
+					if( $form->has('registrationDate') && $form->get("registrationDate")->getData() != null) {
 						$formData_registrationDate = $form->get("registrationDate")->getData();
 						$orthopodologyHistory->setRegistrationDate( $formData_registrationDate );
 						$registrationDate = date_format($formData_registrationDate,'Y_m_d');

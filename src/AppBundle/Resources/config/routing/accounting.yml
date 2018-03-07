@@ -1,0 +1,7 @@
+# ROUTING VER DOCUMENTOS CLÍNICA
+clinic_accounting:
+    path: /clinic/{clinicNameUrl}/accounting
+    defaults: { _controller: AppBundle:Accounting:accountingSummary } 
+clinic_accounting_year:
+    path: /clinic/{clinicNameUrl}/accounting/{year}
+    defaults: { _controller: AppBundle:Accounting:accountingSummary } 

@@ -11,3 +11,6 @@ schedule_event_edit:
 schedule_event_remove:
     path: /{clinicNameUrl}/{userName}/schedule/remove
     defaults: { _controller: AppBundle:Schedule:removeEvent }
+schedule_event_daterange:
+    path: /{clinicNameUrl}/{userName}/schedule/daterange/
+    defaults: { _controller: AppBundle:Schedule:dateRangeEventAjax }    

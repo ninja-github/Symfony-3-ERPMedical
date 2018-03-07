@@ -75,13 +75,13 @@
 												<li>
 													<a><i class="fa fa-h-square"></i>Historias Clinicas<span class="fa fa-chevron-down"></span></a>
 													<ul class="nav child_menu">
-														{% if permissionLoggedUser.medicalHistoryList == true %}													
+														{% if permissionLoggedUser.medicalHistoryList == true %}
 															<li>
 																<a href="{{ path("medical_history_list", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">
 																	Listado
 																</a>
 															</li>
-														{% endif %}													
+														{% endif %}
 														{% if permissionLoggedUser.medicalHistoryCreate == true %}
 															<li>
 																<a href="{{ path("medical_history_create", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">
@@ -92,19 +92,19 @@
 													</ul>
 												</li>
 											{% endif %}
-										{#  ..................................................................................... HISTORIAS CLÍNICAS #}	
-										{# ESTUDIO ORTOPODOLÓGICO ...................................................................................#}														
+										{#  ..................................................................................... HISTORIAS CLÍNICAS #}
+										{# ESTUDIO ORTOPODOLÓGICO ...................................................................................#}
 											{% if permissionLoggedUser.orthopodologyHistoryList == true or permissionLoggedUser.orthopodologyHistoryCreate == true %}
 												<li>
 													<a><i class="fa fa-folder-open"></i>Estudios<span class="fa fa-chevron-down"></span></a>
 													<ul class="nav child_menu">
-														{% if permissionLoggedUser.orthopodologyHistoryList == true %}						
+														{% if permissionLoggedUser.orthopodologyHistoryList == true %}
 															<li>
 																<a href="{{ path("orthopodology_history_list", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">Listado
 																</a>
 															</li>
-														{% endif %}	
-														{#}										
+														{% endif %}
+														{#}
 														{% if permissionLoggedUser.orthopodologyHistoryCreate == true %}
 															<li>
 																<a href="{{ path("orthopodology_history_create", {clinicNameUrl:ClinicsUser.nameUrl,medicalHistoryNumber:"without_MedicalHistoryNumber" } ) }}">
@@ -116,17 +116,17 @@
 													</ul>
 												</li>
 											{% endif %}
-										{# ................................................................................... ESTUDIO ORTOPODOLÓGICO #}											
+										{# ................................................................................... ESTUDIO ORTOPODOLÓGICO #}
 										{% if permissionLoggedUser.reportList == true or permissionLoggedUser.reportCreate == true %}
 											<li>
 												<a><i class="fa fa-file-text-o"></i>Informes<span class="fa fa-chevron-down"></span></a>
 												<ul class="nav child_menu">
-													{% if permissionLoggedUser.reportList == true %}										
+													{% if permissionLoggedUser.reportList == true %}
 														<li>
 															<a href="{{ path("report_list", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">Listado
 															</a>
 														</li>
-													{% endif %}												
+													{% endif %}
 													{% if permissionLoggedUser.reportCreate == true %}
 														<li>
 															<a href="{{ path("report_create", {clinicNameUrl:ClinicsUser.nameUrl,medicalHistoryNumber:"without_MedicalHistoryNumber" } ) }}">
@@ -137,31 +137,31 @@
 												</ul>
 											</li>
 										{% endif %}
-										{% if permissionLoggedUser.invoiceList == true or permissionLoggedUser.invoiceCreate == true %}
+										{% if permissionLoggedUser.invoiceIssuedList == true or permissionLoggedUser.invoiceIssuedCreate == true %}
 											<li>
 												<a><i class="fa fa-bank"></i>Contabilidad<span class="fa fa-chevron-down"></span></a>
 												<ul class="nav child_menu">
 													<li>
-														<a >
-															Contabilidad
-														</a>
-													</li>													
-													{% if permissionLoggedUser.invoiceList == true %}												
+														<a href="{{ path("clinic_accounting", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">Contabilidad</a>
+													</li>
+													{% if permissionLoggedUser.invoiceIssuedList == true %}
 														<li>
 															<a href="{{ path("invoice_list", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">Listado Facturas
 															</a>
 														</li>
 													{% endif %}
-													{% if permissionLoggedUser.invoiceCreate == true %}
+													{#}
+													{% if permissionLoggedUser.invoiceIssuedCreate == true %}
 														<li>
-															<a href="{{ path("invoice_create", {clinicNameUrl:ClinicsUser.nameUrl,medicalHistoryNumber:"without_MedicalHistoryNumber" } ) }}">
+															<a href="{{ path("invoice_issued_create", {clinicNameUrl:ClinicsUser.nameUrl,medicalHistoryNumber:"without_MedicalHistoryNumber" } ) }}">
 																Nueva Factura
 															</a>
 														</li>
 													{% endif %}
+													#}
 												</ul>
 											</li>
-										{% endif %}																													
+										{% endif %}
 										<li>
 											<a href="{{ path("schedule_home", {clinicNameUrl:ClinicsUser.nameUrl,userName:app.user.userName}) }}">
 												<i class="fa fa-calendar"></i>
@@ -201,7 +201,7 @@
 					</div>
 				</div>
 				<!-- top navigation -->
-					<div class="top_nav">
+					<div class="top_nav" style="position: sticky; z-index: 100;top:0px;">
 						<div class="nav_menu" >
 							<nav>
 								<div class="nav toggle">
@@ -219,7 +219,7 @@
 													{% endif %}
 												{# ..................................................IMAGEN DE USUARIO SI EXISTIESE O NO UN REGISTRO #}
 												{{app.user.userName}}
-												<span class=" fa fa-angle-down"></span>
+												<i class=" fa fa-angle-down"></i>
 											</a>
 											<ul class="dropdown-menu dropdown-usermenu pull-right">
 												<li><a href="{{ path('user_own_edit') }}">Perfil de Usuario</a></li>
@@ -285,13 +285,15 @@
 				{% endfor %}
 			</div>
 		</div>
-		<script>
-		window.setTimeout(function() {
-			$(".alert").fadeTo(500, 0).slideUp(500, function(){
-			$(this).remove();
-			});
-		}, 3000);
-		</script>
+		{% if app.session.flashbag().get('status')|length != 0 %}
+			<script>
+				window.setTimeout(function() {
+					$(".alert").fadeTo(500, 0).slideUp(500, function(){
+					$(this).remove();
+					});
+				}, 3000);
+			</script>
+		{% endif %}
         <div class="clearfix"></div>
 	{# ......................................................MOSTRAMOS LOS FLASHBAG #}
 {% block content %}
@@ -354,7 +356,7 @@
 		<script src="{{ asset ('assets/vendors/jqvmap/dist/maps/jquery.vmap.world.js') }}"></script>
 		<script src="{{ asset ('assets/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js') }}"></script>
 		<!-- custom -->
-		<script src="{{ asset ('assets/js/custom.min.js') }}"></script>
+		<script src="{{ asset ('assets/js/custom.js') }}"></script>
 {% endblock %}
 	</body>
 </html>

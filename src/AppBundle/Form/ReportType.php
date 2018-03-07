@@ -40,7 +40,7 @@ class ReportType extends AbstractType {
 		$userLoggedId = $options['attr']['userLoggedId'];
 		$builder
 			->add('registrationDate', DateType::class, array(
-					'required'=>false,
+					'required'=>true,
 					'widget' => 'single_text',
 					'format'=>'dd/MM/yyyy',
 					'html5' => false,
@@ -51,10 +51,10 @@ class ReportType extends AbstractType {
 				'attr'=>array('class'=>'form-control', 'style' => 'margin-bottom:13px', ' rows' => '3', 'data-sample'=>'reasonConsultation')))
 			->add('diagnostic', TextareaType::class, array(
 				'required'=>false,
-				'attr'=>array('class'=>'form-control', 'style' => 'margin-bottom:13px', ' rows' => '3', 'data-sample'=>'reasonConsultation')))
+				'attr'=>array('class'=>'form-control', 'style' => 'margin-bottom:13px', ' rows' => '3', 'data-sample'=>'diagnostic')))
 			->add('treatment', TextareaType::class, array(
 				'required'=>false,
-				'attr'=>array('class'=>'form-control', 'style' => 'margin-bottom:13px', ' rows' => '3', 'data-sample'=>'reasonConsultation')))		
+				'attr'=>array('class'=>'form-control', 'style' => 'margin-bottom:13px', ' rows' => '3', 'data-sample'=>'treatment')))		
 			->add('submit',SubmitType::class, array(
 				'attr'=>array('class'=>'form-submit btn btn-success', 'style' => 'margin-bottom:13px, display:block')));
     }

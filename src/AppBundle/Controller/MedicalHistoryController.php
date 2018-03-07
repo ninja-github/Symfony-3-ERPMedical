@@ -11,16 +11,19 @@
 	use Symfony\Component\Validator\Constraints\DateTime;
 /* Añadimos la LIBRERIA Html2Pdf ******************************************************************************/
 	use Spipu\Html2Pdf\Html2Pdf;    // Objeto Base de Html2Pdf
+/* Añadimos la LIBRERIA Html2Pdf ******************************************************************************/
+	//use Spipu\Html2Pdf\Html2Pdf;    // Objeto Base de Html2Pdf	
 /* Añadimos las ENTIDADES que usaremos ************************************************************************/	
 	use BackendBundle\Entity\MedicalHistory;		// Da acceso a la Entidad Historia Médica
-	use BackendBundle\Entity\MedicalHistoryDoc;		// Da acceso a la Entidad Historia Médica Doc
+	use BackendBundle\Entity\Documents;				// Da acceso a la Entidad Documents
 	use BackendBundle\Entity\Tracing;				// Da acceso a la Entidad Tracing
 	use BackendBundle\Entity\Clinic;				// Da acceso a la Entidad Clinica
 	use BackendBundle\Entity\ClinicUser;			// Da acceso a la Entidad ClinicaUser
 	use BackendBundle\Entity\AddressCity;			// Da acceso a la Entidad AddressCity
+	use BackendBundle\Entity\Payment;				// Da acceso a la Entidad Payment
 /* Añadimos los FORMULARIOS que usaremos **********************************************************************/
 	use AppBundle\Form\MedicalHistoryType;			// Da acceso al Formulario MedicalHistoryType
-	use AppBundle\Form\MedicalHistoryDocType;		// Da acceso al Formulario MedicalHistoryDocType
+	use AppBundle\Form\DocumentsType;				// Da acceso al Formulario DocumentsType
 	use AppBundle\Form\TracingType;					// Da acceso al Formulario TracingType
 /**************************************************************************************************************/
 class MedicalHistoryController extends Controller{
@@ -61,11 +64,23 @@ class MedicalHistoryController extends Controller{
 			}
 			if ($permissionDenied){ return $this->redirectToRoute('homepage'); }
 		/******************************************************************************************************/
+		/* CARGO LOS REPOSITORIOS  ****************************************************************************/
+			$medicalHistory_repo = $em->getRepository("BackendBundle:MedicalHistory");
+			$tracingService_repo = $em->getRepository("BackendBundle:TracingService");
+			$tracing_repo = $em->getRepository("BackendBundle:Tracing");
+		/******************************************************************************************************/
+		/* REALIZO LAS CONSULTAS NECESARIAS A LA BD MEDIANTE LOS REPOSITORIOS *********************************/			
+			$medicalHistoryList = $medicalHistory_repo->findAll(array('clinic'=>$clinicView));
+			foreach ($medicalHistoryList as $key => $medicalHistory){
+				$medicalHistoryNumber = $medicalHistory->getMedicalHistoryNumber();
+				$dataExtraMedicalHistoryList[$medicalHistoryNumber]['costEarnings'] = $tracing_repo->getCostEarnings($clinicNameUrl, $medicalHistoryNumber);
+			}
 		/* CARGAMOS LA VISTA CON SUS VARIABLES ****************************************************************/  
 			return $this->render('AppBundle:MedicalHistory:medicalHistory_List.html.twig',
 				array(
 					'permissionLoggedUser'=>$permissionLoggedUser,
-					'clinicView'=>$clinicView
+					'clinicView'=>$clinicView,
+					'dataExtraMedicalHistoryList'=>$dataExtraMedicalHistoryList
 				)
 			);
 		/******************************************************************************************************/ 		
@@ -105,11 +120,12 @@ class MedicalHistoryController extends Controller{
 			$orthopodologyHistories_repo = $em->getRepository("BackendBundle:OrthopodologyHistory");
 			$tracing_repo = $em->getRepository("BackendBundle:Tracing");
 			$typeTracing_repo = $em->getRepository("BackendBundle:TypeTracing");
-			$medicalHistoryDoc_repo = $em->getRepository("BackendBundle:MedicalHistoryDoc");
+			$documents_repo = $em->getRepository("BackendBundle:Documents");
 			$typeDoc_repo = $em->getRepository("BackendBundle:TypeDoc");
 			$service_repo = $em->getRepository("BackendBundle:Service");
 			$tracingService_repo = $em->getRepository("BackendBundle:TracingService");
-			$clinic_repo = $em->getRepository("BackendBundle:Clinic");		
+			$clinic_repo = $em->getRepository("BackendBundle:Clinic");
+			$typeContentDoc_repo = $em->getRepository("BackendBundle:TypeContentDoc");	
 		/******************************************************************************************************/
 		/* REALIZO LAS CONSULTAS NECESARIAS A LA BD MEDIANTE LOS REPOSITORIOS *********************************/
 			// Realizamos las consultas // funciones Repositorio usadas, ver 'src\BackendBundle\Repository'
@@ -118,7 +134,12 @@ class MedicalHistoryController extends Controller{
 				array(
 					'clinic'=>$clinic,
 					'medicalHistoryNumber'=>$medicalHistoryNumber));
-			$medicalHistoryDocList = $medicalHistoryDoc_repo->findByMedicalHistory($medicalHistory);
+			if($medicalHistory == NULL){
+				$status = [	'type'=>'danger','description'=>'No existe la historia indicada.'];
+				// generamos los mensajes FLASH (necesario activar las sesiones)
+				$this->session->getFlashBag()->add("status", $status);
+				return $this->redirectToRoute('medical_history_list', array('clinicNameUrl'=>$clinicNameUrl));
+			}
 			/* $medicalHistoryData -> Devuelve el número mínimo, máximo y número total */
 			$medicalHistoryData = array(
 				'min'=>$medicalHistory_repo->findOneBy(['clinic'=>$clinic],['medicalHistoryNumber'=>'ASC'])->getMedicalHistoryNumber(),
@@ -126,7 +147,20 @@ class MedicalHistoryController extends Controller{
 			);
 			// Extraemos $tracingMedicalHistoryList para ordenarlos por Fecha
 			$tracingMedicalHistoryList = $tracing_repo->findBy(['medicalHistory'=>$medicalHistory],['date'=>'DESC']);
-		/******************************************************************************************************/		
+		/******************************************************************************************************/
+		/* DATOS ECONÓMICOS PACIENTE **************************************************************************/
+		//////////////////////////////////// ELIMINAR PAGOS TABLA TRACING SERVICE //////////////////////////////
+			foreach ($tracingService_repo->findAll() as $key => $value){
+				if($value->getService() != null and $value->getService()->getTypeService() == true){
+					// Localizado el documento, lo eliminamos			
+					$em->remove($value);
+					// persistimos la eliminación dentro de la bD
+					$flush = $em->flush();
+				}
+			}
+		//////////////////////////////////// ELIMINAR PAGOS TABLA TRACING SERVICE //////////////////////////////			
+			$costEarnings = $tracing_repo->getCostEarnings($clinicNameUrl, $medicalHistoryNumber);
+		/******************************************************************************************************/	
 		/* FORMULARO NUEVO SEGUIMIENTO ************************************************************************/
 			$tracingNew = new Tracing();
 			$attr = array('clinicNameUrl'=>$clinicNameUrl, 'medicalHistoryNumber'=>$medicalHistoryNumber, 'idTracing'=>NULL, 'userName'=> NULL);
@@ -173,11 +207,12 @@ class MedicalHistoryController extends Controller{
 							$em = $this->getDoctrine()->getManager();
 							$idTracing = $request->request->get('tracing')['id'];
 							$tracingEdit = $tracing_repo->findOneById($idTracing);
+							$orthopodologyHistory = $tracingEdit->getOrthopodologyHistory();
 							$tracingEdit->setDate($form_medicalHistoryTracing->get("date")->getData());
 							$tracingEdit->setTracing($form_medicalHistoryTracing->get("tracing")->getData());
 							$tracingEdit->setUser($userLogged);
 							$tracingEdit->setTypeTracing( $tracingEdit->getTypeTracing() );
-							$tracingEdit->setOrthopodologyHistory( NULL );
+							$tracingEdit->setOrthopodologyHistory( $orthopodologyHistory );
 							$tracingEdit->setMedicalHistory($medicalHistory);
 							// persistimos los datos dentro de Doctirne
 							$em->persist($tracingEdit);
@@ -214,50 +249,61 @@ class MedicalHistoryController extends Controller{
 			}
 		/******************************************************************************************************/
 		/* FORMULARO SUBIR NUEVO DOCUMENTO ********************************************************************/
-			$medicalHistoryDoc = new MedicalHistoryDoc();
+			$documents = new Documents();
 			$attr = array('clinicNameUrl'=>$clinicNameUrl, 'medicalHistoryNumber'=>$medicalHistoryNumber);
-			$form_medicalHistoryDoc = $this->createForm(MedicalHistoryDocType::class, $medicalHistoryDoc,
+			$form_documents = $this->createForm(DocumentsType::class, $documents,
 				array(
 					'allow_extra_fields'=> $permissionLoggedUser,
 					'attr'=> $attr
 				)
 			);
-			$form_medicalHistoryDoc->handleRequest($request);
-			if($form_medicalHistoryDoc->isSubmitted()){
-				if($form_medicalHistoryDoc->isValid()){
+			$form_documents->handleRequest($request);
+			if($form_documents->isSubmitted()){
+				if($form_documents->isValid()){
 					$em = $this->getDoctrine()->getManager();
 					// Upload file
-					$file = $form_medicalHistoryDoc["doc"]->getData();
-					$title = str_replace( " ", "_", strtolower( $form_medicalHistoryDoc["title"]->getData() ) );
-					// extraemos la extensión del fichero
-					$ext = $file->guessExtension();
-					if($ext=='jpg' || $ext=='jpeg' || $ext=='png' || $ext=='gif' || $ext=='pdf'){
-						if($ext=='jpg' || $ext=='jpeg' || $ext=='png' || $ext=='gif'){
-							$typeDoc = $typeDoc_repo->findOneByType("image");
+					$files = $form_documents["doc"]->getData();
+					$fristFile = true;
+					$numberCorrectFiles = 0;
+					foreach($files as $key=>$file){
+						$title = str_replace( " ", "_", strtolower( $form_documents["title"]->getData() ) );
+						// extraemos la extensión del fichero
+						$ext = $file->guessExtension();
+						if($ext=='jpg' || $ext=='jpeg' || $ext=='png' || $ext=='gif' || $ext=='pdf'){
+							if($ext=='jpg' || $ext=='jpeg' || $ext=='png' || $ext=='gif'){
+								$typeDoc = $typeDoc_repo->findOneByType("image");
+							}else{
+								$typeDoc = $typeDoc_repo->findOneByType("pdf");
+							}
+							$numberCorrectFiles = $numberCorrectFiles + 1;
+							$title = $title.'_'.$numberCorrectFiles;
+							// renombramos el archivo con el idUser+fecha+extensión
+							$file_name = $title.'.'.$ext;
+							// movemos el fichero
+							$file->move('uploads/clinics/'.$clinicNameUrl.'/medicalHistory/'.$medicalHistoryNumber.'/',$file_name);
+							if(!$fristFile){
+								$documents = new Documents();
+							}
+							$documents->setDoc($file_name);
+							$documents->setTitle($form_documents["title"]->getData());
+							$documents->setDescription($form_documents["description"]->getData());
+							$documents->setTypeDoc($typeDoc);
+							$documents->setModificationDate(new \DateTime("now"));
+							$documents->setRegistrationDate(new \DateTime("now"));
+							$documents->setUserModifier($this->getUser());
+							$documents->setUserRegisterer($this->getUser());
+							$documents->setMedicalHistory($medicalHistory);
+							$documents->setTypeContentDoc($typeContentDoc_repo->findOneByType('medical_history_doc'));
+							// persistimos los datos dentro de Doctirne
+							$em->persist($documents);
+							// guardamos los datos persistidos dentro de la BD
+							$flush = $em->flush();
+							// Si se guardan correctamente los datos en la BD
+							$fristFile = false;
+							$status = ['type'=>'success','description'=>'Se ha subido el documento correctamente'];
 						}else{
-							$typeDoc = $typeDoc_repo->findOneByType("pdf");
+							$status = [	'type'=>'danger','description'=>'No se ha subido el documento correctamente. Por favor, revisa la extensión del documento'];
 						}
-						// renombramos el archivo con el idUser+fecha+extensión
-						$file_name = $title.'.'.$ext;
-						// movemos el fichero
-						$file->move('uploads/clinics/'.$clinicNameUrl.'/medicalHistory/'.$medicalHistoryNumber.'/',$file_name);
-						$medicalHistoryDoc->setDoc($file_name);
-						$medicalHistoryDoc->setTitle($form_medicalHistoryDoc["title"]->getData());
-						$medicalHistoryDoc->setDescription($form_medicalHistoryDoc["description"]->getData());
-						$medicalHistoryDoc->setTypeDoc($typeDoc);
-						$medicalHistoryDoc->setModificationDate(new \DateTime("now"));
-						$medicalHistoryDoc->setRegistrationDate(new \DateTime("now"));
-						$medicalHistoryDoc->setUserModifier($this->getUser());
-						$medicalHistoryDoc->setUserRegisterer($this->getUser());
-						$medicalHistoryDoc->setMedicalHistory($medicalHistory);
-						// persistimos los datos dentro de Doctirne
-						$em->persist($medicalHistoryDoc);
-						// guardamos los datos persistidos dentro de la BD
-						$flush = $em->flush();
-						// Si se guardan correctamente los datos en la BD
-						$status = ['type'=>'success','description'=>'Se ha subido el documento correctamente'];
-					}else{
-						$status = [	'type'=>'danger','description'=>'No se ha subido el documento correctamente. Por favor, revisa la extensión del documento'];
 					}
 				}else{
 					$status = [	'type'=>'danger','description'=>'No se ha subido el documento correctamente'];
@@ -276,8 +322,9 @@ class MedicalHistoryController extends Controller{
 					'medicalHistoryData' => $medicalHistoryData,
 					'tracingMedicalHistoryList'=>$tracingMedicalHistoryList,
 					'form_medicalHistoryTracing'=>$form_medicalHistoryTracing->createView(),
-					'form_medicalHistoryDoc'=>$form_medicalHistoryDoc->createView(),
-					'form_tracingMedicalHistoryList'=>$tracingMedicalHistoryListForm
+					'form_documents'=>$form_documents->createView(),
+					'form_tracingMedicalHistoryList'=>$tracingMedicalHistoryListForm,
+					'costEarnings'=>$costEarnings
 				)
 			);
 		/******************************************************************************************************/ 		
@@ -377,6 +424,19 @@ class MedicalHistoryController extends Controller{
 			if($form->isSubmitted()){
 				if($form->isValid()){			
 					$em = $this->getDoctrine()->getManager();
+					$patientRiskListString = $request->request->get('patientRisk');
+					if( strpos($patientRiskListString, ",") ){
+						$patientRiskListArray = explode(",", $patientRiskListString) ;
+					}elseif( (!strpos($patientRiskListString, ",")) && $patientRiskListString != "" ){
+						$patientRiskListArray = [$patientRiskListString] ;
+					}elseif( $patientRiskListString == "" ){
+						$patientRiskListArray = NULL;
+					}
+					if($patientRiskListArray != NULL){
+						$patientRiskListJson = json_encode( $patientRiskListArray,JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE | true);
+					}else{
+						$patientRiskListJson = NULL;
+					}
 					// Hacemos la consulta
 					$medicalHistory->setMedicalHistoryNumber($medicalHistoryNumber);
 					$medicalHistory->setName($form->get("name")->getData());
@@ -399,7 +459,9 @@ class MedicalHistoryController extends Controller{
 					$medicalHistory->setDiagnostic($form->get("diagnostic")->getData());
 					/* Introducimos el Objeto Clinic a partir de la Url */
 					$medicalHistory->setClinic($clinicView);
+					$medicalHistory->setInsuranceCarrier($form->get("insuranceCarrier")->getData());
 					$medicalHistory->setCity($form->get("city")->getData());
+					$medicalHistory->setPatientRisk($patientRiskListJson);					
 					/* **********************************************************************************************/
 					if( $form->has('registrationDate') && $form->get("registrationDate")->getData() != NULL ){
 						$registrationDate = $form->get("registrationDate")->getData();
@@ -447,7 +509,8 @@ class MedicalHistoryController extends Controller{
 			return $this->render('AppBundle:MedicalHistory:medicalHistory_Create.html.twig', array(
 				'permissionLoggedUser'=>$permissionLoggedUser,
 				'clinicNameUrl'=>$clinicNameUrl,
-				'form' => $form->createView() 	// Pasamos el formulario a la vista
+				'form' => $form->createView(), 	// Pasamos el formulario a la vista
+				'medicalHistoryNumber'=>$medicalHistoryNumber
 			));
 		/******************************************************************************************************/			
 	}
@@ -478,6 +541,12 @@ class MedicalHistoryController extends Controller{
 					'medicalHistoryNumber'=>$medicalHistoryNumber
 				)
 			);
+			if($medicalHistory == NULL){
+				$status = [	'type'=>'danger','description'=>'No existe la historia indicada.'];
+				// generamos los mensajes FLASH (necesario activar las sesiones)
+				$this->session->getFlashBag()->add("status", $status);
+				return $this->redirectToRoute('medical_history_list', array('clinicNameUrl'=>$clinicNameUrl));
+			}
 			$medicalHistoryData = $medicalHistory_repo->getMedicalHistoryClinicalDataQuery( $clinicNameUrl );
 		/******************************************************************************************************/
 		/* FORMULARO EDITAR HISTORIA **************************************************************************/
@@ -527,6 +596,20 @@ class MedicalHistoryController extends Controller{
 			if($form->isSubmitted()){
 				if($form->isValid()){
 					$em = $this->getDoctrine()->getManager();
+					$patientRiskListString = $request->request->get('patientRisk');
+					if( strpos($patientRiskListString, ",") ){
+						$patientRiskListArray = explode(",", $patientRiskListString) ;
+					}elseif( (!strpos($patientRiskListString, ",")) && $patientRiskListString != "" ){
+						$patientRiskListArray = [$patientRiskListString] ;
+					}elseif( $patientRiskListString == "" ){
+						$patientRiskListArray = NULL;
+					}
+					if($patientRiskListArray != NULL){
+						$patientRiskListJson = json_encode( $patientRiskListArray,JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE | true);
+					}else{
+						$patientRiskListJson = NULL;
+					}
+					//var_dump($patientRiskListJson);die();
 					// Hacemos la consulta
 					$medicalHistory->setName($form->get("name")->getData());
 					$medicalHistory->setSurname($form->get("surname")->getData());
@@ -546,7 +629,9 @@ class MedicalHistoryController extends Controller{
 					$medicalHistory->setPatologies($form->get("patologies")->getData());
 					$medicalHistory->setSupplementaryTest($form->get("supplementaryTest")->getData());
 					$medicalHistory->setDiagnostic($form->get("diagnostic")->getData());
+					$medicalHistory->setInsuranceCarrier($form->get("insuranceCarrier")->getData());
 					$medicalHistory->setCity($form->get("city")->getData());
+					$medicalHistory->setPatientRisk($patientRiskListJson);
 					/* **********************************************************************************************/
 					if( $form->has('registrationDate') && $form->get("registrationDate")->getData() != NULL ){
 						$medicalHistory->setRegistrationDate( $form->get("registrationDate")->getData() );
@@ -593,7 +678,8 @@ class MedicalHistoryController extends Controller{
 					'form'=>$form->createView(),
 					'medicalHistoryNumber'=>$medicalHistoryNumber,
 					'clinicNameUrl'=>$clinicNameUrl,
-					'medicalHistoryData' => $medicalHistoryData
+					'medicalHistoryData' => $medicalHistoryData,
+					'medicalHistory'=>$medicalHistory
 				)
 			);
 		/******************************************************************************************************/
@@ -724,6 +810,150 @@ class MedicalHistoryController extends Controller{
 				$medicalHistory = $medicalHistoryList[$key];
 				$result[$key] = $medicalHistory->getMedicalHistoryDataComplete().' - '.$medicalHistory->getPhoneMobile().' - '.$medicalHistory->getPhoneHome();
 		}	
+		return new Response(json_encode($result)); // codificamos la respuesta en JSON
+	}
+/**************************************************************************************************************/
+/* MÉTODO AJAX BUSCAR HISTORIA MÉDICA *************************************************************************/
+	public function changeUpdatedMedicalHistoryAction(Request $request){
+		$session = $request->getSession();
+		$clinicNameUrl = "podologia_priego";
+		//$clinicNameUrl = $session->get('clinicUserLogged')['nameUrl'];
+		$em = $this->getDoctrine()->getManager();
+		/* CARGO LOS REPOSITORIOS  ****************************************************************************/
+			$medicalHistory_repo = $em->getRepository("BackendBundle:MedicalHistory");
+			$clinic_repo = $em->getRepository("BackendBundle:Clinic");		
+		/******************************************************************************************************/
+		/* REALIZO LAS CONSULTAS NECESARIAS A LA BD MEDIANTE LOS REPOSITORIOS *********************************/
+			$idMedicalHistory = (integer) $request->get('id');
+			// Realizamos las consultas // funciones Repositorio usadas, ver 'src\BackendBundle\Repository'
+			$clinic = $clinic_repo->findOneByNameUrl($clinicNameUrl);
+			$medicalHistory = $medicalHistory_repo->findOneBy(array('id'=>$idMedicalHistory));
+		/******************************************************************************************************/
+		/* CAMBIAMOS ESTADO UPDATED ***************************************************************************/
+			$updated = $medicalHistory->getUpdated();
+			if($updated == false){$updated = true;}else{$updated = false;}
+			$updated = $medicalHistory->setUpdated($updated);
+			// persistimos los datos dentro de Doctirne
+			$em->persist($medicalHistory);
+			// guardamos los datos persistidos dentro de la BD
+			$flush = $em->flush();
+		/******************************************************************************************************/
+		if($flush == null){
+			$response =
+				'<div class="alert alert-success fade in" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+					La historia no cambió su estado.
+				</div>';
+		}else{
+			if($updated==true){$statusResponse='actualizada';}else{$statusResponse='no actualizado';}
+			$response =
+				'<div class="alert alert-success fade in" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+					El cambió su estado. Ahora está '.$statusResponse.'.
+				</div>';
+		}
+		$result['alert'] = $response;	
+		return new Response(json_encode($result)); // codificamos la respuesta en JSON
+	}
+/**************************************************************************************************************/
+/* MÉTODO AJAX AÑADIR AL CONTADOR UN RETRASO ******************************************************************/
+	public function addLateMedicalHistoryAction(Request $request){
+		$session = $request->getSession();
+		$clinicNameUrl = "podologia_priego";
+		//$clinicNameUrl = $session->get('clinicUserLogged')['nameUrl'];
+		$em = $this->getDoctrine()->getManager();
+		/* CARGO LOS REPOSITORIOS  ****************************************************************************/
+			$medicalHistory_repo = $em->getRepository("BackendBundle:MedicalHistory");
+			$clinic_repo = $em->getRepository("BackendBundle:Clinic");		
+		/******************************************************************************************************/
+		/* REALIZO LAS CONSULTAS NECESARIAS A LA BD MEDIANTE LOS REPOSITORIOS *********************************/
+			$idMedicalHistory = (integer) $request->get('id');
+			// Realizamos las consultas // funciones Repositorio usadas, ver 'src\BackendBundle\Repository'
+			$clinic = $clinic_repo->findOneByNameUrl($clinicNameUrl);
+			$medicalHistory = $medicalHistory_repo->findOneBy(array('id'=>$idMedicalHistory));
+		/******************************************************************************************************/
+		/* CAMBIAMOS ESTADO UPDATED ***************************************************************************/
+			$late = $medicalHistory->getLate();
+			if($late == null){$late = 1;}else{$late = $late + 1;}
+			$medicalHistory->setLate($late);
+			// persistimos los datos dentro de Doctirne
+			$em->persist($medicalHistory);
+			// guardamos los datos persistidos dentro de la BD
+			$flush = $em->flush();
+		/******************************************************************************************************/
+		if($flush == null){
+			$response =
+				'<div class="alert alert-success fade in" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+					La historia cambió su estado. Ahora acumula '.$late.' retrasos.
+				</div>';
+		}else{
+			if($updated==true){$statusResponse='actualizada';}else{$statusResponse='no actualizado';}
+			$response =
+				'<div class="alert alert-danger fade in" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+					La historia no cambió su estado. 
+				</div>';
+		}
+		$result['alert'] = $response;
+		$result['late'] = $late;
+		return new Response(json_encode($result)); // codificamos la respuesta en JSON
+	}
+/**************************************************************************************************************/
+/* MÉTODO AJAX ELIMINAR AL CONTADOR UN RETRASO ******************************************************************/
+	public function removeLateMedicalHistoryAction(Request $request){
+		$session = $request->getSession();
+		$clinicNameUrl = "podologia_priego";
+		//$clinicNameUrl = $session->get('clinicUserLogged')['nameUrl'];
+		$em = $this->getDoctrine()->getManager();
+		/* CARGO LOS REPOSITORIOS  ****************************************************************************/
+			$medicalHistory_repo = $em->getRepository("BackendBundle:MedicalHistory");
+			$clinic_repo = $em->getRepository("BackendBundle:Clinic");		
+		/******************************************************************************************************/
+		/* REALIZO LAS CONSULTAS NECESARIAS A LA BD MEDIANTE LOS REPOSITORIOS *********************************/
+			$idMedicalHistory = (integer) $request->get('id');
+			// Realizamos las consultas // funciones Repositorio usadas, ver 'src\BackendBundle\Repository'
+			$clinic = $clinic_repo->findOneByNameUrl($clinicNameUrl);
+			$medicalHistory = $medicalHistory_repo->findOneBy(array('id'=>$idMedicalHistory));
+		/******************************************************************************************************/
+		/* CAMBIAMOS ESTADO UPDATED ***************************************************************************/
+			$late = $medicalHistory->getLate();
+			if($late == null or $late == 1 ){$late = null;}else{$late = $late - 1;}
+			$medicalHistory->setLate($late);
+			// persistimos los datos dentro de Doctirne
+			$em->persist($medicalHistory);
+			// guardamos los datos persistidos dentro de la BD
+			$flush = $em->flush();
+		/******************************************************************************************************/
+		if($flush == null){
+			$response =
+				'<div class="alert alert-success fade in" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+					La historia cambió su estado. Ahora acumula '.$late.' retrasos.
+				</div>';
+		}else{
+			if($updated==true){$statusResponse='actualizada';}else{$statusResponse='no actualizado';}
+			$response =
+				'<div class="alert alert-danger fade in" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+					La historia no cambió su estado.
+				</div>';
+		}
+		$result['alert'] = $response;
+		if($late == null){$late = "";}
+		$result['late'] = $late;
 		return new Response(json_encode($result)); // codificamos la respuesta en JSON
 	}
 /**************************************************************************************************************/

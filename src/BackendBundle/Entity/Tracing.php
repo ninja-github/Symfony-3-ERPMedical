@@ -14,10 +14,13 @@
 class Tracing {
 	private $tracingServiceList;
 	public function getTracingServiceList() { return $this->tracingServiceList; }
+	private $paymentList;
+	public function getPaymentList() { return $this->paymentList; }
 /* CONSTRUCTOR ************************************************************************************************/
 	//Un ArrayCollection es una implementación de colección que se ajusta a la matriz PHP normal.
 	public function __construct() {
 		$this->tracingServiceList = new ArrayCollection();
+		$this->paymentList = new ArrayCollection();
     }
 /**************************************************************************************************************/
 /* Id de la Tabla *********************************************************************************************/

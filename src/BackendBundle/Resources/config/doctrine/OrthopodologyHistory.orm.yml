@@ -27,6 +27,27 @@ BackendBundle\Entity\OrthopodologyHistory:
 # /id #################################################################
 # fields ##############################################################
     fields:
+        shoeSize:
+            type: string
+            nullable: true
+            length: 10
+            options:
+                fixed: false
+            column: shoe_size
+        height:
+            type: string
+            nullable: true
+            length: 10
+            options:
+                fixed: false
+            column: height
+        weight:
+            type: string
+            nullable: true
+            length: 10
+            options:
+                fixed: false
+            column: weight                        
         reasonConsultation:
             type: string
             nullable: true
@@ -65,16 +86,18 @@ BackendBundle\Entity\OrthopodologyHistory:
                 unsigned: false
             column: articular_exploration_rotary_pattern_internal_right
         articularExplorationHipLeft:
-            type: smallint
+            type: string
             nullable: true
+            length: 50
             options:
-                unsigned: false
+                fixed: false
             column: articular_exploration_hip_left
         articularExplorationHipRight:
-            type: smallint
+            type: string
             nullable: true
+            length: 50
             options:
-                unsigned: false
+                fixed: false
             column: articular_exploration_hip_right
         articularExplorationKneeLeft:
             type: string
@@ -275,7 +298,7 @@ BackendBundle\Entity\OrthopodologyHistory:
         dissimmetry:
             type: string
             nullable: true
-            length: 150
+            length: 255
             options:
                 fixed: false
         muscularExplorationDorsalFlexionLeft:
@@ -412,8 +435,8 @@ BackendBundle\Entity\OrthopodologyHistory:
 # oneToMany ###########################################################           
     oneToMany:
         # docList # no se encuentra dentro de la BD, pero se define en la entidad para listar los elementos
-        docList:
-            targetEntity: OrthopodologyHistoryDoc
+        documentsList:
+            targetEntity: Documents
             # mappedBy # hace referencia a la columna de la tabla # OrthopodologyHistoryDoc # dentro de la BD relacionada con la tabla # OrthopodologyHistory #
             mappedBy: orthopodologyHistory
         # tracingList # no se encuentra dentro de la BD, pero se define en la entidad para listar los elementos

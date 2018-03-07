@@ -30,6 +30,7 @@ class GenerateTagsExtension extends \Twig_Extension{
   public function generateTagsFilter($arrayTags){
     $listTags ="";
     if( isset($arrayTags) ){
+      $arrayTags = json_decode($arrayTags,true);
       foreach ($arrayTags as $idTag => $tag ){
         $listTags = $listTags.'<span class="tag " style="background:red;" >'.$tag.'</span>';
       }

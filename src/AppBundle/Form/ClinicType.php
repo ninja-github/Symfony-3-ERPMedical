@@ -53,7 +53,7 @@ class ClinicType extends AbstractType {
 				'required'=>false,
 				'attr'=>array('class'=>'form-control', 'style' => 'margin-bottom:13px')))
 			/**************************************************************************************************/
-		 	->add('idAddressCity', TextType::class, array(
+		 	->add('city', TextType::class, array(
 		 		'required'=>false,
 		 		'attr'=>array('class'=>'form-control', 'style' => 'margin-bottom:0px', 'id'=>'search-box')))
 			/**************************************************************************************************/		

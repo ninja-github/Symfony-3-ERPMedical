@@ -30,7 +30,7 @@ app_report:
 # GESTOR ROUTING FACTURAS
 app_invoice:
     resource: '@AppBundle/Resources/config/routing/invoice.yml'
-    prefix:   /         
+    prefix:   /
 # GESTOR ROUTING CIUDADES
 app_address_city:
     resource: '@AppBundle/Resources/config/routing/addressCity.yml'
@@ -42,7 +42,11 @@ app_tracing:
 # GESTOR ROUTING SERVICIOS SEGUIMIENTOS
 app_tracing_service:
     resource: '@AppBundle/Resources/config/routing/tracingService.yml'
-    prefix:   /    
+    prefix:   /   
+# GESTOR ROUTING PAGOS
+app_payment:
+    resource: '@AppBundle/Resources/config/routing/payment.yml'
+    prefix:   / 
 # GESTOR ROUTING CLINICAS
 app_clinic:
     resource: '@AppBundle/Resources/config/routing/clinic.yml'
@@ -55,6 +59,10 @@ app_schedule:
 app_doc:
     resource: '@AppBundle/Resources/config/routing/documents.yml'
     prefix:   /
+# GESTOR CUENTAS
+app_accounting:
+    resource: '@AppBundle/Resources/config/routing/accounting.yml'
+    prefix:   /    
 # PRUEBAS
 app_pruebas:
     resource: '@AppBundle/Resources/config/routing/pruebas.yml'

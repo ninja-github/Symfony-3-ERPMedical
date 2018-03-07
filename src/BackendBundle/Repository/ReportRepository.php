@@ -23,6 +23,7 @@ class ReportRepository extends \Doctrine\ORM\EntityRepository {
       		->innerJoin('r.medicalHistory', 'mh', 'mh.id = r.medicalHistory')
       		->innerJoin('mh.clinic', 'cl', 'cl.id = mh.clinic')
       		->where('cl.nameUrl =:nameUrl ')
+      		->orderBy('r.registrationDate','ASC')
       		->setParameter('nameUrl', $clinicNameUrl)
       		->getQuery();
 		$reportListOfClinic = $query->getResult();
@@ -36,6 +37,7 @@ class ReportRepository extends \Doctrine\ORM\EntityRepository {
 			->innerJoin('r.medicalHistory', 'mh', 'mh.id = r.medicalHistory')
 			->innerJoin('mh.clinic', 'cl', 'cl.id = mh.clinic')			
 			->where('mh.medicalHistoryNumber =:medicalHistoryNumber AND cl.nameUrl=:clinicNameUrl')
+			->orderBy('r.registrationDate','ASC')
 			->setParameter('clinicNameUrl', $clinicNameUrl)
 			->setParameter('medicalHistoryNumber', $medicalHistoryNumber)
       		->getQuery();

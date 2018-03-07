@@ -1,7 +1,7 @@
 # MÉTODO AJAX PARA BUSCAR COINCIDENCIAS EN CIUDAD
 remove_tracing_service:
     path: /removetracingservice
-    defaults: { _controller: AppBundle:TracingService:remove }
+    defaults: { _controller: AppBundle:TracingService:removeTracingService }
 # MÉTODO AJAX PARA BUSCAR COINCIDENCIAS EN CIUDAD
 generate_form_tracing_service:
     path: /generateformtracingservice

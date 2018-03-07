@@ -7,10 +7,40 @@
 	{{ parent() }}
 	<!-- Font Awesome EXTRA-->
 	<link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
+		<!-- CK Editor -->
+	<script src="{{ asset ('assets/vendors/ckeditor/ckeditor.js') }}"></script>
+	<script>
+		if ( location.hostname == 'sdk.ckeditor.com' ) {
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+					m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			ga('create', 'UA-271067-15', 'auto');
+			ga('send', 'pageview');
+		}
+	</script>	
+	<style>
+		.pdfobject-container { 
+			height: 500px;
+		}
+		.pdfobject { 
+			border: 1px solid #666; 
+		}
+		.bootstrap-datetimepicker-widget table td, .bootstrap-datetimepicker-widget table th {
+			text-align: center;
+			border-radius: 0px;
+			background-color:  #2B6D8D;
+			color:#fff;
+	 		/*https://www.jquery-az.com/bootstrap-datetimepicker-managing-with-date-and-time-in-bootstrap/*/
+		}			
+	</style>	
 {% endblock %}
 {# ............................INCLUIMOS EL JAVASCRIPT QUE VERIFICA SI EL NICK EXISTE #}
 {% block content %}
 	{% set medicalHistory = orthopodologyHistory.medicalHistory %}
+	{% set orthopodologyHistoryList = orthopodologyHistory.medicalHistory.orthopodologyHistoryList %}
+	{% set fristOrthopodologyHistory = orthopodologyHistoryList[0].registrationDate %}
+	{% set registrationDate = orthopodologyHistory.registrationDate %}
 	<!-- page content -->
 		<div class="right_col" role="main">
 			<div class="clearfix"></div>
@@ -92,159 +122,683 @@
 									<!-- /datos Paciente -->
 									<!-- Estudio Ortopodológico -->						
 										<div class="col-md-9 col-sm-12 col-xs-12">
+											<div class="panel-body" style="padding:0px;">
+												{% for orthopodologyHistory in medicalHistory.orthopodologyHistoryList %}
+													<a class="btn btn-success {% if orthopodologyHistory.registrationDate == registrationDate%}disabled{% endif %}"
+														href="{{ path("orthopodology_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate.date | date("Y_m_d") } ) }}">
+														{{orthopodologyHistory.registrationDate.date | date("d/m/Y")}}
+													</a>
+												{% endfor %}
+											</div>
 											<!-- start orthopodologyHistory -->
 												<div class="message_wrapper">
 													<div class="message_wrapper">
-														<h4 class="heading">RAZÓN DE LA CONSULTA:</h4>
-														<blockquote class="message">{{orthopodologyHistory.reasonConsultation}}</blockquote>
-														<h4 class="heading">ANTECEDENTES:</h4>
-														<blockquote class="message">{{orthopodologyHistory.background}}</blockquote>
-														<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+														<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" style="margin-top:20px;">
 															<thead>
 																<tr>
-																	<th style="text-align: center;">Izquierdo</th>
-																	<th style="text-align: center;">EXPLORACIÓN ARTICULAR</th>
-																	<th style="text-align: center;">Derecho</th>
+																	<th style="text-align: center;">Pie</th>
+																	<th style="text-align: center;">Altura</th>
+																	<th style="text-align: center;">Peso</th>
 																<tr>
 															</thead>
 															<tbody>
+																<tr style="height:30px;">
+																	<td style="text-align: center;">
+																		<p style="margin-bottom:0px;">
+																			{{orthopodologyHistory.shoeSize}}
+																		</p>
+																		{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																			{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																				{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate%}
+																				<p style="margin-bottom:0px;">
+																					{{orthopodologyHistoryDay.shoeSize}}
+																				</p>
+																				{% endif %}
+																			{% endfor %}
+																		{% endif %}
+																	</td>
+																	<td style="text-align: center;">
+																		<p style="margin-bottom:0px;">
+																			{{orthopodologyHistory.height}}
+																		</p>
+																		{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																			{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																				{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate%}
+																				<p style="margin-bottom:0px;">
+																					{{orthopodologyHistoryDay.height}}
+																				</p>
+																				{% endif %}
+																			{% endfor %}
+																		{% endif %}
+																	</td>
+																	<td style="text-align: center;">
+																		<p style="margin-bottom:0px;">
+																			{{orthopodologyHistory.weight}}
+																		</p>
+																		{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																			{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																				{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate%}
+																				<p style="margin-bottom:0px;">
+																					{{orthopodologyHistoryDay.weight}}
+																				</p>
+																				{% endif %}
+																			{% endfor %}
+																		{% endif %}
+																	</td>															
 																<tr>
-																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationRotaryPatternExternalLeft}}/{{orthopodologyHistory.articularExplorationRotaryPatternInternalLeft}}</td>
-																	<td style="text-align: center;">PATRON ROTADOR (ext / int)</td>
-																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationRotaryPatternExternalRight}}/{{orthopodologyHistory.articularExplorationRotaryPatternInternalRight}}</td>
-																</tr>
-																<tr>
-																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationHipLeft}}</td>
-																	<td style="text-align: center;">CADERA</td>
-																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationHipRight}}</td>
-																</tr>
-																<tr>
-																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationKneeLeft}}</td>
-																	<td style="text-align: center;">RODILLA</td>
-																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationKneeRight}}</td>
-																</tr>
-																<tr>
-																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationAnkleLeft}}</td>
-																	<td style="text-align: center;">TOBILLO</td>
-																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationAnkleRight}}</td>
-																</tr>
-																<tr>
-																<td style="text-align: center;">{{orthopodologyHistory.articularExplorationRetroPieLeft}}</td>
-																	<td style="text-align: center;">RETROPIÉ</td>
-																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationRetroPieRight}}</td>
-																</tr>
-																<tr>
-																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationBeforeFootLeft}}</td>
-																	<td style="text-align: center;">ANTEPIÉ</td>
-																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationBeforeFootRight}}</td>
-																</tr>
-																<tr>
-																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationFirstRadioLeft}}</td>
-																	<td style="text-align: center;">I RADIO</td>
-																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationFirstRadioRight}}</td>
-																</tr>
-																<tr>
-																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationFifthRadioLeft}}</td>
-																	<td style="text-align: center;">V RADIO</td>
-																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationFifthRadioRight}}</td>
-																</tr>
-																<tr>
-																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationCentralRadiosLeft}}</td>
-																	<td style="text-align: center;">R. CENTRALES</td>
-																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationCentralRadiosRight}}</td>
-																</tr>
-																<tr>
-																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationFirstFingerLeft}}</td>
-																	<td style="text-align: center;">1º DEDO</td>
-																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationFirstFingerRight}}</td>
-																</tr>
-																<tr>
-																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationSmallerFingersLeft}}</td>
-																	<td style="text-align: center;">D. MENORES</td>
-																	<td style="text-align: center;">{{orthopodologyHistory.articularExplorationSmallerFingersRight}}</td>
-																</tr>
-															</tbody>
+															</tbody>														
 														</table>
-														<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
-															<thead>
-																<tr>
-																	<th style="text-align: center;">Izquierdo</th>
-																	<th style="text-align: center;">TORSIONES</th>
-																	<th style="text-align: center;">Derecho</th>
-																</tr>
-															</thead>
-															<tbody>
-																<tr>
-																	<td style="text-align: center;">{{orthopodologyHistory.torsionsFemoralLeft}}</td>
-																	<td style="text-align: center;">FEMORAL</td>
-																	<td style="text-align: center;">{{orthopodologyHistory.torsionsFemoralRight}}</td>
-																</tr>
-																<tr>
-																	<td style="text-align: center;">{{orthopodologyHistory.torsionsGenusLeft}}</td>
-																	<td style="text-align: center;">GENUS</td>
-																	<td style="text-align: center;">{{orthopodologyHistory.torsionsGenusRight}}</td>
-																</tr>
-																<tr>
-																	<td style="text-align: center;">{{orthopodologyHistory.torsionsAngleQLeft}}</td>
-																	<td style="text-align: center;">ÁNGULO Q</td>
-																	<td style="text-align: center;">{{orthopodologyHistory.torsionsAngleQRight}}</td>
-																</tr>
-																<tr>
-																	<td style="text-align: center;">{{orthopodologyHistory.torsionsTibialLeft}}</td>
-																	<td style="text-align: center;">TIBIAL</td>
-																	<td style="text-align: center;">{{orthopodologyHistory.torsionsTibialRight}}</td>
-																</tr>
-																<tr>
-																	<td style="text-align: center;">{{orthopodologyHistory.torsionsHelbingLeft}}</td>
-																	<td style="text-align: center;">HELBING</td>
-																	<td style="text-align: center;">{{orthopodologyHistory.torsionsHelbingRight}}</td>
-																</tr>
-															</tbody>
-														</table>
-														<h4 class="heading">DISIMETRÍA:</h4>
-														<blockquote class="message">{{orthopodologyHistory.dissimmetry}}</blockquote>
-														<h4 class="heading">EXPLORACIÓN MUSCULAR:</h4>
-														<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
-															<thead>
-																<tr>
-																	<th style="text-align: center;">Izquierdo</th>
-																	<th style="text-align: center;">EXPLORACIÓN MUSCULAR</th>
-																		<th style="text-align: center;">Derecho</th>
+														{% if orthopodologyHistory.reasonConsultation != null %}
+															<h4 class="heading">RAZÓN DE LA CONSULTA:</h4>
+															<blockquote class="message">{{orthopodologyHistory.reasonConsultation | raw}}</blockquote>
+														{% endif %}
+														{% if orthopodologyHistory.background != null %}
+															<h4 class="heading">ANTECEDENTES:</h4>
+															<blockquote class="message">{{orthopodologyHistory.background | raw}}</blockquote>
+														{% endif %}
+														<!-- Exploración articular -->
+															<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+																<thead>
+																	<tr>
+																		<th style="text-align: center;"><img src="{{ asset ('assets/images/feet_right.png') }}" alt="..." style="width: 25px;"></th>
+																		<th style="text-align: center;">EXPLORACIÓN ARTICULAR</th>
+																		<th style="text-align: center;"><img src="{{ asset ('assets/images/feet_left.png') }}" alt="..." style="width: 25px;"></th>
+																	<tr>
+																</thead>
+																<tbody>
+																	<!-- patrón rotador -->
+																		<tr>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">
+																					{{orthopodologyHistory.articularExplorationRotaryPatternExternalRight}} / {{orthopodologyHistory.articularExplorationRotaryPatternInternalRight}}
+																				</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate%}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.articularExplorationRotaryPatternExternalRight}} / {{orthopodologyHistoryDay.articularExplorationRotaryPatternInternalRight}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>
+																			<td style="text-align: center;">PATRON ROTADOR (ext / int)</td>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">
+																					{{orthopodologyHistory.articularExplorationRotaryPatternExternalLeft}} / {{orthopodologyHistory.articularExplorationRotaryPatternInternalLeft}}
+																				</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate%}
+																						<p style="margin-bottom:0px;">
+																							{{orthopodologyHistoryDay.articularExplorationRotaryPatternExternalLeft}} / {{orthopodologyHistoryDay.articularExplorationRotaryPatternInternalLeft}}
+																						</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>																	
+																		</tr>
+																	<!-- /patrón rotador -->
+																	<!-- cadera -->
+																			<tr>
+																				<td style="text-align: center;">
+																					<p style="margin-bottom:0px;">{{orthopodologyHistory.articularExplorationHipRight}}</p>
+																					{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																						{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																							{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																							<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.articularExplorationHipRight}}</p>
+																							{% endif %}
+																						{% endfor %}
+																					{% endif %}																				
+																				</td>
+																				<td style="text-align: center;">CADERA</td>
+																				<td style="text-align: center;">
+																					<p style="margin-bottom:0px;">{{orthopodologyHistory.articularExplorationHipLeft}}</p>
+																					{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																						{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																							{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate%}
+																							<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.articularExplorationHipLeft}}</p>
+																							{% endif %}
+																						{% endfor %}
+																					{% endif %}																		
+																				</td>
+																		</tr>
+																	<!-- /cadera -->
+																	<!-- rodilla -->
+																		<tr>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.articularExplorationKneeRight}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.articularExplorationKneeRight}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}																		
+																			</td>
+																			<td style="text-align: center;">RODILLA</td>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.articularExplorationKneeLeft}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.articularExplorationKneeLeft}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}																			
+																			</td>																		
+																		</tr>
+																	<!-- /rodilla -->
+																	<!-- tobillo -->												
+																		<tr>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.articularExplorationAnkleRight}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.articularExplorationAnkleRight}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}	
+																			</td>	
+																			<td style="text-align: center;">TOBILLO</td>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.articularExplorationAnkleLeft}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.articularExplorationAnkleLeft}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}																			
+																			</td>
+																		</tr>
+																	<!-- /tobillo -->																
+																	<!-- retropie -->
+																		<tr>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.articularExplorationRetroPieRight}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.articularExplorationRetroPieRight}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}			
+																			</td>
+																			<td style="text-align: center;">RETROPIÉ</td>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.articularExplorationRetroPieLeft}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.articularExplorationRetroPieLeft}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}																			
+																			</td>																	
+																		</tr>
+																	<!-- /retropie -->
+																	<!-- antepie -->
+																		<tr>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.articularExplorationBeforeFootRight}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.articularExplorationBeforeFootRight}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}																		
+																			</td>
+																			<td style="text-align: center;">ANTEPIÉ</td>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.articularExplorationBeforeFootLeft}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.articularExplorationBeforeFootLeft}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}																			
+																			</td>
+																		</tr>
+																	<!-- /antepie -->																	
+																	<!-- I radio -->
+																		<tr>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.articularExplorationFirstRadioRight}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.articularExplorationFirstRadioRight}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>
+																			<td style="text-align: center;">I RADIO</td>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.articularExplorationFirstRadioLeft}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.articularExplorationFirstRadioLeft}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>
+																		</tr>
+																	<!-- /I radio -->
+																	<!-- V radio -->
+																		<tr>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.articularExplorationFifthRadioRight}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.articularExplorationFifthRadioRight}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}	
+																			</td>
+																			<td style="text-align: center;">V RADIO</td>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.articularExplorationFifthRadioLeft}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.articularExplorationFifthRadioLeft}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>
+																		</tr>
+																	<!-- V radio -->																	
+																	<!-- r centrales -->
+																		<tr>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.articularExplorationCentralRadiosRight}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.articularExplorationCentralRadiosRight}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>
+																			<td style="text-align: center;">R. CENTRALES</td>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.articularExplorationCentralRadiosLeft}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.articularExplorationCentralRadiosLeft}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>
+																		</tr>
+																	<!-- /r centrales -->
+																	<!-- 1er dedo -->
+																		<tr>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.articularExplorationFirstFingerRight}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.articularExplorationFirstFingerRight}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>
+																			<td style="text-align: center;">1º DEDO</td>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.articularExplorationFirstFingerLeft}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.articularExplorationFirstFingerLeft}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}	
+																			</td>
+																		</tr>
+																	<!-- /1er dedo -->
+																	<!-- D menores -->
+																		<tr>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.articularExplorationSmallerFingersRight}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.articularExplorationSmallerFingersRight}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>																	
+																			<td style="text-align: center;">D. MENORES</td>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.articularExplorationSmallerFingersLeft}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.articularExplorationSmallerFingersLeft}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>																	
+																		</tr>
+																	<!-- /D menores -->
+																</tbody>
+															</table>
+														<!-- /Exploración articular -->
+														<!-- Torsiones -->	
+															<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+																<thead>
+																	<tr>
+																		<th style="text-align: center;"><img src="{{ asset ('assets/images/feet_right.png') }}" alt="..." style="width: 25px;"></th>
+																		<th style="text-align: center;">TORSIONES</th>
+																		<th style="text-align: center;"><img src="{{ asset ('assets/images/feet_left.png') }}" alt="..." style="width: 25px;"></th>
 																	</tr>
 																</thead>
 																<tbody>
-																	<tr>
-																		<td style="text-align: center;">{{orthopodologyHistory.muscularExplorationDorsalFlexionLeft}}</td>
-																		<td style="text-align: center;">FLEXIÓN DORSAL</td>
-																		<td style="text-align: center;">{{orthopodologyHistory.muscularExplorationDorsalFlexionRight}}</td>
+																	<!-- Femoral -->
+																		<tr>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.torsionsFemoralRight}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.torsionsFemoralRight}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>
+																			<td style="text-align: center;">FEMORAL</td>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.torsionsFemoralLeft}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.torsionsFemoralLeft}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>
+																		</tr>
+																	<!-- /Femoral -->
+																	<!-- Genus -->
+																		<tr>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.torsionsGenusRight}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.torsionsGenusRight}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>
+																			<td style="text-align: center;">GENUS</td>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.torsionsGenusLeft}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.torsionsGenusLeft}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>
+																		</tr>
+																	<!-- /genus -->
+																	<!-- angulo q -->
+																		<tr>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.torsionsAngleQRight}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.torsionsAngleQRight}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}	
+																			</td>
+																			<td style="text-align: center;">ÁNGULO Q</td>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.torsionsAngleQLeft}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.torsionsAngleQLeft}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>
+																		</tr>
+																	<!-- /angulo q -->
+																	<!-- tibial -->
+																		<tr>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.torsionsTibialRight}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.torsionsTibialRight}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>
+																			<td style="text-align: center;">TIBIAL</td>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.torsionsTibialLeft}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.torsionsTibialLeft}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}	
+																			</td>
+																		</tr>
+																	<!-- tibial -->
+																	<!-- helbing -->
+																		<tr>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.torsionsHelbingRight}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.torsionsHelbingRight}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}		
+																			</td>
+																			<td style="text-align: center;">HELBING</td>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.torsionsHelbingLeft}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.torsionsHelbingLeft}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}	
+																			</td>
+																		</tr>
+																	<!-- /helbing -->
+																</tbody>
+															</table>
+														<!-- /Torsiones -->														
+														<h4 class="heading">DISIMETRÍA:</h4>
+														<blockquote class="message">{{orthopodologyHistory.dissimmetry | raw}}
+															{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																	{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																		{{orthopodologyHistoryDay.dissimmetry | raw}}
+																	{% endif %}
+																{% endfor %}
+															{% endif %}	
+														</blockquote>		
+														<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+															<thead>
+																<tr>
+																	<th style="text-align: center;"><img src="{{ asset ('assets/images/feet_right.png') }}" alt="..." style="width: 25px;"></th>
+																	<th style="text-align: center;">EXPLORACIÓN MUSCULAR</th>
+																		<th style="text-align: center;"><img src="{{ asset ('assets/images/feet_left.png') }}" alt="..." style="width: 25px;"></th>
 																	</tr>
-																	<tr>
-																		<td style="text-align: center;">{{orthopodologyHistory.muscularExplorationPlantarFlexionLeft}}</td>
-																		<td style="text-align: center;">FLEXION PLANTAR</td>
-																		<td style="text-align: center;">{{orthopodologyHistory.muscularExplorationPlantarFlexionRight}}</td>
-																	</tr>
-																	<tr>
-																		<td style="text-align: center;">{{orthopodologyHistory.muscularExplorationEversionLeft}}</td>
-																		<td style="text-align: center;">EVERSIÓN</td>
-																		<td style="text-align: center;">{{orthopodologyHistory.muscularExplorationEversionRight}}</td>
-																	</tr>
-																	<tr>
-																		<td style="text-align: center;">{{orthopodologyHistory.muscularExplorationReversalLeft}}</td>
-																		<td style="text-align: center;">INVERSION</td>
-																		<td style="text-align: center;">{{orthopodologyHistory.muscularExplorationReversalRight}}</td>
-																	</tr>
+																</thead>
+																<tbody>
+																	<!-- Flexión dorsal -->
+																		<tr>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.muscularExplorationDorsalFlexionRight}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.muscularExplorationDorsalFlexionRight}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>
+																			<td style="text-align: center;">FLEXIÓN DORSAL</td>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.muscularExplorationDorsalFlexionLeft}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.muscularExplorationDorsalFlexionLeft}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>
+																		</tr>
+																	<!-- /Flexión dorsal -->
+																	<!-- Flexión puntal -->
+																		<tr>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.muscularExplorationPlantarFlexionRight}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.muscularExplorationPlantarFlexionRight}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>
+																			<td style="text-align: center;">FLEXION PLANTAR</td>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.muscularExplorationPlantarFlexionLeft}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.muscularExplorationPlantarFlexionLeft}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>
+																		</tr>
+																	<!-- /Flexión puntal -->
+																	<!-- Eversión -->
+																		<tr>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.muscularExplorationEversionRight}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.muscularExplorationEversionRight}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}	
+																			</td>
+																			<td style="text-align: center;">EVERSIÓN</td>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.muscularExplorationEversionLeft}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.muscularExplorationEversionLeft}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>
+																		</tr>
+																	<!-- /Eversión -->
+																	<!-- Inversión -->
+																		<tr>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.muscularExplorationReversalRight}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.muscularExplorationReversalRight}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>
+																			<td style="text-align: center;">INVERSION</td>
+																			<td style="text-align: center;">
+																				<p style="margin-bottom:0px;">{{orthopodologyHistory.muscularExplorationReversalLeft}}</p>
+																				{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																					{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																						{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																						<p style="margin-bottom:0px;">{{orthopodologyHistoryDay.muscularExplorationReversalLeft}}</p>
+																						{% endif %}
+																					{% endfor %}
+																				{% endif %}
+																			</td>
+																		</tr>
+																	<!-- /Inversión -->																		
 																</tbody>
 															</table>
 															<h4 class="heading">EXPLORACIÓN DINÁMICA:</h4>
-															<blockquote class="message">{{orthopodologyHistory.dinamicExploration}}</blockquote>
+															<blockquote class="message">{{orthopodologyHistory.dinamicExploration | raw}}
+																{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																	{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																		{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																			{{orthopodologyHistoryDay.dinamicExploration | raw}}
+																		{% endif %}
+																	{% endfor %}
+																{% endif %}	
+															</blockquote>																	
 															<h4 class="heading">SIGNOS DE HUELLA:</h4>
-															<blockquote class="message">{{orthopodologyHistory.signsFootprint}}</blockquote>
+															<blockquote class="message">{{orthopodologyHistory.signsFootprint | raw}}
+																{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																	{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																		{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																			{{orthopodologyHistoryDay.signsFootprint | raw}}
+																		{% endif %}
+																	{% endfor %}
+																{% endif %}	
+															</blockquote>
 															<h4 class="heading">PRUEBAS COMPLEMENTARIAS:</h4>
-															<blockquote class="message">{{orthopodologyHistory.suplementaryTest}}</blockquote>
+															<blockquote class="message">{{orthopodologyHistory.suplementaryTest | raw}}
+																{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																	{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																		{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																			{{orthopodologyHistoryDay.suplementaryTest | raw}}
+																		{% endif %}
+																	{% endfor %}
+																{% endif %}	
+															</blockquote>
 															<h4 class="heading">DIAGNÓSTICO:</h4>
-															<blockquote class="message">{{orthopodologyHistory.diagnostic}}</blockquote>
+															<blockquote class="message">{{orthopodologyHistory.diagnostic | raw}}
+																{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																	{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																		{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																			{{orthopodologyHistoryDay.diagnostic | raw}}
+																		{% endif %}
+																	{% endfor %}
+																{% endif %}	
+															</blockquote>
 															<h4 class="heading">TRATAMIENTO:</h4>
-															<blockquote class="message">{{orthopodologyHistory.treatment}}</blockquote>
+															<blockquote class="message">{{orthopodologyHistory.treatment | raw}}
+																{% if fristOrthopodologyHistory == orthopodologyHistory.registrationDate %}
+																	{% for orthopodologyHistoryDay in orthopodologyHistoryList %}
+																		{% if orthopodologyHistoryDay.registrationDate != orthopodologyHistory.registrationDate %}
+																			{{orthopodologyHistoryDay.treatment | raw}}
+																		{% endif %}
+																	{% endfor %}
+																{% endif %}	
+															</blockquote>
 													</div>
 												</div>
 											<!-- start orthopodologyHistory -->
@@ -284,7 +838,7 @@
 																				<!-- Modificar Seguimiento -->
 																					<a data-toggle="modal" data-target="#tracingEdit_{{tracingDay.id}}" style="cursor: pointer; cursor: hand; margin:5px;" class="pull-right"><i class="fa fa-pencil fa-2x"></i></a>
 																				<!-- /modificar Seguimiento -->
-																				<blockquote class="message" style="margin-bottom:10px;">{{tracingDay.tracing}}</blockquote>
+																				<blockquote class="message" style="margin-bottom:10px;">{{tracingDay.tracing | raw}}</blockquote>
 																				<br />
 																			</div>
 																		</li>
@@ -298,7 +852,7 @@
 										</div>
 									<!-- /seguimiento -->
 									<!-- Documentos -->
-										{% if orthopodologyHistory.docList is not empty %}
+										{% if orthopodologyHistory.documentsList is not empty %}
 											<div class="col-md-12 col-sm-12 col-xs-12" style="padding-right:0px;">
 												<div class="accordion" id="accordion_tracing" role="tablist" aria-multiselectable="true">
 													<div class="panel">
@@ -309,7 +863,7 @@
 															<div class="row">
 																<div class="col-md-12">
 																	<!-- Listado de documentos -->
-																		{% for orthopodologyHistoryDoc in orthopodologyHistory.docList %}
+																		{% for orthopodologyHistoryDoc in orthopodologyHistory.documentsList %}
 																			<div class="col-md-55">
 																				<div class="thumbnail">
 																					<!-- Imagen del documento -->
@@ -368,13 +922,11 @@
 									<!-- Sección final Bloque (operativa) -->								
 										<div class="col-md-12 col-sm-12 col-xs-12" style="padding-right:0px;">
 											<div class="pull-left">
-												{% if orthopodologyHistory.registrationDate.date | date("Y-m-d") ==  registrationDate %}
-													<a class="btn btn-success"
-														href="{{ path("orthopodology_history_edit", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate.date | date("Y_m_d") } ) }}">
-														<i class="fa fa-edit m-right-xs"></i>
-														Editar Estudio
-													</a>
-												{% endif %}
+												<a class="btn btn-success"
+													href="{{ path("orthopodology_history_edit", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate.date | date("Y_m_d") } ) }}">
+													<i class="fa fa-edit m-right-xs"></i>
+													Editar Estudio
+												</a>
 											</div>
 											<div class="pull-right">
 												<!-- Nuevo Estudio -->
@@ -388,6 +940,7 @@
 													</a>
 													#}
 												<!-- /nuevo Estudio -->
+												{% if registrationDate == fristOrthopodologyHistory %}
 												<!-- Activa Modal - Nuevo Seguimiento -->
 													<button class="btn btn-success" data-toggle="modal" data-target="#createTracing">
 														<div data-toggle="tooltip" data-placement="top" title="Nuevo Seguimiento">
@@ -404,6 +957,7 @@
 														</div>
 													</button>
 												<!-- /activa Modal - Nuevo Documento -->
+												{% endif %}
 											</div>
 										</div>
 									<!-- /sección final Bloque (operativa) -->
@@ -435,9 +989,10 @@
 								{{ form_start(form_orthopodologyHistoryTracing, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
 									<div class="col-md-12 col-sm-12 col-xs-12 pull-left">
 										<div class="form-group">
-											<!-- Fecha -->
+												<!-- Fecha -->
 												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12">Fecha de Seguimiento</label>
 												<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+													{# Script al final de la plantilla que gestiona 'datetimepicker' de Bootstrap #}
 													<div class='input-group date' id='datetimepicker_newTracing'>
 														{{form_widget(form_orthopodologyHistoryTracing.date)}}
 														<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
@@ -475,6 +1030,7 @@
 		{% for tracingDay in tracingOrthopodologyHistoryList %}
 				{# Renombro la variable ...#}
 					{% set form_orthopodologyHistoryTracing  = form_tracingOrthopodologyHistoryList[tracingDay.id] %}
+					{% set tracing_edit = 'tracing_edit_'~tracingDay.id %}
 				{# ...Renombro la variable #}
 				<div class="modal fade" id="tracingEdit_{{tracingDay.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-lg">
@@ -497,7 +1053,8 @@
 													<!-- Fecha -->
 														<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12">Fecha de Seguimiento</label>
 														<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
-															<div class='input-group date' id='datetimepicker_editTracing'>
+															{# Script al final de la plantilla que gestiona 'datetimepicker' de Bootstrap #}
+															<div class='input-group date' id='datetimepicker_newTracing'>
 																{{form_widget(form_orthopodologyHistoryTracing.date)}}
 																<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
 																</span>
@@ -508,7 +1065,7 @@
 													<!-- Seguimiento -->
 														<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12" >Seguimiento<span class="required">*</span>
 														</label>
-														<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form_orthopodologyHistoryTracing.tracing)}}</div>
+														<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form_orthopodologyHistoryTracing.tracing, {'id': tracing_edit})}}</div>
 													<!-- /seguimiento -->
 													<!-- Id Oculto -->
 														{{form_widget(form_orthopodologyHistoryTracing.id)}}
@@ -548,26 +1105,26 @@
 					<!-- Modal Body -->
 						<div class="modal-body">
 							<div class="row control-label form-horizontal form-label-left">
-								{{ form_start(form_orthopodologyHistoryDoc, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
+								{{ form_start(form_documents, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
 									<div class="col-md-12 col-sm-12 col-xs-12 pull-left">
 										<div class="form-group">
 											<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-2" >Título<span class="required"></span></label>
-											<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">{{form_widget(form_orthopodologyHistoryDoc.title)}}</div>
+											<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">{{form_widget(form_documents.title)}}</div>
 											<div class="clearfix"></div>
 										</div>
 										<div class="form-group">
 											<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-2" >Título<span class="required"></span></label>
-											<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">{{form_widget(form_orthopodologyHistoryDoc.doc)}}</div>
+											<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">{{form_widget(form_documents.doc)}}</div>
 											<div class="clearfix"></div>
 										</div>
 										<div class="form-group">
 											<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-2" >Descripción<span class="required"></span></label>
-											<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">{{form_widget(form_orthopodologyHistoryDoc.description)}}</div>
+											<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">{{form_widget(form_documents.description)}}</div>
 											<div class="clearfix"></div>
 										</div>
-										{{form_widget(form_orthopodologyHistoryDoc.add, { 'label': 'Añadir Documento' }) }}
+										{{form_widget(form_documents.add, { 'label': 'Añadir Documento' }) }}
 									</div>
-								{{ form_end(form_orthopodologyHistoryDoc)}}
+								{{ form_end(form_documents)}}
 		            		</div>
 		            	</div>
 					<!-- Modal Body -->
@@ -579,7 +1136,7 @@
 		</div>
 	<!-- /modal - Nuevo Documento -->	
 	<!-- Modal - Ver Pdf -->
-		{% for orthopodologyHistoryDoc in orthopodologyHistory.docList %}
+		{% for orthopodologyHistoryDoc in orthopodologyHistory.documentsList %}
 			{% if orthopodologyHistoryDoc.typeDoc.type == "pdf" %}
 				<div class="modal fade" id="viewPdf_{{orthopodologyHistoryDoc.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-lg">
@@ -617,10 +1174,28 @@
 {% block javascriptsFinal %}
 	{# la función parent() carga todo el contenido del bloque anterior #}
 	{{ parent() }}
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
+	<!-- moment.js -->
+	<!-- Analice, valide, manipule y muestre fechas y horas en JavaScript.-->
+    <script src="{{ asset ('assets/vendors/moment/min/moment.min.js') }}"></script>
+    <!-- locale -->
+    <script src="{{ asset ('assets/vendors/fullcalendar/locale/es.js') }}"></script>
+	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>-->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.3/js/bootstrap-datetimepicker.min.js"></script>
-	<!-- dateTimePickerCustom -->
-	<script src="{{ asset ('assets/js/custom/dateTimePicker.js') }}"></script>
+	<script type="text/javascript">
+		// El selector JQuery hace referencia a todos los id con 'datetimepicker' 
+		$('[id ^= datetimepicker]').datetimepicker({
+		//$('#datetimepicker_birthday').datetimepicker({
+			format: 'DD/MM/YYYY',
+			locale:'es',
+			pickTime: false,
+			icons: {
+		//		time: "fa fa-clock-o",
+				date: "fa fa-calendar",
+		//		up: "fa fa-arrow-up",
+		//		down: "fa fa-arrow-down"
+			}
+		});
+	</script>
 	<!-- bootstrap-progressbar -->
 	<script src="{{ asset ('assets/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js') }}"></script>
 	<!-- tether.io -->
@@ -630,7 +1205,7 @@
 		<script src="{{ asset ('assets/vendors/pdfObject/pdfobject.js') }}"></script>
 		<script>
 			// https://pdfobject.com/
-			{% for orthopodologyHistoryDoc in orthopodologyHistory.docList %}
+			{% for orthopodologyHistoryDoc in orthopodologyHistory.documentsList %}
 				{% if orthopodologyHistoryDoc.typeDoc.type == "pdf" %}
 					PDFObject.embed("{{ asset ('uploads/clinics/'~orthopodologyHistory.medicalHistory.clinic.nameUrl~'/medicalHistory/'~orthopodologyHistory.medicalHistory.medicalHistoryNumber~'/orthopodologyHistory/'~orthopodologyHistory.registrationDate| date("Y_m_d")~'/'~orthopodologyHistoryDoc.doc) }}", "#viewerPdf_{{orthopodologyHistoryDoc.id}}");
 				{% endif %}
@@ -641,4 +1216,17 @@
 		<!-- lightbox -->
 		<script src="{{ asset ('assets/vendors/lightbox/dist/ekko-lightbox.js') }}"></script>
 		<script src="{{ asset ('assets/js/custom/custom-lightbox.js') }}"></script>
+	<script data-sample="reasonConsultation">
+		CKEDITOR.replace( 'tracing_tracing', {
+    		customConfig: "{{ asset ('assets/js/custom/ckeditor_config_orthopodology_history.js') }}"
+		});	
+		{% for tracingDay in tracingOrthopodologyHistoryList %}
+			{# Renombro la variable ...#}
+				{% set tracing_edit = 'tracing_edit_'~tracingDay.id %}
+			{# Renombro la variable ...#}					
+			CKEDITOR.replace( {{tracing_edit}}, {
+		    	customConfig: "{{ asset ('assets/js/custom/ckeditor_config_orthopodology_history.js') }}"
+			});	
+		{% endfor %}
+	</script>			
 {% endblock %}		

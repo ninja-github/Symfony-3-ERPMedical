@@ -6,8 +6,9 @@
 	use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 	use Symfony\Component\HttpFoundation\Request;
 /* Añadimos los componentes que permitirán el uso de nuevas clases ********************************************/
+	use Symfony\Component\HttpFoundation\JsonResponse;		// Permite usar Json Response
 	use Symfony\Component\HttpFoundation\Session\Session;
-	use Symfony\Component\HttpFoundation\Response;			// Permite usar el método Response, usado en AJAX	
+	use Symfony\Component\HttpFoundation\Response;			// Permite usar el método Response, usado en AJAX
 	use Symfony\Component\Validator\Constraints\DateTime; 	// necesitamos esta librería para trabajar con fechas
 	use Symfony\Component\HttpFoundation\ParameterBag;
 /* Añadimos las ENTIDADES que usaremos ************************************************************************/
@@ -50,8 +51,9 @@ class ScheduleController extends Controller {
 			$clinicUser_repo = $em->getRepository("BackendBundle:ClinicUser");
 			$medicalHistory_repo = $em->getRepository("BackendBundle:MedicalHistory");
 			$tracing_repo = $em->getRepository("BackendBundle:Tracing");
-			$typeTracing_repo = $em->getRepository("BackendBundle:TypeTracing"); 
+			$typeTracing_repo = $em->getRepository("BackendBundle:TypeTracing");
 		/******************************************************************************************************/
+
 		/* REALIZO LAS CONSULTAS NECESARIAS A LA BD MEDIANTE LOS REPOSITORIOS *********************************/
 			$userCalendar = $user_repo->findOneBy(array('userName'=>$userName));
 			$clinicCalendar = $clinic_repo->findOneBy(array('nameUrl'=>$clinicNameUrl));
@@ -68,7 +70,7 @@ class ScheduleController extends Controller {
 				return $this->redirectToRoute('homepage');
 			}
 			$scheduleGoogleCalendar = $scheduleGoogleCalendar_repo->findOneBy(array('user'=>$userCalendar));
-			// Obtengo mi identificador como usuario en la API de Google Calendar	
+			// Obtengo mi identificador como usuario en la API de Google Calendar
 			$refreshToken = $scheduleGoogleCalendar->getRefreshToken();
 			$calendarId = $scheduleGoogleCalendar->getGoogleCalendarId();
 			/* Cargamos la cuenta de Google Calendar *********************************************************/
@@ -79,12 +81,47 @@ class ScheduleController extends Controller {
 				$googleCalendar->setRefreshToken($refreshToken);
 			/*************************************************************************************************/
 			// $date = new \DateTime('today');
-			$start = new \DateTime('2018-02-01');
-			$end = new \DateTime('2020-01-31');
+			// Corrección de fecha de inicio primer dia del mes menos 6 días (el mes puede empezar en domingo)
+			//$today = new \DateTime('today');
+			//$fristDayOfMonth = $today->modify('first day of this month');
+			//$start = date_add($fristDayOfMonth, date_interval_create_from_date_string('- 6 days'));
+			//$start = new \DateTime('2018-01-01');
+			$start = new \DateTime('today');
+			$end = new \DateTime('2020-12-31');
 			// $client = $googleCalendar->getClient();
 			// $listCalendars = $googleCalendar->listCalendars();
 			// $events = $googleCalendar->getEventsForDate($calendarId, $date);
+
 			$eventsGoogleCalendar = $googleCalendar->getEventsOnRange($calendarId, $start, $end);
+			/*foreach($eventsGoogleCalendar as $key => $value){
+				$getStringDate = $value->getStart()->getDateTime();
+				//$getDateTimeInterfaceDate = date_create_from_format('Y-m-d\TH:i:sP', $getStringDate);
+				//$getFullCalendarFormatDate = date_format($getDateTimeInterfaceDate,'Y-m-d\TH:i:s') ;
+				//var_dump( $getFullCalendarFormatDate );
+				var_dump( $value->getStart() );
+				echo "<br>";
+
+			}die();
+			/*$i = false;
+			$listEvents = array();
+			foreach($eventsGoogleCalendar  as $key => $value){
+				array_push($listEvents,$value);
+			}
+			while ( $i == false ){
+				$numberEvent = count($eventsGoogleCalendar);
+				$dateStart = $eventsGoogleCalendar[$numberEvent-1]->getStart();
+				$dateStart = date_format( date_create_from_format('Y-m-d\TH:i:sP', $dateStart->getDateTime()) , 'Y-m-d');
+				$start = new \DateTime($dateStart);
+				$newGoogleEvents = $googleCalendar->getEventsOnRange($calendarId, $start, $end);
+				if(count($newGoogleEvents) ==0 ){
+					$i = true;
+				}
+				foreach($newGoogleEvents  as $key => $value){
+					array_push($listEvents,$value);
+				}
+			}
+			$eventsGoogleCalendar = $listEvents;
+			*/
 			$eventsDataBase = [];
 			foreach ($eventsGoogleCalendar as $key => $value) {
 				$idEventGoogleCalendar = $value->getId();
@@ -94,7 +131,7 @@ class ScheduleController extends Controller {
 				}
 			}
 		/* CARGAMOS EL FORMULARIO tracingGoogleCalendar *******************************************************/
-			$tracingGoogleCalendar = new Tracing();	
+			$tracingGoogleCalendar = new Tracing();
 			$attr = array('clinicNameUrl'=>$clinicNameUrl, 'medicalHistoryNumber'=>NULL, 'idTracing'=>NULL, 'userName'=>$userName);
 			$form_tracingGoogleCalendar = $this->createForm(TracingType::class, $tracingGoogleCalendar,
 				array(
@@ -121,20 +158,20 @@ class ScheduleController extends Controller {
 						$idTracing = $request->get('idTracing');
 					/*****************************************************************************************/
 					/* Adaptamos fechas **********************************************************************/
-						$eventStart = 
+						$eventStart =
 							date_create_from_format(
-								'd/m/Y H:i P', 
+								'd/m/Y H:i P',
 								$googleCalendarDateEventStart.' '.$googleCalendarTimeEventStart.' +01:00'
 							);
 						//$eventEndDate = date_format( $eventStart, 'd/m/Y');
 						//$googleCalendarEventEnd = $eventEndDate.' '.$googleCalendarEventEnd;
-						$eventEnd = 
+						$eventEnd =
 							date_create_from_format(
-								'd/m/Y H:i P', 
+								'd/m/Y H:i P',
 								$googleCalendarDateEventStart.' '.$googleCalendarTimeEventEnd.' +01:00'
 							);
 						//$dateEvent = date_format($eventStart, 'Y-m-d H:i:s');var_dump($dateEvent);die();
-					/*****************************************************************************************/	
+					/*****************************************************************************************/
 					/* Existen dos casos: nuevo evento y editar evento ***************************************/
 						/* Actuamos sobre Google Calendar ****************************************************/
 							if( $request->request->get('tracing')['googleCalendarEvent'] == "" ){
@@ -178,8 +215,8 @@ class ScheduleController extends Controller {
 								$flush = $em->flush();
 								$status = ['type'=>'success','description'=>'Evento editado correctamente en la Base de datos'];
 							}
-						/*************************************************************************************/						
-					/*****************************************************************************************/	
+						/*************************************************************************************/
+					/*****************************************************************************************/
 					$status = ['type'=>'success','description'=>'Evento creado/modificado correctamente'];
 				}else{
 					$status = ['type'=>'danger','description'=>'Error al crear/modificar el evento'];
@@ -190,7 +227,7 @@ class ScheduleController extends Controller {
 					array('clinicNameUrl'=>$clinicNameUrl, 'userName'=>$userName ));
 			}
 		/******************************************************************************************************/
-		return $this->render('AppBundle:Schedule:schedule_Home.html.twig', 
+		return $this->render('AppBundle:Schedule:schedule_Home.html.twig',
 			array (
 				'permissionLoggedUser'=>$permissionLoggedUser,
 				'eventsGoogleCalendar'=>$eventsGoogleCalendar,
@@ -201,9 +238,120 @@ class ScheduleController extends Controller {
 				// Formularios
 				'form_tracingGoogleCalendar'=>$form_tracingGoogleCalendar->createView(),
 			)
-		);			
+		);
 	}
-/**************************************************************************************************************/	
+/**************************************************************************************************************/
+/* MÉTODO AJAX CARGAR EVENTOS *********************************************************************************/
+	public function dateRangeEventAjaxAction(Request $request) {
+		/* CARGA INICIAL **************************************************************************************/
+			$em = $this->getDoctrine()->getManager();
+			$clinicNameUrl = $request->get('clinicNameUrl');
+			$start = $request->get('start');
+			$userName = $request->get('userName');
+		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
+		/* CARGO LOS REPOSITORIOS  ****************************************************************************/
+			$scheduleGoogleCalendar_repo = $em->getRepository("BackendBundle:ScheduleGoogleCalendar");
+			$user_repo = $em->getRepository("BackendBundle:User");
+			$clinic_repo = $em->getRepository("BackendBundle:Clinic");
+			$clinicUser_repo = $em->getRepository("BackendBundle:ClinicUser");
+			$medicalHistory_repo = $em->getRepository("BackendBundle:MedicalHistory");
+			$tracing_repo = $em->getRepository("BackendBundle:Tracing");
+			$typeTracing_repo = $em->getRepository("BackendBundle:TypeTracing");
+		/******************************************************************************************************/
+		/* REALIZO LAS CONSULTAS NECESARIAS A LA BD MEDIANTE LOS REPOSITORIOS *********************************/
+			$userCalendar = $user_repo->findOneBy(array('userName'=>$userName));
+			$scheduleGoogleCalendar = $scheduleGoogleCalendar_repo->findOneBy(array('user'=>$userCalendar));
+			// Obtengo mi identificador como usuario en la API de Google Calendar
+			$refreshToken = $scheduleGoogleCalendar->getRefreshToken();
+			$calendarId = $scheduleGoogleCalendar->getGoogleCalendarId();
+			/* Cargamos la cuenta de Google Calendar **********************************************************/
+				$request = $this->get('request_stack')->getMasterRequest();
+				$googleCalendar = $this->get('fungio.google_calendar');
+				$googleCalendar->clearTokens();
+				//$googleCalendar->setRefreshToken(NULL);
+				$googleCalendar->setRefreshToken($refreshToken);
+			/**************************************************************************************************/
+		// Corrección de fecha de inicio primer dia del mes menos 6 días (el mes puede empezar en domingo)
+		$start = new \DateTime($start);
+		//$fristDayOfMonth = $start->modify('first day of this month');
+		//$start = date_add($fristDayOfMonth, date_interval_create_from_date_string('- 0 days'));
+		$start = date_add($start, date_interval_create_from_date_string('- 6 days'));
+		// defino fecha fin de intervalo lejana
+		$end = new \DateTime('2020-01-31');
+		$eventsGoogleCalendar = $googleCalendar->getEventsOnRange($calendarId, $start, $end);
+		$result = array();
+		/* Consulto los seguimientos enlazados en Google Calendar *********************************************/
+			$eventsDataBase = [];
+			foreach ($eventsGoogleCalendar as $key => $value) {
+				$idEventGoogleCalendar = $value->getId();
+				$tracing = $tracing_repo->findOneBy(array('googleCalendarEvent'=>$idEventGoogleCalendar));
+				if($tracing != NULL){
+					$eventsDataBase[$idEventGoogleCalendar] = $tracing;
+				}
+			}
+		/* Consulto los seguimientos enlazados en Google Calendar *********************************************/
+			foreach($eventsGoogleCalendar as $key => $value){
+				// $data['start'] = $value->getStart()->getDateTime();
+				$getStringDate = $value->getStart()->getDateTime();
+				$getDateTimeInterfaceDate = date_create_from_format('Y-m-d\TH:i:sP', $getStringDate);
+				if( !is_bool($getDateTimeInterfaceDate) ){
+					$getFullCalendarFormatDate = date_format($getDateTimeInterfaceDate,'Y-m-d\TH:i:s') ;
+					$data['start'] = $getFullCalendarFormatDate;
+				}else{
+					$getStringDate = $value->getStart()->getDate();
+					$getDateTimeInterfaceDate = date_create_from_format('Y-m-d', $getStringDate);
+					$getFullCalendarFormatDate = date_format($getDateTimeInterfaceDate,'Y-m-d\T00:00:00') ;
+					$data['start'] = $getFullCalendarFormatDate;
+				}
+				//$data['end'] = $value->getEnd()->getDateTime();
+				$getStringDate = $value->getEnd()->getDateTime();
+				$getDateTimeInterfaceDate = date_create_from_format('Y-m-d\TH:i:sP', $getStringDate);
+				if( !is_bool($getDateTimeInterfaceDate) ){
+					$getFullCalendarFormatDate = date_format($getDateTimeInterfaceDate,'Y-m-d\TH:i:s') ;
+					$data['end'] = $getFullCalendarFormatDate;
+				}else{
+					$getStringDate = $value->getEnd()->getDate();
+					$getDateTimeInterfaceDate = date_create_from_format('Y-m-d', $getStringDate);
+					$getFullCalendarFormatDate = date_format($getDateTimeInterfaceDate,'Y-m-d\T23:59:59') ;
+					$data['end'] = $getFullCalendarFormatDate;
+				}
+				$data['id'] = $value->getId();
+				$data['title'] = $value->getSummary();
+				$data['description'] = ($value->getDescription() == null)?'':$value->getDescription();
+				if( isset ( $eventsDataBase[ $data['id'] ] )){
+					$data['idTracing'] = $eventsDataBase[ $data['id'] ]->getId();
+				}else{
+					$data['idTracing'] = '';
+				}
+				if( isset ( $eventsDataBase[ $data['id'] ] )){
+					$data['medicalHistoryDataComplete'] = $eventsDataBase[ $data['id'] ]->getMedicalHistory()->getMedicalHistoryDataComplete();
+				}else{
+					$data['medicalHistoryDataComplete'] = '';
+				}
+				$data['clinicNameUrl'] = $clinicNameUrl;
+				if( isset ( $eventsDataBase[ $data['id'] ] )){
+					$data['medicalHistoryNumber'] = $eventsDataBase[ $data['id'] ]->getMedicalHistory()->getMedicalHistoryNumber();
+				}else{
+					$data['medicalHistoryNumber'] = '';
+				}
+				if( $value->getStart()->getDate() != null ){
+					$data['color'] ='#E74C3C';
+					$data['bloqued'] = true;
+				}else{
+					if( isset ( $eventsDataBase[ $data['id'] ] ) ){
+						$data['color'] ='#1ABB9C';
+					}else{
+						$data['color'] ='#2A3F54';
+					}
+					$data['bloqued'] = false;
+				}
+				array_push($result,$data);
+			}
+			$resultJSON_encode = json_encode($result);
+		/******************************************************************************************************/
+		return new Response($resultJSON_encode);
+	}
+/**************************************************************************************************************/
 /* MÉTODO AJAX MODIFICAR FECHAS EVENTOS ***********************************************************************/
 	public function editTimeEventAjaxAction(Request $request) {
 		/* CARGA INICIAL **************************************************************************************/
@@ -218,19 +366,19 @@ class ScheduleController extends Controller {
 			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userLogged);
 		/******************************************************************************************************/
 		/* PERMISO ACCESO *************************************************************************************/
-			$permissionDenied = false;			
+			$permissionDenied = false;
 			$clinicView= $em->getRepository("BackendBundle:Clinic")->findOneByNameUrl($clinicNameUrl);
 			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userLogged));
-			if( $clinicUserCorrect == NULL && $permissionLoggedUser->getClinicViewOther() == false ){
+			if( $clinicUserCorrect == null && $permissionLoggedUser->getClinicViewOther() == false ){
 				$status = ['type'=>'danger','description'=>'No tiene permisos suficientes para visualizar una agenda ajena a su Clínica.'];
 				// generamos los mensajes FLASH (necesario activar las sesiones)
-				$this->session->getFlashBag()->add("status", $status);				
+				$this->session->getFlashBag()->add("status", $status);
 				$permissionDenied = true;
 			}
 			if( $permissionLoggedUser->getScheduleEdit() == false ){
 				$status = ['type'=>'danger','description'=>'No tiene permisos suficientes para EDITAR una agenda.'];
 				// generamos los mensajes FLASH (necesario activar las sesiones)
-				$this->session->getFlashBag()->add("status", $status);				
+				$this->session->getFlashBag()->add("status", $status);
 				$permissionDenied = true;
 			}
 			if ($permissionDenied){ return $this->redirectToRoute('homepage'); }
@@ -239,7 +387,7 @@ class ScheduleController extends Controller {
 			$scheduleGoogleCalendar_repo = $em->getRepository("BackendBundle:ScheduleGoogleCalendar");
 			$tracing_repo = $em->getRepository("BackendBundle:Tracing");
 		/******************************************************************************************************/
-		/* REALIZO LAS CONSULTAS NECESARIAS A LA BD MEDIANTE LOS REPOSITORIOS *********************************/		
+		/* REALIZO LAS CONSULTAS NECESARIAS A LA BD MEDIANTE LOS REPOSITORIOS *********************************/
 			// Busco dentro de la BD el dato
 			$user = $userLogged;
 			$scheduleGoogleCalendar = $scheduleGoogleCalendar_repo->findOneBy(array('user'=>$user));
@@ -314,7 +462,6 @@ class ScheduleController extends Controller {
 		// Extraigo del request el eventId
 			$event = $request->get('Event');
 			$eventId = $event[0];
-
 		/* Busco el evento y extraigo Start, End y TimeZone ***************************************************/
 			$eventGoogleCalendar = $googleCalendar->getEvent($calendarId, $eventId);
 			$eventStartOriginal = $eventGoogleCalendar->getStart();
@@ -365,13 +512,13 @@ class ScheduleController extends Controller {
 				$newScheduleGoogleCalendar->setgoogleCalendarId('primary');
 				$em->persist($newScheduleGoogleCalendar);
 				// guardamos los datos persistidos dentro de la BD
-				$flush = $em->flush();				
-			}			
+				$flush = $em->flush();
+			}
 			$request = $this->get('request_stack')->getMasterRequest();
 			$googleCalendar = $this->get('fungio.google_calendar');
 			$redirectUri = 'http://'.$request->server->get('HTTP_HOST').'/schedule_config';
 			$googleCalendar->setRedirectUri($redirectUri);
-			// Si no existe registro en la base de datos del usuario o el usuario no tiene RefreshToken almacenado 
+			// Si no existe registro en la base de datos del usuario o el usuario no tiene RefreshToken almacenado
 			if( empty($scheduleGoogleCalendar) || $scheduleGoogleCalendar->getRefreshToken() == NULL ){
 				if ($request->query->has('code') && $request->get('code')) {
 					$client = $googleCalendar->getClient($request->get('code'), false);
@@ -388,7 +535,7 @@ class ScheduleController extends Controller {
 						$newScheduleGoogleCalendar->setRefreshToken($refresh_token);
 						$em->persist($newScheduleGoogleCalendar);
 						// guardamos los datos persistidos dentro de la BD
-						$flush = $em->flush();	
+						$flush = $em->flush();
 					}
 				/**********************************************************************************************/
 				if (is_string($client)) {
@@ -409,7 +556,7 @@ class ScheduleController extends Controller {
 		/******************************************************************************************************/
 		/* EXTRAE PERMISOS DEL USUARIO  ***********************************************************************/
 			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userLogged);
-		/******************************************************************************************************/	
+		/******************************************************************************************************/
 			$request = $this->get('request_stack')->getMasterRequest();
 			$googleCalendar = $this->get('fungio.google_calendar');
 			if(isset($redirectUri)){
@@ -420,7 +567,7 @@ class ScheduleController extends Controller {
 			} else {
 			    //$client = $googleCalendar->getClient();
 				$googleCalendar->setRefreshToken();
-				$client = $googleCalendar->getClient(null, false);			    
+				$client = $googleCalendar->getClient(null, false);
 			}
 			if (is_string($client)) {
 			    return new RedirectResponse($client);
@@ -441,7 +588,7 @@ class ScheduleController extends Controller {
 		/* Cargamos la cuenta de Google Calendar **************************************************************/
 			$request = $this->get('request_stack')->getMasterRequest();
 			$googleCalendar = $this->get('fungio.google_calendar');
-		/******************************************************************************************************/					
+		/******************************************************************************************************/
 		/* CARGO LOS REPOSITORIOS  ****************************************************************************/
 			$scheduleGoogleCalendar_repo = $em->getRepository("BackendBundle:ScheduleGoogleCalendar");
 			$user_repo = $em->getRepository("BackendBundle:User");
@@ -456,7 +603,7 @@ class ScheduleController extends Controller {
 				$status = ['type'=>'danger','description'=>'No existe dicho usuario en esa clínica'];
 			}
 			$scheduleGoogleCalendar = $scheduleGoogleCalendar_repo->findOneBy(array('user'=>$userCalendar));
-			// Obtengo mi identificador como usuario en la API de Google Calendar	
+			// Obtengo mi identificador como usuario en la API de Google Calendar
 			$refreshToken = $scheduleGoogleCalendar->getRefreshToken();
 			$calendarId = $scheduleGoogleCalendar->getGoogleCalendarId();
 			/* Cargamos la cuenta de Google Calendar *********************************************************/
@@ -466,7 +613,7 @@ class ScheduleController extends Controller {
 			/*************************************************************************************************/
 			/* Obtengo id del Evento por el formulario *******************************************************/
 				$eventId = $request->get('idEvent');
-			/*************************************************************************************************/				
+			/*************************************************************************************************/
 			$googleCalendar->deleteEvent($calendarId, $eventId);
 			$status = ['type'=>'success','description'=>'Evento borrado de Google Calendar correctamente'];
 			/* Modifico la Base de Datos *********************************************************************/
@@ -520,7 +667,7 @@ class ScheduleController extends Controller {
 			$events = $googleCalendar->getEventsForDate($calendarId, $date);
 
 		/******************************************************************************************************/
-/*		return $this->render('AppBundle:Schedule:schedule_Home.html.twig', 
+/*		return $this->render('AppBundle:Schedule:schedule_Home.html.twig',
 			array (
 				'request'=>$request,
 				'permissionLoggedUser'=>$permissionLoggedUser,

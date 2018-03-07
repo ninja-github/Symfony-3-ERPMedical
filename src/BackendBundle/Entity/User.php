@@ -51,6 +51,11 @@ class User implements UserInterface, \Serializable {
 	public function setSurnames($surnames) { $this->surnames = $surnames; return $this; }
 	public function getSurnames() { return $this->surnames; }
 /**************************************************************************************************************/
+/* dni ********************************************************************************************************/
+	private $dni;
+	public function setDni($dni) { $this->dni = $dni; return $this; }
+	public function getDni() { return $this->dni; }
+/**************************************************************************************************************/
 /* password ***************************************************************************************************/
 	private $password;
 	public function setPassword($password) { $this->password = $password; return $this; }
@@ -60,6 +65,16 @@ class User implements UserInterface, \Serializable {
 	private $email;
 	public function setEmail($email) { $this->email = $email; return $this; }
 	public function getEmail() { return $this->email; }
+/**************************************************************************************************************/
+/* address ****************************************************************************************************/
+	private $address;
+	public function setAddress($address) { $this->address = $address; return $this; }
+	public function getAddress() { return $this->address; }
+/**************************************************************************************************************/
+/* city *******************************************************************************************************/
+	private $city;
+	public function setCity (\BackendBundle\Entity\AddressCity $city = null) { $this->city = $city; return $this; }
+	public function getCity() { return $this->city; }    
 /**************************************************************************************************************/
 /* role *******************************************************************************************************/
 	private $role;

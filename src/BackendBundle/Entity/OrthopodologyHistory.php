@@ -12,15 +12,18 @@
     use Doctrine\Common\Collections\ArrayCollection;
 /**************************************************************************************************************/
 class OrthopodologyHistory {
-/* Listamos Historias Médicas *********************************************************************************/
-	private $docList;
-	public function getDocList() { return $this->docList; }
+/* Listamos Documentos asociados a la Orthopodology History ***************************************************/
+    private $documentsList;
+    public function getDocumentsList() { return $this->documentsList; }
+    public function addDocumentsList(\BackendBundle\Entity\Documents $documentsList) { $this->documentsList[] = $documentsList; return $this; } 
+    public function removeDocumentsList(\BackendBundle\Entity\Documents $documentsList) { $this->documentsList->removeElement($documentsList); }    
+/**************************************************************************************************************/
 	private $tracingList;
 	public function getTracingList() { return $this->tracingList; }
 /* CONSTRUCTOR ************************************************************************************************/
 	//Un ArrayCollection es una implementación de colección que se ajusta a la matriz PHP normal.
 	public function __construct() {
-		$this->docList = new ArrayCollection();
+		$this->documentsList = new ArrayCollection();
 		$this->tracingList = new ArrayCollection();
     }
 /**************************************************************************************************************/
@@ -33,11 +36,27 @@ class OrthopodologyHistory {
     public function setReasonConsultation($reasonConsultation) { $this->reasonConsultation = $reasonConsultation; return $this; } 
     public function getReasonConsultation() { return $this->reasonConsultation; }   
 /**************************************************************************************************************/
+/* shoeSize ***************************************************************************************************/
+    private $shoeSize;
+    public function setShoeSize($shoeSize) { $this->shoeSize = $shoeSize; return $this; } 
+    public function getShoeSize() { return $this->shoeSize; }   
+/**************************************************************************************************************/
+/* weight *****************************************************************************************************/
+    private $weight;
+    public function setWeight($weight) { $this->weight = $weight; return $this; } 
+    public function getWeight() { return $this->weight; }   
+/**************************************************************************************************************/
+/* height *****************************************************************************************************/
+    private $height;
+    public function setHeight($height) { $this->height = $height; return $this; } 
+    public function getHeight() { return $this->height; }   
+/**************************************************************************************************************/
 /* background *************************************************************************************************/  
 
 
 
 /**************************************************************************************************************/
+
 /* medicalHistory *********************************************************************************************/ 
     private $medicalHistory;
     public function setMedicalHistory(\BackendBundle\Entity\MedicalHistory $medicalHistory = null) { $this->medicalHistory = $medicalHistory; return $this; } 
@@ -1466,29 +1485,8 @@ class OrthopodologyHistory {
 	public function getModificationDate() { return $this->modificationDate; } 
     
 
-    /**
-     * Add docList
-     *
-     * @param \BackendBundle\Entity\OrthopodologyHistoryDoc $docList
-     *
-     * @return OrthopodologyHistory
-     */
-    public function addDocList(\BackendBundle\Entity\OrthopodologyHistoryDoc $docList)
-    {
-        $this->docList[] = $docList;
+ 
 
-        return $this;
-    }
-
-    /**
-     * Remove docList
-     *
-     * @param \BackendBundle\Entity\OrthopodologyHistoryDoc $docList
-     */
-    public function removeDocList(\BackendBundle\Entity\OrthopodologyHistoryDoc $docList)
-    {
-        $this->docList->removeElement($docList);
-    }
 
     /**
      * Add tracingList

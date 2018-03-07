@@ -11,6 +11,7 @@
 {# ............................INCLUIMOS EL JAVASCRIPT QUE VERIFICA SI EL NICK EXISTE #}
 {% block content %}
 	<!-- page content -->
+	{% set registrationDate = app.request.get('registrationDate') %}
 	{% set doctor = report.user %}
 	{% set doctorNumber = report.user.userDataDoctor.collegeNumber %}
 	{% set medicalHistory = report.medicalHistory %}	
@@ -24,6 +25,28 @@
 							<!-- Título del Bloque -->							
 								<div class="x_title">
 									<h3 style="display:inline-block;">Informe</h3>
+									<div style="display:block;margin-top:4px;" class="pull-right">
+										<a class="btn btn-success" href="{{ path("report_list", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">
+											<i class="fa fa-mail-reply-all m-right-xs"></i>
+											Listado
+										</a>
+										{% if reportBeforeNext['before'] is defined and (reportBeforeNext['before']['registrationDate'] != registrationDate) %}
+											{% set clinicNameUrl = reportBeforeNext['clinicNameUrl'] %}
+											{% set medicalHistoryNumber = reportBeforeNext['before']['medicalHistory'] %}
+											{% set registrationDate = reportBeforeNext['before']['registrationDate'] %}
+											<a class="btn btn-success" href="{{ path("report_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber, 'registrationDate': registrationDate } ) }}">
+												<i class="fa fa-backward m-right-xs"></i>
+											</a>
+										{% endif %}
+										{% if reportBeforeNext['next'] is defined and (reportBeforeNext['next']['registrationDate'] != registrationDate) %}
+											{% set clinicNameUrl = reportBeforeNext['clinicNameUrl'] %}
+											{% set medicalHistoryNumber = reportBeforeNext['next']['medicalHistory'] %}
+											{% set registrationDate = reportBeforeNext['next']['registrationDate'] %}									
+											<a class="btn btn-success" href="{{ path("report_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber, 'registrationDate': registrationDate } ) }}">
+												<i class="fa fa-forward m-right-xs"></i>
+											</a>
+										{% endif %}
+									</div>
 									<div class="clearfix"></div>
 								</div>
 							<!-- /título del Bloque -->

@@ -1,0 +1,256 @@
+{# EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig'...................... #}
+	{% extends "AppBundle:Layouts:layout.html.twig"%}
+{# ......................EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig' #}
+{% block stylesheets %}
+	{# la función parent() carga todo el contenido del bloque anterior #}
+	{{ parent() }}
+	<!-- Datatables -->
+{% endblock %}
+{% block content %}
+<!-- page content -->
+	{% set clinic = invoiceIssued.clinic %}
+	{% set doctor = invoiceIssued.user %}
+	{% set doctorNumber = doctor.userDataDoctor.collegeNumber %}	
+	{% set business = invoiceIssued.business %}
+	<!-- page content -->
+		<div class="right_col" role="main">
+			<div class="clearfix"></div>
+			<div class="row">
+				<!-- Bloque -->
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<div class="x_panel" >
+							<!-- Título del Bloque -->							
+								<div class="x_title">
+									<h3 style="display:inline-block;">Factura</h3>
+									<div style="display:block;margin-top:4px;" class="pull-right">
+										<a class="btn btn-success" href="{{ path("invoice_list", {clinicNameUrl:clinic.nameUrl} ) }}">
+											<i class="fa fa-mail-reply-all m-right-xs"></i>
+											Listado
+										</a>
+										{% if invoiceIssuedBeforeNext['before'] is defined %}
+											{% set clinicNameUrl = invoiceIssuedBeforeNext['clinicNameUrl'] %}
+											{% set invoiceNumber = invoiceIssuedBeforeNext['before']['invoiceIssuedNumber'] %}
+											<a class="btn btn-success" href="{{ path("invoice_issued_view", {'clinicNameUrl': clinicNameUrl, 'invoiceIssuedNumber': invoiceNumber } ) }}">
+												<i class="fa fa-backward m-right-xs"></i>
+											</a>
+										{% endif %}
+										{% if invoiceIssuedBeforeNext['next'] is defined %}
+											{% set clinicNameUrl = invoiceIssuedBeforeNext['clinicNameUrl'] %}
+											{% set invoiceNumber = invoiceIssuedBeforeNext['next']['invoiceIssuedNumber'] %}
+											<a class="btn btn-success" href="{{ path("invoice_issued_view", {'clinicNameUrl': clinicNameUrl, 'invoiceIssuedNumber': invoiceNumber } ) }}">
+												<i class="fa fa-forward m-right-xs"></i>
+											</a>
+										{% endif %}
+									</div>									
+									<div class="clearfix"></div>
+								</div>
+							<!-- /título del Bloque -->
+							<!-- Contenido del Bloque -->								
+								<div class="x_content">
+									<!-- Datos Paciente -->
+										<div class="col-md-12 col-sm-12 col-xs-12 profile_left">
+											<!-- Datos Doctor-->
+												<table  class="table table-striped table-bordered" cellspacing="0" style="width:100%;">
+													<tr>
+														<td>
+															<h4>{{clinic.name}}</h4>
+															<h4>
+															{{clinic.address}}, {{clinic.city.cp}} {{clinic.city.city }} ( {{clinic.city.province}} )
+															</h4>
+														</td>
+														<td>
+															<h3>FA-{{invoiceIssued.invoiceNumber}}</h3>
+														</td>
+													</tr>
+												</table>
+											<!-- Datos Clínica + numero factura -->	
+										</div>
+										<div class="col-md-4 col-sm-5 col-xs-12 profile_left">								
+											<!-- Datos Doctor-->
+												<h4>PODÓLOGO:</h4>
+												<h3>{{doctor.surnames | upper}},{{doctor.name | upper}} </h3>
+												<ul class="list-unstyled user_data">
+													<li>
+														<h4>Número de Colegiado: {{doctorNumber}}</h4>  
+													</li>
+													<li>
+														<h4>
+															{{doctor.address}},<br>{{doctor.city.cp}} {{doctor.city.city }}<br>( {{doctor.city.province}} )
+														</h4> 
+													</li>
+													<li>
+														<h4>
+															NIF {{doctor.dni}}
+														</h4> 
+													</li>													
+												</ul>									
+											<!-- /datos Doctor-->							
+										</div>
+										<div class="col-md-4 col-sm-5 col-xs-12 pull-right">								
+											<!-- Datos Doctor-->
+												<h4>CLIENTE:</h4>
+												{% if business != null %}
+													<h3>{{business.name | upper}}</h3>
+													<ul class="list-unstyled user_data">
+														<li>
+															<h4>
+																{{business.address}},<br> {{business.city.cp}} {{business.city.city }}<br>( {{business.city.province}} )
+															</h4> 
+														</li>
+														<li>
+															<h4>CIF: {{business.cif}}</h4>  
+														</li>																								
+													</ul>													
+													{% if invoiceIssued.medicalHistory != null %}
+														{% set medicalHistory = invoiceIssued.medicalHistory %}
+														<ul class="list-unstyled user_data">
+															<li>
+																<h4>
+																	PACIENTE: 
+																	<a href="{{ path("medical_history_view", {'clinicNameUrl': clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber } ) }}">{{medicalHistory.medicalHistoryNumber}} - {{medicalHistory.surname}} {{medicalHistory.name}}
+																	</a>
+																</h4> 
+															</li>	
+														</ul>														
+													{% endif %}
+												{% endif %}
+												{% if business == null and invoiceIssued.medicalHistory != null %}
+													{% set medicalHistory = invoiceIssued.medicalHistory %}
+													{% set medicalHistoryNumber = medicalHistory.medicalHistoryNumber %}
+													<h3>{{medicalHistory.surname | upper}}, {{medicalHistory.name | upper}}</h3>
+													<ul class="list-unstyled user_data">
+														<li>
+															<h4>
+																{{medicalHistory.address}},<br>{% if medicalHistory.city != null %}{{medicalHistory.city.cp}} {{medicalHistory.city.city }}<br>( {{medicalHistory.city.province}} ){% endif %}
+															</h4> 
+														</li>
+														<li>
+															<h4>DNI: {{medicalHistory.dni}}</h4>  
+														</li>																								
+													</ul>													
+													<ul class="list-unstyled user_data">
+														<li>
+															<h4>
+																Nº HISTORIA: <a href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber } ) }}">{{medicalHistoryNumber}}</a>
+															</h4> 
+														</li>	
+													</ul>														
+												{% endif %}												
+							
+											<!-- /datos Doctor-->							
+										</div>										
+										<br />
+									<!-- /datos Paciente-->										
+									<div class="clearfix"></div>
+									<div class="col-md-12 col-sm-12 col-xs-12 profile_left" style="text-align: right;">
+										<ul class="list-unstyled user_data">
+											<li>
+												<h4>
+													FECHA: {{invoiceIssued.registrationDate|date('d/m/Y')}} 
+												</h4> 
+											</li>
+											<li>
+												<h4 >
+													Nº DE FACTURA: FA-{{invoiceIssued.invoiceNumber}} 
+												</h4> 
+											</li>													
+										</ul>											
+									</div>
+								</div>
+							<!-- /título del Bloque -->
+							<!-- Contenido del Bloque -->								
+								<div class="x_content">
+									<!-- Datos Paciente -->
+										<div class="col-md-12 col-sm-12 col-xs-12 profile_left">
+												<table  class="table table-striped table-bordered" cellspacing="0" style="width:100%;">
+													<thead>
+														<tr>
+															<th style="text-align: center; width:20px;">Nº</th>
+															<th style="text-align: center;">Descripción</th>
+															<th style="text-align: center; width:80px;">IVA</th>
+															<th style="text-align: right; width:100px;">Precio</th>
+														</tr>
+													</thead>
+													<tbody>
+														{% set numberService = 1 %}
+														{% set taxBase = 0 %}
+														{% set taxTotal = 0 %}
+														{% for invoiceService in invoiceIssued.invoiceServiceList %}
+															<tr>
+																<td>{{numberService}}</td>
+																<td>{{invoiceService.description}}</td>
+																<td style="text-align: right;">{% if invoiceService.typeTaxService != null %}{{invoiceService.typeTaxService.percent}}{% endif %} %</td>
+																<td style="text-align: right;">{{invoiceService.price}} €</td>
+															</tr>
+															{% set numberService = numberService + 1 %}
+															{% set taxBase = taxBase + invoiceService.price %}
+														{% endfor %}
+														<tr>
+															<td style="width: 100px;" colspan="3">
+																<p style="margin:0px 4px;text-align:right;">BASE IMPONIBLE</p>
+															</td>
+															<td style="width: 50px; text-align: right;">
+																<p style="margin:0px 4px;">{{taxBase}} €</p>
+															</td>
+														</tr>
+														{% set withOutIva = true %}
+														{% for  tax in totalTaxService %}
+															{% if tax['percent'] != 0 %}{% set withOutIva = false %}{% endif %}
+														{% endfor %}
+														{% if withOutIva == false %}
+															{% for tax in totalTaxService %}
+																<tr>
+																	<td style="width: 100px;" colspan="3">
+																		<p style="margin:0px 4px;text-align:right;">IVA {{tax['percent']}} %</p>
+																	</td>
+																	<td style="width: 50px; text-align: right;">
+																		{% set taxService = (tax['total'] * tax['percent'] / 100)|number_format(2, '.', ',') %}
+																		<p style="margin:0px 4px;">{{taxService }} €</p>
+																	</td>{##}
+																</tr>
+																{% set taxTotal = taxTotal + taxService %}
+															{% endfor %}
+														{% endif %}
+														{% set irpf = (taxBase * invoiceIssued.typeTaxInvoice.percent / 100)|number_format(2, '.', ',') %}
+														{% if invoiceIssued.typeTaxInvoice.percent != 0 %}
+															<tr>
+																<td style="width: 100px;" colspan="3">
+																	<p style="margin:0px 4px;text-align:right;">IRPF ({{invoiceIssued.typeTaxInvoice.percent}} %)</p>
+																</td>
+																<td style="width: 50px;">
+																	<p style="margin:0px 4px;text-align:right;">
+																		{% if invoiceIssued.medicalHistory == null %}
+																			{{irpf}} €
+																		{% endif %}
+																	</p>
+																</td>
+															</tr>
+														{% endif %}
+														<tr>
+															<td style="width: 100px;" colspan="3">
+																<p style="margin:0px 4px;text-align:right;">TOTAL </p>
+															</td>
+															<td style="width: 50px;">
+																<p style="margin:0px 4px;text-align:right;">{{ taxBase + taxTotal + irpf }} €</p>
+															</td>
+														</tr>												
+													</tbody>
+												</table>
+										</div>
+									<!--/ Datos Paciente -->
+								</div>	
+							<!-- /contenido Bloque -->
+						</div>
+					</div>
+				<!--/ bloque -->
+			</div>
+		</div>
+}
+}
+}
+}
+<!-- /page content -->
+{% endblock %}
+{% block javascriptsFinal %}
+	{{ parent() }}
+{% endblock %}	

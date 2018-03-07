@@ -1,7 +1,6 @@
 {# EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig'...................... #}
 	{% extends "AppBundle:Layouts:layout.html.twig"%}
 {# ......................EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig' #}
-{# INCLUIMOS EL JAVASCRIPT QUE VERIFICA SI EL NICK EXISTE............................ #}
 {% block stylesheets %}
 	{# la función parent() carga todo el contenido del bloque anterior #}
 	{{ parent() }}
@@ -12,8 +11,7 @@
 	<link href="{{ asset ('assets/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
 	<link href="{{ asset ('assets/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
 	<link href="{{ asset ('assets/vendors/ionicons.com/2.0.1/css/ionicons.min.css') }}" rel="stylesheet">
- {% endblock %}
-{# ............................INCLUIMOS EL JAVASCRIPT QUE VERIFICA SI EL NICK EXISTE #}
+{% endblock %}
 {% block content %}
 <!-- page content -->
 	{% set medicalHistoryList = clinicView.medicalHistoryList %}
@@ -25,35 +23,79 @@
 					<div class="x_title">
 						<h3 style="display:inline-block;">Listado de Historias</h3>
 					</div>
-					<div class="x_content">
-						<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
-						{# No se usará la paginación por ahora
-						<table  class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
-						#}
+					<div class="x_content" >
+						<table id="datatable-buttons-medicalHistoryList" class="table table-striped table-bordered" cellspacing="0" style="width:100%;">
 							<thead>
 								<tr>
-									<th style="text-align: center;">Nºhª</th>
+									<th style="text-align: center; width:10px;">Nºhª</th>
+									<th style="text-align: center; width:10px;">
+										<i class="fa fa-clock-o m-right-xs"></i>
+									</th>
+									<th style="text-align: center; width:10px;">
+										<i class="fa fa-check-circle m-right-xs"></i>
+									</th>
+									<th style="text-align: center; width:10px;">
+										<i class="fa fa-money m-right-xs">
+									</th>
+									<th style="text-align: center; width:10px;">
+										<i class="fa fa-exclamation-triangle"></i>
+									</th>																		
 									<th>Nombre</th>
-									<th>DNI</th>
-									<th>Móvil</th>
-									<th>Fijo</th>
-									<th style="text-align: center;"><i class="ionicons ion-male" style="text-align: center;"></i> / <i class="ionicons ion-female" style="text-align: center;"></i></th>
+									<th style="text-align: center ;width:45px;">DNI</th>
+									<th style="text-align: center; width:45px;">Móvil</th>
+									<th style="text-align: center; width:45px;">Fijo</th>
+									<th>Ciudad</th>
+									<th style="text-align: center; width:35px;"><i class="ionicons ion-male"></i> / <i class="ionicons ion-female"></i></th>
 								</tr>
 							</thead>
 							<tbody>
-
-								{% for medicalHistory in medicalHistoryList %}
-								{# No se usará la paginación por ahora
-								{% for medicalHistory in medicalHistoriesPagination %}
+								{#}
+								{% set countrow = 0 %}
 								#}
+								{% for medicalHistory in medicalHistoryList %}
+									{#}
+									{% set countrow = countrow + 1 %}
+										{% if countrow < 10 %}
+									#}		
+									{# DEFINO VARIABLES ................................................................... #}
+										{% set clinicNameUrl = medicalHistory.clinic.nameUrl %}
+										{% set city = medicalHistory.city %}
+										{% set medicalHistoryNumber = medicalHistory.medicalHistoryNumber %}
+										{% set cost = dataExtraMedicalHistoryList[medicalHistoryNumber]['costEarnings']['cost'] %}
+										{% set earnings = dataExtraMedicalHistoryList[medicalHistoryNumber]['costEarnings']['earnings'] %}
+									{# ................................................................... DEFINO VARIABLES #}
 									<tr {% if medicalHistory.patientRisk != NULL %} class="danger"{% endif %}>
-										<td style="text-align: center;"><a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}">{{medicalHistory.medicalHistoryNumber}}</a></td>
-										<td><a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}">{{medicalHistory.surname| title}}, {{medicalHistory.name| title}}</a></td>
-										<td><a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}">{{medicalHistory.dni}}</a></td>
-										<td><a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}">{{medicalHistory.phoneMobile}}</a></td>
-										<td><a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}">{{medicalHistory.phoneHome}}</a></td>
+										<td style="text-align: center;"><a href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber} ) }}">{{medicalHistory.medicalHistoryNumber}}</a></td>
 										<td style="text-align: center;">
-											<a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}">
+											{% if medicalHistory.late != NULL %}
+												{{medicalHistory.late}} <i class="fa fa-clock-o m-right-xs"></i>
+											{% endif %}
+										</td>
+										<td style="text-align: center;">
+											{% if medicalHistory.updated != NULL %}
+												<i class="fa fa-check-circle m-right-xs"></i>
+											{% endif %}
+										</td>
+										<td style="text-align: center;">
+											{% if cost > earnings %}
+												<i class="fa fa-money m-right-xs"></i>
+											{% endif %}
+										</td>
+										<td style="text-align: center;">
+											{% if medicalHistory.patientRisk != NULL %}
+												<i class="fa fa-exclamation-triangle"></i>
+											{% endif %}
+										</td>
+										<td><a href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber':medicalHistoryNumber} ) }}">{{medicalHistory.surname| title}}, {{medicalHistory.name| title}}</a></td>
+										<td style="text-align: center;"><a href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber} ) }}">{{medicalHistory.dni}}</a></td>
+										<td style="text-align: center;"><a href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber} ) }}">{{medicalHistory.phoneMobile}}</a></td>
+										<td style="text-align: center;"><a href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber} ) }}">{{medicalHistory.phoneHome}}</a></td>
+										<td>
+											<a href="{{ path('medical_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber} ) }}">
+											{% if city != null %} {{city.city}} ( {{city.province.province}} ){% endif %}</a>
+										</td>													
+										<td style="text-align: center;">
+											<a href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber} ) }}">
 												{% if medicalHistory.gender == "Hombre" %}
 													<i class="ionicons ion-male"></i>
 												{% elseif medicalHistory.gender == "Mujer" %}
@@ -62,16 +104,13 @@
 											</a>
 										</td>
 									</tr>
+								{#}	
+								{% endif %}
+								#}
 								{% endfor %}
+
 							</tbody>
 						</table>
-						{# PAGINACIÓN DE LOS USUARIOS................................................. #}
-							{#
-							<div class="navigation">
-								{{ knp_pagination_render(medicalHistoriesPagination) }}
-							</div>
-							#}
-						{# .................................................PAGINACIÓN DE LOS USUARIOS #}
 					</div>
 				</div>
 			</div>
@@ -97,4 +136,7 @@
     <script src="{{ asset ('assets/vendors/jszip/dist/jszip.min.js') }}"></script>
     <script src="{{ asset ('assets/vendors/pdfmake/build/pdfmake.min.js') }}"></script>
     <script src="{{ asset ('assets/vendors/pdfmake/build/vfs_fonts.js') }}"></script>
+    <script>
+		//var table = $('#datatable-buttons-medicalHistoryList').DataTable();
+    </script>
 {% endblock %}

@@ -2513,12 +2513,18 @@ if (typeof NProgress != 'undefined') {
 				console.log('init_DataTables');
 				
 				var handleDataTableButtons = function() {
-				  if ($("#datatable-buttons").length) {
-					$("#datatable-buttons").DataTable({
+				if ($("[id^=datatable-buttons]").length) {
+					$("[id^=datatable-buttons]").DataTable({
+				//if ($("#datatable-1").length) {
+				//	$("#datatable-1").DataTable({
 					  dom: "Bfrtip",
 					  buttons: [
 						{
 						  extend: "copy",
+						  className: "btn-sm"
+						},
+						{
+						  extend: "pdf",
 						  className: "btn-sm"
 						},
 						{
@@ -2530,19 +2536,15 @@ if (typeof NProgress != 'undefined') {
 						  className: "btn-sm"
 						},
 						{
-						  extend: "pdfHtml5",
-						  className: "btn-sm"
-						},
-						{
 						  extend: "print",
 						  className: "btn-sm"
 						},
 					  ],
-					  responsive: true
+					  responsive: true,
+					  paging:   true
 					});
 				  }
 				};
-
 				TableManageButtons = function() {
 				  "use strict";
 				  return {

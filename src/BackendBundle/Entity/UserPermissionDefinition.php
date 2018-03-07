@@ -402,6 +402,11 @@ class UserPermissionDefinition {
 		public function setTracingServiceRemove($tracingServiceRemove) { $this->tracingServiceRemove = $tracingServiceRemove; return $this; }
 		public function getTracingServiceRemove() { return $this->tracingServiceRemove; }
 	/**********************************************************************************************************/
+	/* tracingServiceChangeCountableStatus ***********************************************************************************/
+		private $tracingServiceChangeCountableStatus;
+		public function setTracingServiceChangeCountableStatus($tracingServiceChangeCountableStatus) { $this->tracingServiceChangeCountableStatus = $tracingServiceChangeCountableStatus; return $this; }
+		public function getTracingServiceChangeCountableStatus() { return $this->tracingServiceChangeCountableStatus; }
+	/**********************************************************************************************************/	
 /**************************************************************************************************************/
 /* ADMIN ******************************************************************************************************/
 	/* adminSectionAccess**************************************************************************************/

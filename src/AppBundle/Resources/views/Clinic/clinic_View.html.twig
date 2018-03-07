@@ -10,6 +10,7 @@
 {# ............................INCLUIMOS EL JAVASCRIPT QUE VERIFICA SI EL NICK EXISTE #}
 {% block content %}
 		<!-- page content -->
+			{% set documentsList = clinic.documentsList %}
 			<div class="right_col" role="main">
 				<div class="">
 					<div class="clearfix"></div>
@@ -18,23 +19,38 @@
 							<div class="x_panel" >
 								<div class="x_title">
 									<h3 style="display:inline;">Datos de Clínica</h3>
+									<ul class="nav navbar-right panel_toolbox">
+										<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+										</li>
+										<li class="dropdown">
+											<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+											<ul class="dropdown-menu" role="menu">
+												<li><a href="#">Settings 1</a>
+												</li>
+												<li><a href="#">Settings 2</a>
+												</li>
+											</ul>
+										</li>
+										<li><a class="close-link"><i class="fa fa-close"></i></a>
+										</li>
+									</ul>									
 									<div class="clearfix"></div>
 								</div>
-								<div class="x_content row">
-									<div class="col-lg-12 col-md-6 col-sm-12 col-xs-12 profile_left">
+								<div class="x_content">
+									<div class="col-lg-12 col-md-6 col-sm-12 col-xs-6 profile_left">
 										<div class="profile_img">
 											<div id="crop-avatar">
 												{# IMAGEN DE CLINICA SI EXISTIESE O NO UN EGISTRO......................................................... #}
 													{% if clinic.image == null %}
-														<img class="img-responsive avatar-view" src="{{ asset ('assets/images/default_clinic.png') }}" alt="Avatar" title="Change the avatar" style ="max-width:170px;">
+														<img class="img-responsive avatar-view" src="{{ asset ('assets/images/default_clinic.png') }}" alt="Avatar" title="Change the avatar" style ="max-width:170px;width:100%;">
 													{% else %}
-														<img lass="img-responsive avatar-view" src="{{ asset ('uploads/clinics/'~clinic.nameUrl~'/'~clinic.image) }}" alt="Avatar" title="Change the avatar"/>
+														<img lass="img-responsive avatar-view" src="{{ asset ('uploads/clinics/'~clinic.nameUrl~'/'~clinic.image) }}" alt="Avatar" title="Change the avatar" style ="max-width:170px;width:100%;"/>
 													{% endif %}
 												{# ..........................................................IMAGEN DE CLINICA SI EXISTIESE O NO UN REGISTRO #}
 											</div>
 										</div>
 									</div>
-									<div class="col-lg-12 col-md-6 col-sm-12 col-xs-12 profile_left">
+									<div class="col-lg-12 col-md-6 col-sm-12 col-xs-6 profile_left">
 										{% if clinic.name != NULL %}
 											<h3>{{clinic.name | upper}}</h3>
 										{% endif %}
@@ -53,13 +69,6 @@
 														{{clinic.city | title}}
 														<br/>
 													{% endif %}
-													{#}
-													{% if addressCity != NULL %}
-														{{addressCity.cp | title}}, {{addressCity.city | title}}, <br/>
-														{{addressCity.idAddressProvince.province}}
-														<br/>
-													{% endif %}
-													#}
 												</li>
 											{% endif %}
 											{% if clinic.registrationDate != NULL %}
@@ -79,98 +88,151 @@
 							</div>
 							<br />
 						</div>
-						<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-							<div class="x_panel">
-								<div class="x_title">
-									<h3 style="display:inline;">Usuarios</h3>
-									<ul class="nav navbar-right panel_toolbox">
-										<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-										</li>
-										<li class="dropdown">
-											<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-											<ul class="dropdown-menu" role="menu">
-												<li><a href="#">Settings 1</a>
-												</li>
-												<li><a href="#">Settings 2</a>
-												</li>
-											</ul>
-										</li>
-										<li><a class="close-link"><i class="fa fa-close"></i></a>
-										</li>
-									</ul>
-									<div class="clearfix"></div>
-								</div>
-								<div class="x_content">
-									<table class="table table-striped">
-										<thead>
-											<tr>
-												<th>Nick</th>
-												<th>Nombre</th>
-												<th>Apellidos</th>
-											</tr>
-										</thead>
-										<tbody>
-											{% for user in clinicUser %}
-												{% set user = user.user %}
+						<!-- Users Clinic -->
+							<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+								<div class="x_panel">
+									<div class="x_title">
+										<h3 style="display:inline;">Usuarios</h3>
+										<ul class="nav navbar-right panel_toolbox">
+											<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+											</li>
+											<li class="dropdown">
+												<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+												<ul class="dropdown-menu" role="menu">
+													<li><a href="#">Settings 1</a>
+													</li>
+													<li><a href="#">Settings 2</a>
+													</li>
+												</ul>
+											</li>
+											<li><a class="close-link"><i class="fa fa-close"></i></a>
+											</li>
+										</ul>
+										<div class="clearfix"></div>
+									</div>
+									<div class="x_content">
+										<table class="table table-striped">
+											<thead>
 												<tr>
-													<td><a href="{{ path ("clinic_view", {clinicNameUrl:clinic.nameUrl})}}">{{user.userName}}</a></td>
-													<td>{{user.name}}</td>
-													<td>{{user.surnames}}</td>
+													<th>Nick</th>
+													<th>Nombre</th>
+													<th>Apellidos</th>
 												</tr>
-											{% endfor %}
+											</thead>
+											<tbody>
+												{% for user in clinicUser %}
+													{% set user = user.user %}
+													<tr>
+														<td><a href="{{ path ("clinic_view", {clinicNameUrl:clinic.nameUrl})}}">{{user.userName}}</a></td>
+														<td>{{user.name}}</td>
+														<td>{{user.surnames}}</td>
+													</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						<!-- /Users Clinic -->
+						<!-- ratio sexo pacientes -->
+							<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+								<div class="x_panel">
+									<div class="x_title">
+										<h3 style="display:inline;">Género</h3>
+										<ul class="nav navbar-right panel_toolbox">
+											<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+											</li>
+											<li class="dropdown">
+												<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+												<ul class="dropdown-menu" role="menu">
+													<li><a href="#">Settings 1</a>
+													</li>
+													<li><a href="#">Settings 2</a>
+													</li>
+												</ul>
+											</li>
+											<li><a class="close-link"><i class="fa fa-close"></i></a>
+											</li>
+										</ul>
+										<div class="clearfix"></div>
+									</div>
+								<div class="x_content">
+									<table class="" style="width:100%">
+										<tbody>
+											<tr>
+												<td>
+													<iframe class="chartjs-hidden-iframe" style="width: 90%; display: block; border: 0px; height: 0px; margin: 0px; position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px;"></iframe>
+													<canvas id="doughnutChart" height="150" width="150" style=" width: 140px; height: 140px;"></canvas>
+												</td>
+												<td>
+													<table class="tile_info">
+														<tbody>
+															<tr>
+																<td><i class="fa fa-square dark-blue"></i></td>
+																<td> {{medicalHistoryRatioSex[1].percent}}%</td>
+															</tr>
+															<tr>
+																<td><i class="fa fa-square green"></td>
+																<td>{{medicalHistoryRatioSex[2].percent}}%</td>
+															</tr>
+														</tbody>
+													</table>
+												</td>
+											</tr>
 										</tbody>
 									</table>
 								</div>
-							</div>
-						</div>
-						<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-							<div class="x_panel">
-								<div class="x_title">
-									<h3 style="display:inline;">Género</h3>
-									<ul class="nav navbar-right panel_toolbox">
-										<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-										</li>
-										<li class="dropdown">
-											<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-											<ul class="dropdown-menu" role="menu">
-												<li><a href="#">Settings 1</a>
-												</li>
-												<li><a href="#">Settings 2</a>
-												</li>
-											</ul>
-										</li>
-										<li><a class="close-link"><i class="fa fa-close"></i></a>
-										</li>
-									</ul>
-									<div class="clearfix"></div>
+							</div></div>
+						<!-- /ratio sexo pacientes -->
+						<!-- Documents -->
+							<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+								<div class="x_panel">
+									<div class="x_title">
+										<h3 style="display:inline;">Documentos</h3>
+										<ul class="nav navbar-right panel_toolbox">
+											<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+											</li>
+											<li class="dropdown">
+												<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+												<ul class="dropdown-menu" role="menu">
+													<li><a href="#">Settings 1</a>
+													</li>
+													<li><a href="#">Settings 2</a>
+													</li>
+												</ul>
+											</li>
+											<li><a class="close-link"><i class="fa fa-close"></i></a>
+											</li>
+										</ul>
+										<div class="clearfix"></div>
+									</div>
+									<div class="x_content">
+										<table class="table table-striped">
+											<thead>
+												<tr>
+													<th>Nick</th>
+													<th>Nombre</th>
+													<th>Apellidos</th>
+												</tr>
+											</thead>
+											<tbody>
+												{% for documents in documentsList %}
+													{% set type = documents.typeContentDoc.type %}
+													{% if documents.typeContentDoc.type == 'clinic' %}
+														<tr>
+															<td>{{documents.description}}</a></td>
+															<td>{% if type == 'pdf' %}<i class="fa fa-file-pdf-o">{% endif %}</td>
+															<td>{{documents.registrationDate | date('d/m/Y')}}</td>
+														</tr>
+													{% endif %}
+												{% endfor %}
+											</tbody>
+										</table>
+										<a href="{{ path ("clinic_doc_list", {clinicNameUrl:clinic.nameUrl})}}">Listado completo</a>
+									</div>
 								</div>
-							<div class="x_content">
-								<table class="" style="width:100%">
-									<tbody>
-										<tr>
-											<td>
-												<iframe class="chartjs-hidden-iframe" style="width: 90%; display: block; border: 0px; height: 0px; margin: 0px; position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px;"></iframe>
-												<canvas id="doughnutChart" height="150" width="150" style=" width: 140px; height: 140px;"></canvas>
-											</td>
-											<td>
-												<table class="tile_info">
-													<tbody>
-														<tr>
-															<td><i class="fa fa-square dark-blue"></i></td>
-															<td> {{medicalHistoryRatioSex[1].percent}}%</td>
-														</tr>
-														<tr>
-															<td><i class="fa fa-square green"></td>
-															<td>{{medicalHistoryRatioSex[2].percent}}%</td>
-														</tr>
-													</tbody>
-												</table>
-											</td>
-										</tr>
-									</tbody>
-								</table>
 							</div>
-						</div>
+						<!-- /Documents -->
 					</div>
 				</div>
 			</div>

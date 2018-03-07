@@ -10,7 +10,7 @@
  */
     use Symfony\Component\Validator\Constraints as Assert;
     use Doctrine\Common\Collections\ArrayCollection;
-    use Doctrine\Common\Collections\Collection; 
+    use Doctrine\Common\Collections\Collection;
 /**************************************************************************************************************/
 class InvoiceService {
 /* Id de la Tabla *********************************************************************************************/
@@ -19,22 +19,27 @@ class InvoiceService {
 /**************************************************************************************************************/
 /* description ************************************************************************************************/
 	private $description;
-	public function setDescription($description) { $this->description = $description; return $this; }   
-	public function getDescription() { return $this->description; } 
+	public function setDescription($description) { $this->description = $description; return $this; }
+	public function getDescription() { return $this->description; }
 /**************************************************************************************************************/
-/* price ******************************************************************************************************/	
-	private $price; 
+/* price ******************************************************************************************************/
+	private $price;
 	public function setPrice($price) { $this->price = $price; return $this; }
-	public function getPrice() { return $this->price; }  
+	public function getPrice() { return $this->price; }
 /**************************************************************************************************************/
-/* invoice ****************************************************************************************************/	
-	private $invoice; 
-	public function setInvoice(\BackendBundle\Entity\Invoice $invoice = null) { $this->invoice = $invoice; return $this; } 
-	public function getInvoice() { return $this->invoice; }   
+/* typeTaxService *********************************************************************************************/
+	private $typeTaxService; 
+	public function setTypeTaxService(\BackendBundle\Entity\typeTaxService $typeTaxService = null) { $this->typeTaxService = $typeTaxService; return $this; } 
+	public function getTypeTaxService() { return $this->typeTaxService; } 	
+/**************************************************************************************************************/
+/* invoice ****************************************************************************************************/
+	private $invoiceIssued;
+	public function setInvoiceIssued(\BackendBundle\Entity\InvoiceIssued $invoiceIssued = null) { $this->invoiceIssued = $invoiceIssued; return $this; }
+	public function getInvoiceIssued() { return $this->invoiceIssued; }
 /**************************************************************************************************************/
 /* tracingService *********************************************************************************************/
-	private $tracingService; 
-	public function setTracingService(\BackendBundle\Entity\TracingService $tracingService = null) { $this->tracingService = $tracingService; return $this; } 
+	private $tracingService;
+	public function setTracingService(\BackendBundle\Entity\TracingService $tracingService = null) { $this->tracingService = $tracingService; return $this; }
 	public function getTracingService() { return $this->tracingService; }
 /**************************************************************************************************************/
 }

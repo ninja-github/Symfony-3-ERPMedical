@@ -24,5 +24,14 @@ services:
             $doctrine: "@doctrine"
         tags:
             - { name: twig.extension }
+# EXTENSIÓN DE TWIG PARA OBTENER LA JSON_DECODE...
+    # nombre del filtro a usar: 'GenerateTags'
+    JsonDecode.twig_extension:
+        class: AppBundle\Twig\JsonDecodeExtension
+        public: false
+        arguments:
+            $doctrine: "@doctrine"
+        tags:
+            - { name: twig.extension }      
 
 

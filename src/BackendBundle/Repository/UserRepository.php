@@ -27,10 +27,39 @@ class UserRepository extends \Doctrine\ORM\EntityRepository {
 		return $listTenLastUsers;
 	}
 /*************************************************************************************************/
-/* OBTIENE LOS USUARIOS DE UNA CLÍNICA ***********************************************************/
-	public function getUserListOfClinic($clinicNameUrl, $userLoggedId){
+/* OBTIENE LOS DOCTORES DE UNA CLÍNICA ***********************************************************/
+	public function getUserDoctorListOfClinic($clinicNameUrl, $userLoggedId){
 		$em=$this->getEntityManager();
 		$clinic_repo = $em->getRepository('BackendBundle:Clinic');
+		$userDataDoctor_repo = $em->getRepository('BackendBundle:UserDataDoctor');
+		$clinic = $clinic_repo->findOneBy(array('nameUrl'=>$clinicNameUrl));
+		$clinicUser_repo = $em->getRepository('BackendBundle:ClinicUser');
+		$userListOfClinic = $clinicUser_repo->findBy(array('clinic'=>$clinic));
+		// genero un array con los id de los usuarios de la clínica
+		$userIdList = array();
+		foreach($userListOfClinic as $user){
+			$isDoctor = $userDataDoctor_repo->findOneByUser($user);
+			if($isDoctor){
+				array_push($userIdList, $user->getUser()->getId());
+			}
+		}
+		if (in_array($userLoggedId, $userIdList)){
+			unset($userIdList[array_search($userLoggedId, $userIdList)]);
+			array_unshift($userIdList, $userLoggedId);
+		}
+		// Genero listado
+		$user_repo = $em->getRepository('BackendBundle:User');
+		$userList = $user_repo->createQueryBuilder('u')
+			->where("u.id IN (:userIdList)")
+			->setParameter('userIdList', $userIdList);
+		return $userList;	
+	}
+/*************************************************************************************************/
+/* OBTIENE LOS USUARIOS DE UNA CLÍNICA ***********************************************************/
+	public function getUserListOfClinic($clinicNameUrl, $userLoggedId){
+		$em = $this->getEntityManager();
+		$clinic_repo = $em->getRepository('BackendBundle:Clinic');
+		$user_repo = $em->getRepository('BackendBundle:User');
 		$clinic = $clinic_repo->findOneBy(array('nameUrl'=>$clinicNameUrl));
 		$clinicUser_repo = $em->getRepository('BackendBundle:ClinicUser');
 		$userListOfClinic = $clinicUser_repo->findBy(array('clinic'=>$clinic));

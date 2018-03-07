@@ -91,10 +91,15 @@ BackendBundle\Entity\Tracing:
 # /manyToOne ##########################################################
 # oneToMany ###########################################################           
     oneToMany:
-        # docList # no se encuentra dentro de la BD, pero se define en la entidad para listar los elementos
+        # tracingServiceList # no se encuentra dentro de la BD, pero se define en la entidad para listar los elementos
         tracingServiceList:
             targetEntity: TracingService
             # mappedBy # hace referencia a la columna de la tabla # TracingService # dentro de la BD relacionada con la tabla # tracing #
             mappedBy: tracing
+        # paymentList # no se encuentra dentro de la BD, pero se define en la entidad para listar los elementos
+        paymentList:
+            targetEntity: Payment
+            # mappedBy # hace referencia a la columna de la tabla # TracingService # dentro de la BD relacionada con la tabla # tracing #
+            mappedBy: tracing            
 # /oneToMany ##########################################################          
     lifecycleCallbacks: {  }

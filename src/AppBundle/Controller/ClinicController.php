@@ -26,7 +26,7 @@ class ClinicController extends Controller {
 		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
 			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userlogged, $request);
 		/* EXTRAE PERMISOS DEL USUARIO  ***********************************************************************/
-			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByIdUser($userlogged);
+			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userlogged);
 		/******************************************************************************************************/
 		/* PERMISO ACCESO *************************************************************************************/
 			$permissionDenied = false;		
@@ -44,7 +44,7 @@ class ClinicController extends Controller {
 			}			
 			if ($permissionDenied){ return $this->redirectToRoute('homepage'); }
 		/******************************************************************************************************/		
-		/* FORMULARO NUEVO SEGUIMIENTO ************************************************************************/
+		/* FORMULARO NUEVO CLINICA ****************************************************************************/
 			$clinic = new Clinic();
 			// Creamos el formulario
 			$formClinicCreate = $this->createForm(ClinicType::class, $clinic);
@@ -58,9 +58,9 @@ class ClinicController extends Controller {
 					$clinic->setName($name);
 					$clinic->setPhone($formClinicCreate->get("phone")->getData());
 					$clinic->setAddress($formClinicCreate->get("address")->getData());
-					$clinic->setIdUserRegisterer($user);
+					$clinic->setUserRegisterer($user);
 					$clinic->setRegistrationDate(new \DateTime("now"));
-					$clinic->setIdUserModifier($user);
+					$clinic->setUserModifier($user);
 					$clinic->setModificationDate(new \DateTime("now"));
 					/* Name URL ***********************************************************************************/
 					$nameWithoutUpper = strtolower( $name );
@@ -126,14 +126,14 @@ class ClinicController extends Controller {
 		/******************************************************************************************************/
 		/* CARGO LOS REPOSITORIOS  ****************************************************************************/
 			$clinic_repo = $em->getRepository("BackendBundle:Clinic");
-			$clinic = $clinic_repo->findOneByNameUrl($clinicNameUrl);
 			$addressCity_repo = $em->getRepository("BackendBundle:AddressCity");
-			$addressCity = $addressCity_repo->findOneById($clinic->getCity());
 			$clinicUser_repo = $em->getRepository("BackendBundle:ClinicUser");
-			$clinicUser = $clinicUser_repo->findByClinic($clinic);
 			$medicalHistory_repo = $em->getRepository("BackendBundle:MedicalHistory");
 		/******************************************************************************************************/
 		/* REALIZO LAS CONSULTAS NECESARIAS A LA BD MEDIANTE LOS REPOSITORIOS *********************************/
+			$clinic = $clinic_repo->findOneByNameUrl($clinicNameUrl);
+			$addressCity = $addressCity_repo->findOneById($clinic->getCity());
+			$clinicUser = $clinicUser_repo->findByClinic($clinic);
 			// Realizamos las consultas // funciones Repositorio usadas, ver 'src\BackendBundle\Repository'			
 			$medicalHistoryRatioSex = $medicalHistory_repo->getRatioGenderQuery($clinicNameUrl);
 			/* Por terminar... Estadísticas consulta
@@ -156,5 +156,6 @@ class ClinicController extends Controller {
 			);
 		/******************************************************************************************************/
 	}
+/**************************************************************************************************************/
 /**************************************************************************************************************/
 }

@@ -188,14 +188,28 @@
 {% block javascriptsFinal %}
 	{# la función parent() carga todo el contenido del bloque anterior #}
 	{{ parent() }}
-    <!-- FullCalendar -->
-    <script src="{{ asset ('assets/vendors/moment/min/moment.min.js') }}"></script>
-	<script src="{{ asset ('assets/vendors/fullcalendar/dist/fullcalendar.min.js') }}"></script>
-	<script src="{{ asset ('assets/vendors/fullcalendar/locale/es.js') }}"></script>
-	<!-- bootstrap-daterangepicker -->
-	<script src="{{ asset ('assets/vendors/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+    <!-- FullCalendar y bootstrap-daterangepicker -->
+	    <script src="{{ asset ('assets/vendors/moment/min/moment.min.js') }}"></script>
+		<script src="{{ asset ('assets/vendors/fullcalendar/dist/fullcalendar.min.js') }}"></script>
+		<script src="{{ asset ('assets/vendors/fullcalendar/locale/es.js') }}"></script>
+	<!-- /bootstrap-daterangepicker -->		
 	<!-- bootstrap-datetimepicker -->    
-	<script src="{{ asset ('assets/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
+		<script src="{{ asset ('assets/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
+		<script type="text/javascript">
+			$('#myDatepickerInputStart').datetimepicker({
+				format: 'DD/MM/YYYY',
+				locale:'es',
+			});
+			$('#myTimepickerInputStart').datetimepicker({
+				format: 'HH:mm',
+				locale:'es'
+			});	
+			$('#myTimepickerInputEnd').datetimepicker({
+				format: 'HH:mm',
+				locale:'es'
+			});	
+		</script>
+	<!-- /bootstrap-datetimepicker --> 	
 	<!-- clockpicker-gh-pages -->
 		<!-- https://weareoutman.github.io/clockpicker/ -->
 		<script type="text/javascript" src="{{ asset ('assets/vendors/clockpicker-gh-pages/dist/bootstrap-clockpicker.min.js') }}"></script>
@@ -210,7 +224,6 @@
 				autoclose: true,
 				'default': 'now'
 			});
-
 			$('.clockpicker-with-callbacks').clockpicker({
 					donetext: 'Done',
 					init: function() { 
@@ -268,217 +281,204 @@
 	<!-- searchPatient -->
 		<!-- Necesaria librería autoComplete -->
 		<script src="{{ asset ('assets/js/custom/searchMedicalHistory.js') }}"></script>
-	<!-- searchPatient -->	
-	<script type="text/javascript">
-		$('#myDatepickerInputStart').datetimepicker({
-			format: 'DD/MM/YYYY',
-			locale:'es',
+	<!-- /searchPatient -->	
+	<!-- Config Full Calendar -->
+		<script type="text/javascript">
+			{% set clinicNameUrl = app.request.attributes.get('clinicNameUrl') %}
+			{% set userName = app.request.attributes.get('userName') %}
+			/*************************************************************************************************************
+			    var moment = $('#calendar').fullCalendar('getDate');
+			/*************************************************************************************************************/
+			//var moment = $('#calendar').fullCalendar('getDate'); 
+			//var urlEventDateRange = '/{{clinicNameUrl}}/{{userName}}/schedule/daterange/'+moment.format('Y_MM_DD');
+				$('#calendar').fullCalendar({
+					header: {
+						left: 'prev,next today',
+						center: 'title',
+						//right: 'month,agendaWeek,agendaDay'
+						right: 'agendaWeek,agendaDay'
+					},
+					businessHours: {
+					    // days of week. an array of zero-based day of week integers (0=Sunday)
+					    dow: [ 1, 2, 3, 4 ,5,6], // Monday - Thursday
+					    start: '08:00', // a start time (10am in this example)
+					    end: '21:00', // an end time (6pm in this example)
+					},
+					minTime:"07:00:00",
+					maxTime:"22:00:00",
+					locale: 'es',	// Es necesario el archivo que gestione el idioma local
+					editable: true,
+					eventLimit: true, // allow "more" link when too many events
+					selectable: true,
+					selectHelper: true,
+					defaultView:'agendaWeek',
+					// Función para nuevo evento
+					select: function(start, end) {
+						$('#CalendarModal #myDatepickerInputStart').val(moment(start).format('DD/MM/YYYY'));
+						$('#CalendarModal #myTimepickerInputStart').val(moment(start).format('HH:mm'));
+						$('#CalendarModal #myTimepickerInputEnd').val(moment(end).format('HH:mm'));
+						$('#CalendarModal #title').val('');
+						$('#CalendarModal #description').val('');
+						$('#CalendarModal').modal('show');
+					},
+					eventRender: function(event, element) {
+						element.bind('dblclick', function() {
+							// Cambiamos el formato de DateTime
+							var start = new Date(event.start);
+							var startDate_utc = new Date(
+								start.getUTCFullYear(), 
+								start.getUTCMonth(), 
+								start.getUTCDate(),  
+								start.getUTCHours(), 
+								start.getUTCMinutes(), 
+								start.getUTCSeconds()
+								);
+							startDate_utc = moment(startDate_utc).format('DD/MM/YYYY');
+							var startHour_utc = new Date(
+								start.getUTCFullYear(), 
+								start.getUTCMonth(), 
+								start.getUTCDate(),  
+								start.getUTCHours(), 
+								start.getUTCMinutes(), 
+								start.getUTCSeconds()
+								);
+							startHour_utc = moment(startHour_utc).format('HH:mm');					
+							var end = new Date(event.end);
+							var endHour_utc = new Date(
+								end.getUTCFullYear(), 
+								end.getUTCMonth(), 
+								end.getUTCDate(),  
+								end.getUTCHours(), 
+								end.getUTCMinutes(), 
+								end.getUTCSeconds()
+								);
+							endHour_utc = moment(endHour_utc).format('HH:mm');
+							$('#removeEvent #tracing_googleCalendarEvent').val(event.id);
+							$('#CalendarModal #tracing_googleCalendarEvent').val(event.id);
+							$('#CalendarModal #removeEvent').val(event.id);
+							$('#CalendarModal #title').val(event.title);
+							$('#CalendarModal #description').val(event.description);
+							$('#CalendarModal #myDatepickerInputStart').val(startDate_utc);
+							$('#CalendarModal #myTimepickerInputStart').val(startHour_utc);
+							$('#CalendarModal #myTimepickerInputEnd').val(endHour_utc);
+							$('#CalendarModal #medicalHistoryDataComplete').val(event.medicalHistoryDataComplete);
+							$('#CalendarModal #idTracing').val(event.idTracing);
+							$('#CalendarModal #urlMedicalHistory').attr('href', '/'+event.clinicNameUrl+'/medicalhistory/'+event.medicalHistoryNumber);
+							$('#CalendarModal #clinicaNameUrl').val(event.clinicaNameUrl);
+							$('#CalendarModal #medicalHistoryNumber').val(event.medicalHistoryNumber);	
+						//	$('#CalendarModal #color').val(event.color);
+							$('#CalendarModal').modal('show');
+						});
+					},
+					eventDrop: function(event, delta, revertFunc) { // si changement de position
+						edit(event);
+					},
+					eventResize: function(event,dayDelta,minuteDelta,revertFunc) { // si changement de longueur
+						edit(event);
+					},
+					events: function (start, end, timezone, callback) {
+		                $.ajax({
+		                    url: '/{{clinicNameUrl}}/{{userName}}/schedule/daterange/',
+		                    type: "POST",
+		                    data: {
+				                start: $('#calendar').fullCalendar('getDate').format('Y-MM-DD'),
+				                clinicNameUrl: '{{clinicNameUrl}}',
+				                userName: '{{userName}}',
+	            			},
+	            			dataType:"json",
+	            			success: function (result) {
+		                        var events = result;
+		                        /*var events = [
+												{% for items in eventsGoogleCalendar.items %}
+													{
+														id: '{{items.id}}',
+														title:'{{items.summary}}',
+														description:'{{items.description}}',
+														start:'{{items.start.dateTime | date("Y-m-d")}}T{{items.start.dateTime | date("H:i:s","Europe/Paris")}}',
+														end:'{{items.end.dateTime | date("Y-m-d")}}T{{items.end.dateTime | date("H:i:s","Europe/Paris")}}',
+														idTracing:'{% if eventsDataBase[items.id] is defined %} {{eventsDataBase[items.id].id}} {% endif %}',
+														medicalHistoryDataComplete:'{% if eventsDataBase[items.id] is defined %}{{eventsDataBase[items.id].medicalHistory.MedicalHistoryDataComplete}}{% endif %}',
+														clinicNameUrl:'{{app.request.attributes.get('clinicNameUrl')}}',
+														medicalHistoryNumber:'{% if eventsDataBase[items.id] is defined %}{{eventsDataBase[items.id].medicalHistory.medicalHistoryNumber}}{% endif %}'
+													},			
+												{% endfor %}
+											];
+											*/
+		                        // alert(result);                 // --1--
+		                        // alert(JSON.stringify(result)); // --2--
+		                        $(result).find('event').each(function () {
+		                            events.push(
+		                                {
+		                                    id: $(this).attr('id'),
+		                                    title: $(this).attr('title'),
+		                                    description: $(this).attr('description'),
+		                                    start: $(this).attr('start'),
+		                                    end: $(this).attr('end'),
+		                                    idTracing: $(this).attr('idTracing'),
+		                                    medicalHistoryDataComplete:$(this).attr('medicalHistoryDataComplete'),
+		                                    clinicNameUrl: $(this).attr('clinicNameUrl'),
+		                                    medicalHistoryNumber: $(this).attr('medicalHistoryNumber'),
+		                                    color: $(this).attr('color'),
+		                                    bloqued: $(this).attr('bloqued'),
+		                                });
+		                        });
+	                            callback(events);
+	                            console.log(events);
+	                    	}
+		               });
+		            }
 
-		});
-		$('#myTimepickerInputStart').datetimepicker({
-			format: 'HH:mm',
-			locale:'es'
-		});	
-		$('#myTimepickerInputEnd').datetimepicker({
-			format: 'HH:mm',
-			locale:'es'
-		});
-		$('#calendar').fullCalendar({
-			header: {
-				left: 'prev,next today',
-				center: 'title',
-				right: 'month,agendaWeek,agendaDay'
-			},
-			businessHours: {
-		    // days of week. an array of zero-based day of week integers (0=Sunday)
-		    dow: [ 1, 2, 3, 4 ,5,6], // Monday - Thursday
-		    start: '08:00', // a start time (10am in this example)
-		    end: '21:00', // an end time (6pm in this example)
-			},
-			minTime:"07:00:00",
-			maxTime:"22:00:00",
-			locale: 'es',	// Es necesario el archivo que gestione el idioma local
-			editable: true,
-			eventLimit: true, // allow "more" link when too many events
-			selectable: true,
-			selectHelper: true,
-			// Función para nuevo evento
-			select: function(start, end) {
-				$('#CalendarModal #myDatepickerInputStart').val(moment(start).format('DD/MM/YYYY'));
-				$('#CalendarModal #myTimepickerInputStart').val(moment(start).format('HH:mm'));
-				$('#CalendarModal #myTimepickerInputEnd').val(moment(end).format('HH:mm'));
-				$('#CalendarModal #title').val('');
-				$('#CalendarModal #description').val('');
-				$('#CalendarModal').modal('show');
-			},
-			eventRender: function(event, element) {
-				element.bind('dblclick', function() {
-					// Cambiamos el formato de DateTime
-					var start = new Date(event.start);
-					var startDate_utc = new Date(
-						start.getUTCFullYear(), 
-						start.getUTCMonth(), 
-						start.getUTCDate(),  
-						start.getUTCHours(), 
-						start.getUTCMinutes(), 
-						start.getUTCSeconds()
-						);
-					startDate_utc = moment(startDate_utc).format('DD/MM/YYYY');
-					var startHour_utc = new Date(
-						start.getUTCFullYear(), 
-						start.getUTCMonth(), 
-						start.getUTCDate(),  
-						start.getUTCHours(), 
-						start.getUTCMinutes(), 
-						start.getUTCSeconds()
-						);
-					startHour_utc = moment(startHour_utc).format('HH:mm');					
-					var end = new Date(event.end);
-					var endHour_utc = new Date(
-						end.getUTCFullYear(), 
-						end.getUTCMonth(), 
-						end.getUTCDate(),  
-						end.getUTCHours(), 
-						end.getUTCMinutes(), 
-						end.getUTCSeconds()
-						);
-					endHour_utc = moment(endHour_utc).format('HH:mm');
-					$('#removeEvent #tracing_googleCalendarEvent').val(event.id);
-					$('#CalendarModal #tracing_googleCalendarEvent').val(event.id);
-					$('#CalendarModal #removeEvent').val(event.id);
-					$('#CalendarModal #title').val(event.title);
-					$('#CalendarModal #description').val(event.description);
-					$('#CalendarModal #myDatepickerInputStart').val(startDate_utc);
-					$('#CalendarModal #myTimepickerInputStart').val(startHour_utc);
-					$('#CalendarModal #myTimepickerInputEnd').val(endHour_utc);
-					$('#CalendarModal #medicalHistoryDataComplete').val(event.medicalHistoryDataComplete);
-					$('#CalendarModal #idTracing').val(event.idTracing);
-					$('#CalendarModal #urlMedicalHistory').attr('href', '/'+event.clinicaNameUrl+'/medicalhistory/'+event.medicalHistoryNumber);
-					$('#CalendarModal #clinicaNameUrl').val(event.clinicaNameUrl);
-					$('#CalendarModal #medicalHistoryNumber').val(event.medicalHistoryNumber);	
-				//	$('#CalendarModal #color').val(event.color);
-					$('#CalendarModal').modal('show');
+					
+					/*
+					events:[
+						{% for items in eventsGoogleCalendar.items %}
+							{
+								id: '{{items.id}}',
+								title:'{{items.summary}}',
+								description:'{{items.description}}',
+								start:'{{items.start.dateTime | date("Y-m-d")}}T{{items.start.dateTime | date("H:i:s","Europe/Paris")}}',
+								end:'{{items.end.dateTime | date("Y-m-d")}}T{{items.end.dateTime | date("H:i:s","Europe/Paris")}}',
+								idTracing:'{% if eventsDataBase[items.id] is defined %} {{eventsDataBase[items.id].id}} {% endif %}',
+								medicalHistoryDataComplete:'{% if eventsDataBase[items.id] is defined %}{{eventsDataBase[items.id].medicalHistory.MedicalHistoryDataComplete}}{% endif %}',
+								clinicNameUrl:'{{app.request.attributes.get('clinicNameUrl')}}',
+								medicalHistoryNumber:'{% if eventsDataBase[items.id] is defined %}{{eventsDataBase[items.id].medicalHistory.medicalHistoryNumber}}{% endif %}'
+							},			
+						{% endfor %}
+					]
+					*/
 				});
-			},
-			eventDrop: function(event, delta, revertFunc) { // si changement de position
-				edit(event);
-			},
-			eventResize: function(event,dayDelta,minuteDelta,revertFunc) { // si changement de longueur
-				edit(event);
-			},
-			events:[
-				{% for items in eventsGoogleCalendar.items %}
-					{
-						id: '{{items.id}}',
-						title:'{{items.summary}}',
-						description:'{{items.description}}',
-						start:'{{items.start.dateTime | date("Y-m-d")}}T{{items.start.dateTime | date("H:i:s","Europe/Paris")}}',
-						end:'{{items.end.dateTime | date("Y-m-d")}}T{{items.end.dateTime | date("H:i:s","Europe/Paris")}}',
-						idTracing:'{% if eventsDataBase[items.id] is defined %} {{eventsDataBase[items.id].id}} {% endif %}',
-						medicalHistoryDataComplete:'{% if eventsDataBase[items.id] is defined %}{{eventsDataBase[items.id].medicalHistory.MedicalHistoryDataComplete}}{% endif %}',
-						clinicaNameUrl:'{% if eventsDataBase[items.id] is defined %}{{eventsDataBase[items.id].medicalHistory.clinic.nameUrl}}{% endif %}',
-						medicalHistoryNumber:'{% if eventsDataBase[items.id] is defined %}{{eventsDataBase[items.id].medicalHistory.medicalHistoryNumber}}{% endif %}'
-					},			
-				{% endfor %}
-			]
-		});
-		function edit(event){
-			DateStart = event.start.format('DD-MM-YYYY');
-			TimeStart = event.start.format('HH:mm:ss');
-			if(event.end){
-				TimeEnd = event.end.format('HH:mm:ss');
-			}else{
-				TimeEnd = TimeStart;
-			}
-			id =  event.id;
-			var Event = [];
-			Event[0] = id;
-			Event[1] = DateStart;
-			Event[2] = TimeStart;
-			Event[3] = TimeEnd;
-			Event[4] = event.clinicaNameUrl;
-			$.ajax({
-			 url: '/schedule_event_edit',
-			 type: "POST",
-			 data: {Event:Event},
-			 success: function(response) {
-				var status = document.getElementById('status');
-						status.innerHTML = 	response;
-						window.setTimeout(function() {
-							$(".alert").fadeTo(500, 0).slideUp(500, function(){
-								$(this).remove();
-							});
-						}, 3000);
+			/* Editar eventos ****************************************************************************/
+				function edit(event){
+					DateStart = event.start.format('DD-MM-YYYY');
+					TimeStart = event.start.format('HH:mm:ss');
+					if(event.end){
+						TimeEnd = event.end.format('HH:mm:ss');
+					}else{
+						TimeEnd = TimeStart;
+					}
+					id =  event.id;
+					var Event = [];
+					Event[0] = id;
+					Event[1] = DateStart;
+					Event[2] = TimeStart;
+					Event[3] = TimeEnd;
+					Event[4] = event.clinicNameUrl;
+					$.ajax({
+					 url: '/schedule_event_edit',
+					 type: "POST",
+					 data: {Event:Event},
+					 success: function(response) {
+						var status = document.getElementById('status');
+								status.innerHTML = 	response;
+								window.setTimeout(function() {
+									$(".alert").fadeTo(500, 0).slideUp(500, function(){
+										$(this).remove();
+									});
+								}, 3000);
+						}
+					});
 				}
-			});
-		}
-	</script>
-
- {% endblock %}		
- {% block extra %}
- 	{#}
-	<!-- calendar modal Edit PRUEBA MAL-->	
-		<!--<div id="CalenderModalEdit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-						<h4 class="modal-title" id="myModalLabel2">Editar</h4>
-					</div>
-					<div class="modal-body">
-						<div id="testmodal2" style="padding: 5px 20px;">
-							<form id="antoform2" class="form-horizontal calender" role="form">
-								<div class="form-group">
-									<div class="form-group">
-										<label class="col-sm-2 control-label">Paciente</label>
-										<div class="col-sm-10">
-											<input type="text" class="form-control" id="editPatient" name="title" value="">
-										</div>
-									</div>
-									<label class="col-sm-2 control-label">Cita</label>
-									<div class='col-sm-5'>
-										<div class='input-group date' id='myDatepickerStart'>
-											<input id="myDatepickerInputStart" type='text' class="form-control" value=""/>
-											<span class="input-group-addon">
-												<span class="glyphicon glyphicon-calendar"></span>
-											</span>
-										</div>
-									</div>
-									<div class='col-sm-5'>
-										<div class='input-group date' id='myDatepickerEnd'>
-											<input id="myDatepickerInputEnd" type='text' class="form-control" value=""/>
-											<span class="input-group-addon">
-												<span class="glyphicon glyphicon-calendar"></span>
-											</span>
-										</div>
-									</div>
-								</div>										
-								<div class="form-group">
-									<label class="col-sm-2 control-label">Título</label>
-									<div class="col-sm-10">
-										<input type="text" class="form-control" id="editTitle" name="title" value="">
-									</div>
-								</div>
-	    						<div class="form-group">
-									<label class="col-sm-2 control-label">Descripción</label>
-									<div class="col-sm-10">
-										<textarea class="form-control" style="height:55px;" id="editDescription" name="description" value=""></textarea>
-									</div>
-								</div>
-								<!-- google calendar id event hidden -->
-									<input id="editId" type="hidden" class="form-control" name="id" value="">
-								<!-- /google calendar id event hidden -->
-								<div class="modal-footer">
-									<button type="button" class="btn btn-default antoclose2" data-dismiss="modal">Cerrar</button>
-									<button type="button" class="btn btn-primary antosubmit2">Guardar Cambios</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="fc_create" data-toggle="modal" data-target="#CalenderModalNew"></div>
-		<div id="fc_edit" data-toggle="modal" data-target="#CalenderModalEdit"></div>
-	<!-- /calendar modal Edit PRUEBA MAL -->#}
+			/* /editar eventos ****************************************************************************/
+		</script>
+	<!-- /Config Full Calendar -->		
  {% endblock %}

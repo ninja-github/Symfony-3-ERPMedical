@@ -25,25 +25,59 @@
 						<h3 style="display:inline-block;">Listado de Estudios Ortopodológicos</h3>
 					</div>
 					<div class="x_content">
+						<table id="datatable-buttons-orthopodologyHistoryList" class="table table-striped table-bordered" style="width:100%;">
+						<!--
 						<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+						-->
 							<thead>
 								<tr>
-									<th>Estudio</th>
+									<th style="width:20px;">NºHª</th>
+									<th style="text-align: center; width:15px;">
+										<i class="fa fa-check-circle m-right-xs"></i>
+									</th>
+									<th style="text-align: center; width:15px;">
+										<i class="fa fa-money m-right-xs">
+									</th>
+									<th style="text-align: center; width:15px;">
+										<i class="fa fa-exclamation-triangle"></i>
+									</th>	
 									<th>Nombre</th>
-									<th>DNI</th>
-									<th>Móvil</th>
-									<th>Fijo</th>
+									<th style="width:40px;">DNI</th>
+									<th style="width:40px;">Móvil</th>
+									<th style="width:40px;">Fijo</th>
+									<th>Ciudad</th>
 									<th style="text-align: center;"><i class="ionicons ion-male" style="text-align: center;"></i> / <i class="ionicons ion-female" style="text-align: center;"></i></th>
+									<th>Fecha</th>
 								</tr>
 							</thead>
 							<tbody>
 								{% for orthopodologyHistory in orthopodologyHistoryList %}
 									{# DEFINO VARIABLES ................................................................... #}
-										{% set clinicNameUrl = orthopodologyHistory.medicalHistory.clinic.nameUrl %}
+										{% set medicalHistory = orthopodologyHistory.medicalHistory %}
+										{% set clinicNameUrl = medicalHistory.clinic.nameUrl %}
+										{% set city = medicalHistory.city %}
+										{% set medicalHistoryNumber = medicalHistory.medicalHistoryNumber %}
+										{% set cost = dataExtraMedicalHistoryList[medicalHistoryNumber]['costEarnings']['cost'] %}
+										{% set earnings = dataExtraMedicalHistoryList[medicalHistoryNumber]['costEarnings']['earnings'] %}											
 									{# ................................................................... DEFINO VARIABLES #}
 									<tr {% if orthopodologyHistory.medicalHistory.patientRisk != NULL %} class="danger"{% endif %}>
-										<td>
-											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">{{orthopodologyHistory.medicalHistory.medicalHistoryNumber}} - {{orthopodologyHistory.registrationDate | date("d/m/Y")}}</a>
+										<td style="text-align:center;">
+											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">{{orthopodologyHistory.medicalHistory.medicalHistoryNumber}}</a>
+										</td>
+										<td style="text-align: center;">
+											{% if medicalHistory.updated != NULL %}
+												<i class="fa fa-check-circle m-right-xs"></i>
+											{% endif %}
+										</td>
+										<td style="text-align: center;">
+											{% if cost > earnings %}
+												<i class="fa fa-money m-right-xs"></i>
+											{% endif %}
+										</td>
+										<td style="text-align: center;">
+											{% if medicalHistory.patientRisk != NULL %}
+												<i class="fa fa-exclamation-triangle"></i>
+											{% endif %}
 										</td>
 										<td>
 											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">{{orthopodologyHistory.medicalHistory.surname| title}}, {{orthopodologyHistory.medicalHistory.name| title}}</a>
@@ -57,6 +91,10 @@
 										<td>
 											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">{{orthopodologyHistory.medicalHistory.phoneHome}}</a>
 										</td>
+										<td>
+											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">
+											{% if city != null %} {{city.city}} ( {{city.province.province}} ){% endif %}</a>
+										</td>										
 										<td style="text-align: center;">
 											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">
 												{% if orthopodologyHistory.medicalHistory.gender == "Hombre" %}
@@ -66,6 +104,9 @@
 												{% endif %}
 											</a>
 										</td>
+										<td style="text-align:center;">
+											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">{{orthopodologyHistory.registrationDate | date("d/m/Y")}}</a>
+										</td>										
 									</tr>
 								{% endfor %}
 							</tbody>

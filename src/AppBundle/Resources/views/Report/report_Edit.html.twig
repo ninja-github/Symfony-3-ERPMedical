@@ -13,7 +13,6 @@
 				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 					m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
 			ga('create', 'UA-271067-15', 'auto');
 			ga('send', 'pageview');
 		}
@@ -70,7 +69,7 @@
 							<div class="row control-label form-horizontal form-label-left">
 								{{ form_start(form, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
 									<div class="form-group" style="margin-bottom:0px;">
-										<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">Fecha
+										<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12">Fecha
 										</label>
 										<div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
 											{# Script al final de la plantilla que gestiona 'datetimepicker' de Bootstrap #}
@@ -81,8 +80,8 @@
 											</div>
 										</div>
 										<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">Paciente</label>
-										<div class="col-lg-8 col-md-4 col-sm-4 col-xs-12">
-											<input type="text" class="form-control" id="medicalHistoryDataComplete" name="medicalHistoryDataComplete" value="">
+										<div class="col-lg-7 col-md-4 col-sm-4 col-xs-12">
+											<input type="text" class="form-control" id="medicalHistoryDataComplete" name="medicalHistoryDataComplete" value="{{medicalHistory}}">
 											<div id="suggesstion-box"></div>
 											<!-- http://phppot.com/jquery/jquery-ajax-autocomplete-country-example/ -->
 										</div>
@@ -91,12 +90,12 @@
 									<div class="clearfix"></div>
 									<div class="divider-dashed" style="margin-top:0px;"></div>
 									<div class="form-group">
-										<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">RAZÓN DE LA CONSULTA</label>
-										<div class="col-lg-11 col-md-10 col-sm-10 col-xs-12"style="margin-bottom:10px;">{{form_widget(form.reasonConsultation)}}</div>
-										<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">DIAGNÓSTICO</label>
-										<div class="col-lg-11 col-md-10 col-sm-10 col-xs-12"style="margin-bottom:10px;">{{form_widget(form.diagnostic)}}</div>
-										<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">TRATAMIENTO</label>
-										<div class="col-lg-11 col-md-10 col-sm-10 col-xs-12" style="margin-bottom:10px;">{{form_widget(form.treatment)}}</div>
+										<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12">RAZÓN DE LA CONSULTA</label>
+										<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12"style="margin-bottom:10px;">{{form_widget(form.reasonConsultation)}}</div>
+										<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12">DIAGNÓSTICO</label>
+										<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12"style="margin-bottom:10px;">{{form_widget(form.diagnostic)}}</div>
+										<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12">TRATAMIENTO</label>
+										<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12" style="margin-bottom:10px;">{{form_widget(form.treatment)}}</div>
 									</div>
 									<div class="clearfix"></div>
 									<div class="divider-dashed"></div>									
@@ -131,6 +130,13 @@
 			}
 		});
 	</script>
+	<!-- autoComplete -->
+		<script src="{{ asset ('assets/vendors/EasyAutocomplete-1.3.5/jquery.easy-autocomplete.min.js') }}"></script>	
+	<!-- /autoComplete -->
+	<!-- searchPatient -->
+		<!-- Necesaria librería autoComplete -->
+		<script src="{{ asset ('assets/js/custom/searchMedicalHistory.js') }}"></script>
+	<!-- searchPatient -->	
 	<script data-sample="reasonConsultation">
 		CKEDITOR.replace( 'report_reasonConsultation', {
     		customConfig: "{{ asset ('assets/js/custom/ckeditor_config_report.js') }}"

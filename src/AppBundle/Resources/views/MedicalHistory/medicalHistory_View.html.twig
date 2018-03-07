@@ -17,12 +17,24 @@
 	<link href="{{ asset ('assets/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css') }}" rel="stylesheet">
 	<!-- bootstrap-lightbox -->
 	<link href="{{ asset ('assets/vendors/lightbox/dist/ekko-lightbox.css') }}" rel="stylesheet">
+	<!-- CK Editor -->
+	<script src="{{ asset ('assets/vendors/ckeditor/ckeditor.js') }}"></script>
+	<script>
+		if ( location.hostname == 'sdk.ckeditor.com' ) {
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+					m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			ga('create', 'UA-271067-15', 'auto');
+			ga('send', 'pageview');
+		}
+	</script>
 	<style>
-		.pdfobject-container { 
+		.pdfobject-container {
 			height: 500px;
 		}
-		.pdfobject { 
-			border: 1px solid #666; 
+		.pdfobject {
+			border: 1px solid #666;
 		}
 		.bootstrap-datetimepicker-widget table td, .bootstrap-datetimepicker-widget table th {
 			text-align: center;
@@ -30,7 +42,105 @@
 			background-color:  #2B6D8D;
 			color:#fff;
 	 		/*https://www.jquery-az.com/bootstrap-datetimepicker-managing-with-date-and-time-in-bootstrap/*/
-		}			
+		}
+		/* */
+.label__checkbox {
+  display: none;
+}
+
+.label__check {
+  display: inline-block;
+  border-radius: 50%;
+  border: 5px solid rgba(0,0,0,0.1);
+  background: white;
+  vertical-align: middle;
+  margin-right: 20px;
+  width: 2em;
+  height: 2em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border .3s ease;
+  
+  i.icon {
+    opacity: 0.2;
+    font-size: ~'calc(1rem + 1vw)';
+    color: transparent;
+    transition: opacity .3s .1s ease;
+    -webkit-text-stroke: 3px rgba(0,0,0,.5);
+  }
+  
+  &:hover {
+    border: 5px solid rgba(0,0,0,0.2);
+  }
+}
+
+.label__checkbox:checked + .label__text .label__check {
+  animation: check .5s cubic-bezier(0.895, 0.030, 0.685, 0.220) forwards;
+  
+  .icon {
+    opacity: 1;
+    transform: scale(0);
+    color: white;
+    -webkit-text-stroke: 0;
+    animation: icon .3s cubic-bezier(1.000, 0.008, 0.565, 1.650) .1s 1 forwards;
+  }
+}
+
+.center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+}
+
+@keyframes icon {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1)
+  }
+}
+
+@keyframes check {
+  0% {
+    width: 1.5em;
+    height: 1.5em;
+    border-width: 5px;
+  }
+  10% {
+    width: 1.5em;
+    height: 1.5em;
+    opacity: 0.1;
+    background: rgba(0,0,0,0.2);
+    border-width: 5px;
+  }
+  12% {
+    width: 1.5em;
+    height: 1.5em;
+    opacity: 0.4;
+    background: rgba(0,0,0,0.1);
+    border-width: 5px;
+  }
+  50% {
+    width: 2em;
+    height: 2em;
+    background: #26B99A;
+    border: 5px;
+    opacity: 0.6;
+  }
+  100% {
+    width: 2em;
+    height: 2em;
+    background: #26B99A;
+    border: 5px;
+    opacity: 1;
+  }
+}
+		/**/
 	</style>
 {% endblock %}
 {% block content %}
@@ -40,10 +150,17 @@
 			<div class="row">
 				<!-- Bloque -->
 					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-						<div class="x_panel" >
+						<div class="x_panel" {% if costEarnings["cost"] > costEarnings["earnings"] %}style="background-color: rgba(255, 0, 0, 0.1); "{% endif %}>
 							<!-- Título del Bloque -->
 								<div class="x_title">
 									<h3 style="display:inline-block;">Historia Clínica</h3>
+									<label class="label" style="display:inline-block; width:30px;">
+										<input type="checkbox" id="medical_history_{{medicalHistory.id}}" class="label__checkbox"{% if medicalHistory.updated == true %} checked {% endif %}	onchange="changeUpdated({{medicalHistory.id}})">
+										<span class="label__text"> <span class="label__check" style="display: inline;color: #fcfbfb;font-size: 150%; bottom: 6px; position: relative; margin-right:0px;"> <i class="fa fa-check icon"></i> </span> </span>
+									</label>
+									<div style="display:inline; position: relative; bottom: 2px; font-size:18px;">
+										<i class="fa fa-minus-square-o icon" onclick="remove_late({{medicalHistory.id}})" style="cursor: pointer;"></i> <i class="fa fa-clock-o icon"></i> <i class="fa fa-plus-square-o icon" onclick="add_late({{medicalHistory.id}})" style="cursor: pointer;"></i><span id='medical_history_late'> {{medicalHistory.late}} </span>
+									</div>
 									<div style="display:block;margin-top:4px;" class="pull-right">
 										<a class="btn btn-success" href="{{ path("medical_history_list", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">
 											<i class="fa fa-mail-reply-all m-right-xs"></i>
@@ -51,7 +168,7 @@
 										</a>
 										<a class="btn btn-success" href="{{ path("medical_history_pdf", {clinicNameUrl:medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}">
 											<i class="fa fa-file-pdf-o m-right-xs"></i>
-										</a>										
+										</a>
 										{% if medicalHistory.medicalHistoryNumber != medicalHistoryData.min %}
 											<a class="btn btn-success" href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber-1} ) }}">
 												<i class="fa fa-backward m-right-xs"></i>
@@ -121,9 +238,13 @@
 														{% endif %}
 													</li>
 													{% if medicalHistory.email != NULL %}
-														<li class="m-top-xs">
-															<i class="fa fa-external-link user-profile-icon"></i><a href="mailto:{{medicalHistory.email | lower}}">{{medicalHistory.email | lower}}</a><br/>
-														</li>
+														<i class="fa fa-external-link user-profile-icon"></i><a href="mailto:{{medicalHistory.email | lower}}">{{medicalHistory.email | lower}}</a><br/>
+													{% endif %}
+													{% if medicalHistory.insuranceCarrier != NULL %}
+														<i class="fa fa-external-link fa-shield"></i> {{medicalHistory.insuranceCarrier | lower}}<br/>
+													{% endif %}
+													{% if costEarnings["cost"] >0 or costEarnings["earnings"] >0 %}
+														<i class="fa fa-external-link fa-money"></i> {{costEarnings["cost"]}} € (gastados) / {{costEarnings["earnings"]}} € (pagados)<br/>
 													{% endif %}
 												</ul>
 											<!-- /datos Paciente-->
@@ -161,22 +282,42 @@
 													</div>
 													<div class="clearfix"></div>
 												{% endif %}
-												<h4 class="heading">RAZÓN DE LA CONSULTA:</h4>
-												<blockquote class="message">{{medicalHistory.reasonConsultation}}</blockquote>
-												<h4 class="heading">ANTECEDENTES:</h4>
-												<blockquote class="message">{{medicalHistory.background}}</blockquote>
-												<h4 class="heading">ALERGIAS:</h4>
-												<blockquote class="message">{{medicalHistory.allergicDiseases}}</blockquote>
-												<h4 class="heading">TRATAMIENTO / ENFERMEDADES:</h4>
-												<blockquote class="message">{{medicalHistory.treatmentDiseases}}</blockquote>
-												<h4 class="heading">PATOLOGÍAS:</h4>
-												<blockquote class="message">{{medicalHistory.patologies}}</blockquote>
-												<h4 class="heading">PRUEBAS SUPLEMENTARIAS:</h4>
-												<blockquote class="message">{{medicalHistory.supplementaryTest}}</blockquote>
-												<h4 class="heading">DIAGNÓSTICO:</h4>
-												<blockquote class="message">{{medicalHistory.diagnostic}}</blockquote>
-												<h4 class="heading">TRATAMIENTO:</h4>
-												<blockquote class="message">{{medicalHistory.treatment}}</blockquote>
+												{% if medicalHistory.reasonConsultation != null %}
+													<h4 class="heading">RAZÓN DE LA CONSULTA:</h4>
+													<blockquote class="message">{{medicalHistory.reasonConsultation | raw}}</blockquote>
+												{% endif %}
+												{% if medicalHistory.background != null %}
+													<h4 class="heading">ANTECEDENTES:</h4>
+													<blockquote class="message">{{medicalHistory.background | raw}}</blockquote>
+												{% endif %}
+												{% if medicalHistory.allergicDiseases != null %}
+													<h4 class="heading">ALERGIAS:</h4>
+													<blockquote class="message">{{medicalHistory.allergicDiseases | raw}}</blockquote>
+												{% endif %}
+												{% if medicalHistory.treatmentDiseases != null %}													
+													<h4 class="heading">TRATAMIENTO / ENFERMEDADES:</h4>
+													<blockquote class="message">{{medicalHistory.treatmentDiseases | raw}}</blockquote>
+												{% endif %}
+												{% if medicalHistory.patologies != null %}													
+													<h4 class="heading">PATOLOGÍAS:</h4>
+													<blockquote class="message">{{medicalHistory.patologies | raw}}</blockquote>
+												{% endif %}
+												{% if medicalHistory.supplementaryTest != null %}													
+													<h4 class="heading">PRUEBAS SUPLEMENTARIAS:</h4>
+													<blockquote class="message">{{medicalHistory.supplementaryTest | raw}}</blockquote>
+												{% endif %}
+												{% if medicalHistory.diagnostic != null %}													
+													<h4 class="heading">DIAGNÓSTICO:</h4>
+													<blockquote class="message">{{medicalHistory.diagnostic | raw}}</blockquote>
+												{% endif %}
+												{% if medicalHistory.treatment != null %}													
+													<h4 class="heading">TRATAMIENTO:</h4>
+													<blockquote class="message">{{medicalHistory.treatment | raw}}</blockquote>
+												{% endif %}
+												{% if medicalHistory.note != null %}													
+													<h4 class="heading">NOTA:</h4>
+													<blockquote class="message">{{medicalHistory.note | raw}}</blockquote>
+												{% endif %}
 											</div>
 										</div>
 									<!-- /historia Médica -->
@@ -192,28 +333,41 @@
 															<!-- start recent activity -->
 															<ul class="messages">
 																{% for tracingDay in tracingMedicalHistoryList  %}
-																	{#																
-																	{% if tracingDay.typeTracing.type == 'medical_history' %}
-																	#}
 																		<li id="tracing_{{tracingDay.id}}">
 																			<div style ="width:60px; display:inline;position:relative;top:-40px;left:15px;">
-																				{# IMAGEN DE USUARIO SI EXISTIESE O NO UN REGISTRO........... #}
+																				{# IMAGEN DE USUARIO SI EXISTIESE O NO UN REGISTRO.............................................. #}
 																					{% if tracingDay.user.image == null %}
 																						<img src="{{ asset ('assets/images/default_profile.png') }}" class="avatar" alt="Avatar" style="position:relative;left:10px;"/>
 																					{% else %}
 																						<img src="{{ asset ('uploads/users/'~tracingDay.user.id~'/'~tracingDay.user.image) }}" class="avatar" alt="Avatar" style="position:relative;left:10px;"/>
 																					{% endif %}
-																				{# ...........IMAGEN DE USUARIO SI EXISTIESE O NO UN REGISTRO #}
-																				{# LOGO TIPO DE TRACING ...........#}
+																				{# ..............................................IMAGEN DE USUARIO SI EXISTIESE O NO UN REGISTRO #}
+																				{# LOGO TIPO DE TRACING .........................................................................#}
 																					{% if tracingDay.typeTracing.type == 'medical_history' %}
 																						<img src="{{ asset ('assets/images/medicalHistory.png') }}" class="avatar" style="position: relative; top: 23px; right: 10px; padding:0px; height: 25px; width: 25px;"/>
 																					{% elseif tracingDay.typeTracing.type == 'orthopodology_history' %}
 																						<img src="{{ asset ('assets/images/orthopodologyHistory.png') }}" class="avatar" style="position: relative; top: 23px; right: 10px; padding:0px; height: 32px; width: 32px;"/>
 																					{% endif %}
-																				{# ...........LOGO TIPO DE TRACING #}
+																				{# .........................................................................LOGO TIPO DE TRACING #}
 																			</div>
 																			<div style="display:inline-block;width:calc(100% - 80px);">
 																				<h4 class="heading" style="display:inline;">{{tracingDay.date | date("d/m/Y")}} - {{tracingDay.user.name}} {{tracingDay.user.surnames}}</h4>
+																				{# BUSCO SI HAY SERVICIOS ENLAZADOS AL DÍA DISTINTOS DE COBROS................................. #}
+																					{% set withoutservice = false %}
+																					{#
+																					{% for tracingService in tracingDay.tracingServiceList %}	
+																						#}
+																					{% for payment in tracingDay.paymentList %}
+																						
+																						{#}
+																						{% if tracingService != null and tracingService.service != null and tracingService.service.typeService == false %}
+																							#}
+																						{% if payment.tracing.id != tracingDay.id %}
+																							{# si tracingService.service.typeService == false significa que hay un servicio distinto de cobro #}
+																							{% set withoutservice = true %}
+																						{% endif %}
+																					{% endfor %}
+																				{# .................................BUSCO SI HAY SERVICIOS ENLAZADOS AL DÍA DISTINTOS DE COBROS #}
 																				<!-- Modificar Seguimiento -->
 																					<a data-toggle="modal" data-target="#tracingEdit_{{tracingDay.id}}" style="cursor: pointer; cursor: hand; margin:5px;" class="pull-right"><i class="fa fa-pencil fa-2x"></i></a>
 																				<!-- /modificar Seguimiento -->
@@ -222,42 +376,155 @@
 																						<i class="pull-right fa fa-user-md fa-2x" onclick="frist_tracing_service({{tracingDay.id}});" style="cursor: pointer; cursor: hand; margin:5px;"></i>
 																					{% endif %}
 																				{# Añadir Servicios.................... #}
-																				<blockquote class="message" style="margin-bottom:10px;">{{tracingDay.tracing}}</blockquote>
-																				{% if tracingDay.tracingServiceList is not empty %}
-																					<table class="table table-striped jambo_table bulk_action" style="margin-bottom: 0px;">
-																						<thead>
-																							<tr class="headings">
-																								<th class="column-title" style="display: table-cell; table-layout: fixed;">Servicio</th>
-																								<th class="column-title" style="display: table-cell;">Descripción</th>
-																								<th class="column-title" style="display: table-cell; width: 75px;">Precio</th>
-																								<th class="column-title" style="display: table-cell; width:60px;">
-																									<i class="fa fa-minus-square m-right-xs"></i> / <i class="fa fa-plus-square m-right-xs" onclick="add_line_tracing_service({{tracingDay.id}});" style="cursor: pointer; cursor: hand; margin:5px;"></i>
-																								</th>
-																							</tr>
-																						</thead>
-																						<tbody id="add_line_tracing_service({{tracingDay.id}})">
-																							{% for tracingService in tracingDay.tracingServiceList  %}
-																								<tr class="even pointer" >
-																									<td class=" ">
-																										{% if tracingService.Service is not null %}
-																											{{tracingService.Service.Service}}
-																										{% endif %}
-																									</td>
-																									<td class=" ">{{tracingService.Description}}</td>
-																									<td class=" " style="text-align: right;">{{tracingService.Price}} €</td>
-																									<td class=" " style="text-align: center;" id="remove_tracing_service_{{tracingService.id}}">
-																											<i class="fa fa-minus-square m-right-xs" onclick="remove_line_tracing_service({{tracingService.id}});" style="cursor: pointer; cursor: hand; margin:5px;"></i>
-																									</td>
+																				{# DESCRIPCIÓN DEL SERVICIO ....................................................................#}
+																					{% if tracingDay.tracing != null %}
+																						<blockquote class="message" style="margin-bottom:10px;">{{tracingDay.tracing | raw}}</blockquote>
+																					{% endif %}
+																				{# ....................................................................DESCRIPCIÓN DEL SERVICIO #} 
+																				{# DISTINGO ENTRE LOS DIAS SIN SERVICIOS Y SI SE DEBE ALGUN SERVICIO QUE ABONAR AÚN ............#}
+																					{% if (tracingDay.tracingServiceList is not empty ) or  (tracingDay.paymentList is not empty ) or ( tracingDay.tracingServiceList is empty and costEarnings["cost"] > costEarnings["earnings"] ) %}
+																						<table class="table table-striped jambo_table bulk_action" style="margin-bottom: 0px;">
+																							<thead>
+																								<tr class="headings">
+																									<th class="column-title" style="display: table-cell; table-layout: fixed; width:270px; padding:2px 7px;">Servicio</th>
+																									<th class="column-title" style="display: table-cell; padding:2px 7px;">Descripción</th>
+																									<th class="column-title" style="display: table-cell; width: 50px; text-align:right; padding:2px 7px;">Precio</th>
+																									<th class="column-title" style="display: table-cell; width: 50px; text-align:right; padding:2px 7px;">Pago</th>
+																									<th class="column-title" style="display: table-cell; width: 95px; text-align:right; padding:2px 7px;">Forma</th>
+																									<th class="column-title" style="display: table-cell; width: 60px; padding:2px 7px;">
+																										<i class="fa fa-minus-square m-right-xs"></i> / <i class="fa fa-plus-square m-right-xs" onclick="add_line_tracing_service({{tracingDay.id}});" style="cursor: pointer; cursor: hand; margin:5px;"></i>
+																									</th>
 																								</tr>
-																							{% endfor %}
-																						</tbody>
-																					</table>
-																				{% endif %}
+																							</thead>
+																							<tbody id="add_line_tracing_service({{tracingDay.id}})">
+																					{% endif %}
+																				{# ............DISTINGO ENTRE LOS DIAS SIN SERVICIOS Y SI SE DEBE ALGUN SERVICIO QUE ABONAR AÚN #}
+																				{# RECORRO TODOS LOS SERVICIOS ASOCIADOS A LA HISTORIA BUSCANDO SERVICIOS SIN ABONAR ...........#}
+																					{% set idTracingDay = tracingDay.id %}
+																					{% if tracingDay.tracingServiceList is empty and ( costEarnings["cost"] > costEarnings["earnings"] ) %}
+																								{% for tracingDay in tracingMedicalHistoryList  %}
+																									{% for tracingService in tracingDay.tracingServiceList %}
+																										{% set costService = tracingService.price %}
+																										{% set paidService = 0 %}
+																										{% for payment in tracingService.paymentList %}
+																											{% set paidService = paidService + payment.payment %}
+																										{% endfor %}
+																										{% if costService != paidService %}
+																											{% set owe = costService - paidService %}
+																											{% if costService != paidService and ( tracingService.service is null or ( tracingService.service is not null and tracingService.service.typeService == false ) ) %}
+																												<tr class="even pointer" id="send_payment_tracing_service({{idTracingDay}},{{tracingService.id}})">
+																													<td class=" " colspan="3" id="service_data({{tracingService.id}})">
+																														{% if tracingService.service != null %}
+																															{{tracingService.service.name}} 
+																														{% endif %}
+																														({{tracingService.registrationDate | date ('d/m/Y')}}), abonó {{paidService}} € de {{costService}} €. DEBE : {{owe}} €.
+																													</td>
+																													<td class=" " style="padding:2px 2px;width:40px;">
+																														<input type="text" class="form-control" id="tracing_service[{{idTracingDay}}][service][payment]" name="tracing[service][payment]">
+																													</td>
+																													<td class=" " style="padding:2px 2px;">
+																														<select class="select_group form-control" id="tracing_service[{{idTracingDay}}][service][paymentType]" name="tracing[service][paymentType]">
+																															{% set servicesList = medicalHistory.clinic.servicesList %}
+																															{% for service in servicesList %}
+																																{% if service.typeService == true %}
+																																	<option value="{{service.id}}" style="padding:0px;">
+																																		{% if service.name == 'PAGO EFECTIVO' %}
+																																			Efectivo
+																																		{% elseif service.name == 'PAGO TARJETA' %}
+																																			Tarjeta
+																																		{% endif %}
+																																	</option>
+																																{% endif %}
+																															{% endfor %}
+																														</select>
+																													</td>
+																													<td class=" " style="text-align: center;">
+																														<i class="fa fa-save m-right-xs" onclick="send_payment_tracing_service({{idTracingDay}},{{tracingService.id}})"></i>
+																													</td>				
+																												</tr>
+																											{% endif %}
+																										{% endif %}
+																									{% endfor %}
+																								{% endfor %}
+																					{% endif %}																				
+																				{# ...........RECORRO TODOS LOS SERVICIOS ASOCIADOS A LA HISTORIA BUSCANDO SERVICIOS SIN ABONAR #}
+																				{# RECORRO TODOS LOS SERVICIOS ASOCIADOS AL DIA EXCLUYENDO LOS PAGOS ...........................#}
+																					{% if tracingDay.paymentList is not empty and tracingDay.tracingServiceList%}
+																								{% for payment in tracingDay.paymentList  %}
+																									{% if payment.tracingService != null and payment.tracing.date != payment.tracingService.registrationDate %}
+																										{% set tracingService = payment.tracingService %}
+																										<tr class="even pointer" style="background-color: rgba(63,83,103, 0.2); padding:2px 7px;">
+																											<td class=" " colspan="3" style=" padding:2px 7px;">
+																												<i class="fa fa-university m-right-xs"></i>  Pago de 
+																												{% if tracingService.service != null %}
+																													{{tracingService.service.name}} 
+																												{% endif %}
+																												({{tracingService.registrationDate | date ('d/m/Y')}})
+																											</td>
+																											<td class=" " style="text-align: right; padding:2px 7px;">{{payment.payment}} €</td>
+																											<td class=" " style="text-align: right; padding:2px 7px;">				
+																												{% if payment.service.name == "PAGO EFECTIVO" %}
+																													<i class="fa fa-money m-right-xs"></i><br>
+																												{% elseif payment.service.name == "PAGO TARJETA" %}
+																													<i class="fa fa-cc-visa m-right-xs"></i><br>
+																												{% endif %}
+																											</td>
+																											<td class=" " style="text-align: center; padding:2px 7px;" id="remove_payment_{{payment.id}}">
+																												<i class="fa fa-minus-square m-right-xs" onclick="remove_line_payment({{payment.id}});" style="cursor: pointer; cursor: hand; margin:5px;"></i>
+																											</td>
+																										</tr>
+																									{% endif %}
+																								{% endfor %}	
+																								{% for tracingService in tracingDay.tracingServiceList  %}
+																									{% if tracingService.service == null or (tracingService.service != null and tracingService.service.typeService == false) %}
+																										{% set priceReal = tracingService.price * (( 100 - tracingService.discount ) / 100 )%}
+																										<tr class="even pointer" >
+																											<td class=" "  style="padding:2px 7px;">
+																												{% if tracingService.Service is not null %}
+																													{{tracingService.Service.name}}
+																												{% endif %}
+																											</td>
+																											<td class=" ">{{tracingService.Description}}</td>
+																											<td class=" " style="text-align: right; padding:2px 7px;">{{priceReal}} €</td>
+																											<td class=" " style="text-align: right; padding:2px 7px;">
+																												{% for tracingDay in tracingMedicalHistoryList  %}
+																													{% for payment in tracingDay.paymentList %} 
+																														{% if payment.tracingService != null and (payment.tracingService.id == tracingService.id ) %}
+																															{% set paidOut = payment.payment %}
+																															<div data-toggle="tooltip" data-placement="top" title="{{payment.tracing.date | date("d/m/Y")}}">{{paidOut}} €</div>
+																														{% endif %}
+																													{% endfor %} 
+																												{% endfor %} 	
+																											</td>
+																											<td class=" " style="text-align: right; padding:2px 7px;">
+																												{% for tracingDay in tracingMedicalHistoryList  %}
+																													{% for payment in tracingDay.paymentList %} 
+																														{% if payment.tracingService != null and (payment.tracingService.id == tracingService.id ) %}
+																															{% if payment.service.name == "PAGO EFECTIVO" %}
+																																<i class="fa fa-money m-right-xs"></i><br>
+																															{% elseif payment.service.name == "PAGO TARJETA" %}
+																																<i class="fa fa-cc-visa m-right-xs"></i><br>
+																															{% endif %}
+																														{% endif %}
+																													{% endfor %} 
+																												{% endfor %}
+																											</td>
+																											<td class=" " style="text-align: center; padding:2px 7px;" id="remove_tracing_service_{{tracingService.id}}">
+																													<i class="fa fa-minus-square m-right-xs" onclick="remove_line_tracing_service({{tracingService.id}});" style="cursor: pointer; cursor: hand; margin:5px;"></i>
+																											</td>
+																										</tr>
+																									{% endif %}
+																								{% endfor %}
+																					{% endif %}
+																				{# ...........................RECORRO TODOS LOS SERVICIOS ASOCIADOS AL DIA EXCLUYENDO LOS PAGOS #}
+																				{# CIERRO LA TABLA ABIERTA CON LAS CONDICIONES DE LA CABECERA ..................................#}
+																					{% if tracingDay.tracingServiceList is not empty or (tracingDay.paymentList is not empty ) or ( tracingDay.tracingServiceList is empty and costEarnings["cost"] > costEarnings["earnings"] ) %}							
+																							</tbody>
+																						</table>
+																					{% endif %}
+																				{# ...................................CIERRO LA TABLA ABIERTA CON LAS CONDICIONES DE LA CABECERA#}
 																			</div>
 																		</li>
-																	{#	
-																	{% endif %}
-																	#}
 																{% endfor %}
 															</ul>
 															<!-- end recent activity -->
@@ -268,7 +535,7 @@
 										{% endif %}
 									<!-- /seguimiento -->
 									<!-- Documentos -->
-										{% if medicalHistory.docList is not empty %}
+										{% if medicalHistory.documentsList is not empty %}
 											<div class="col-md-12 col-sm-12 col-xs-12" style="padding-right:0px;">
 												<div class="accordion" id="accordion_tracing" role="tablist" aria-multiselectable="true">
 													<div class="panel">
@@ -279,8 +546,8 @@
 															<div class="row">
 																<div class="col-md-12">
 																	<!-- Listado de documentos -->
-																		{% for medicalHistoryDoc in medicalHistory.docList %}
-																			<div class="col-md-55">
+																		{% for medicalHistoryDoc in medicalHistory.documentsList %}
+																			<div class="col-md-2">
 																				<div class="thumbnail">
 																					<!-- Imagen del documento -->
 																						<div class="image view view-first">
@@ -293,7 +560,7 @@
 																								{% endif %}
 																							<!-- /para imágenes -->
 																							<!-- Para pdf -->
-																								{% if medicalHistoryDoc.TypeDoc.Type == "pdf" %}
+																								{% if medicalHistoryDoc.typeDoc.type == "pdf" %}
 																									<a data-toggle="modal" data-target="#viewPdf_{{medicalHistoryDoc.id}}">
 																										<img src="{{ asset ('/assets/images/pdf_document.png' ) }}" class="img-fluid" style="width: 80%; cursor: pointer; cursor: hand; top: 30px;">
 																									</a>
@@ -301,11 +568,11 @@
 																							<!-- /para pdf -->
 																							<!-- Máscara opciones de documento -->
 																								<div class="mask">
-																									<div class="tools tools-bottom">
+																									<div class="tools tools-bottom" style="margin-top:0px;">
 																										<!-- Modificar Documento -->
-																											{#																								
+																											{#
 																											<a data-toggle="modal" data-target="#viewDocEdit_{{medicalHistoryDoc.id}}" style="cursor: pointer; cursor: hand;"><i class="fa fa-pencil"></i></a>
-																											#}																						
+																											#}
 																										<!-- /modificar Documento -->
 																										<!-- Eliminar Documento -->
 																											<a href="{{ path("medical_history_doc_remove", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber, 'idDoc':medicalHistoryDoc.id} ) }}"><i class="fa fa-times"></i></a>
@@ -353,7 +620,7 @@
 															<i class="fa fa-plus-square m-right-xs"></i>
 															<i class="fa fa-book m-right-xs"></i>
 														</a>
-													</div>										
+													</div>
 												<!-- /nuevo Estudio -->
 												<!-- Activa Modal - nuevo Informe -->
 													<div data-toggle="tooltip" data-placement="top" title="Nuevo Informe" style="display:inline;">
@@ -361,7 +628,7 @@
 															<i class="fa fa-info-circle m-right-xs"></i>
 														</button>
 													</div>
-												<!-- /activa Modal - nuevo Informe -->												
+												<!-- /activa Modal - nuevo Informe -->
 												<!-- Activa Modal - Nuevo Seguimiento -->
 													<div data-toggle="tooltip" data-placement="top" title="Nuevo Seguimiento" style="display:inline;">
 														<button class="btn btn-success" data-toggle="modal" data-target="#createTracing">					<i class="fa fa-plus-square m-right-xs"></i>
@@ -449,6 +716,7 @@
 		{% for tracingDay in medicalHistory.tracingList %}
 				{# Renombro la variable ...#}
 					{% set form_medicalHistoryTracing  = form_tracingMedicalHistoryList[tracingDay.id] %}
+					{% set tracing_edit = 'tracing_edit_'~tracingDay.id %}
 				{# ...Renombro la variable #}
 				<div class="modal fade" id="tracingEdit_{{tracingDay.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-lg">
@@ -482,7 +750,7 @@
 													<!-- Seguimiento -->
 														<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12" >Seguimiento<span class="required">*</span>
 														</label>
-														<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form_medicalHistoryTracing.tracing)}}</div>
+														<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form_medicalHistoryTracing.tracing, {'id': tracing_edit})}}</div>
 													<!-- /seguimiento -->
 													<!-- Id Oculto -->
 														{{form_widget(form_medicalHistoryTracing.id)}}
@@ -522,26 +790,26 @@
 					<!-- Modal Body -->
 						<div class="modal-body">
 							<div class="row control-label form-horizontal form-label-left">
-								{{ form_start(form_medicalHistoryDoc, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
+								{{ form_start(form_documents, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
 									<div class="col-md-12 col-sm-12 col-xs-12 pull-left">
 										<div class="form-group">
 											<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-2" >Título<span class="required"></span></label>
-											<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">{{form_widget(form_medicalHistoryDoc.title)}}</div>
+											<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">{{form_widget(form_documents.title)}}</div>
 											<div class="clearfix"></div>
 										</div>
 										<div class="form-group">
-											<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-2" >Título<span class="required"></span></label>
-											<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">{{form_widget(form_medicalHistoryDoc.doc)}}</div>
+											<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-2" >Documento<span class="required"></span></label>
+											<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">{{form_widget(form_documents.doc)}}</div>
 											<div class="clearfix"></div>
 										</div>
 										<div class="form-group">
 											<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-2" >Descripción<span class="required"></span></label>
-											<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">{{form_widget(form_medicalHistoryDoc.description)}}</div>
+											<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">{{form_widget(form_documents.description)}}</div>
 											<div class="clearfix"></div>
 										</div>
-										{{form_widget(form_medicalHistoryDoc.add, { 'label': 'Añadir Documento' }) }}
+										{{form_widget(form_documents.add, { 'label': 'Añadir Documento' }) }}
 									</div>
-								{{ form_end(form_medicalHistoryDoc)}}
+								{{ form_end(form_documents)}}
 		            		</div>
 		            	</div>
 					<!-- Modal Body -->
@@ -553,7 +821,7 @@
 		</div>
 	<!-- /modal - Nuevo Documento -->
 	<!-- Modal - Ver Pdf -->
-		{% for medicalHistoryDoc in medicalHistory.docList %}
+		{% for medicalHistoryDoc in medicalHistory.documentsList %}
 			{% if medicalHistoryDoc.typeDoc.type == "pdf" %}
 				<div class="modal fade" id="viewPdf_{{medicalHistoryDoc.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-lg">
@@ -588,7 +856,7 @@
 		{% endfor %}
 	<!-- /modal - Ver Pdf -->
 	<!-- Modal - Ver Editar Documento -->
-		{% for medicalHistoryDoc in medicalHistory.docList %}
+		{% for medicalHistoryDoc in medicalHistory.documentsList %}
 			{% if medicalHistoryDoc.typeDoc.type == "pdf" %}
 				<div class="modal fade" id="viewDocEdit_{{medicalHistoryDoc.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-lg">
@@ -634,7 +902,7 @@
 	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>-->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.3/js/bootstrap-datetimepicker.min.js"></script>
 	<script type="text/javascript">
-		// El selector JQuery hace referencia a todos los id con 'datetimepicker' 
+		// El selector JQuery hace referencia a todos los id con 'datetimepicker'
 		$('[id ^= datetimepicker]').datetimepicker({
 		//$('#datetimepicker_birthday').datetimepicker({
 			format: 'DD/MM/YYYY',
@@ -647,7 +915,7 @@
 		//		down: "fa fa-arrow-down"
 			}
 		});
-	</script>	
+	</script>
 	<!-- bootstrap-progressbar -->
 	<script src="{{ asset ('assets/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js') }}"></script>
 	<!-- tether.io -->
@@ -657,7 +925,7 @@
 		<script src="{{ asset ('assets/vendors/pdfObject/pdfobject.js') }}"></script>
 		<script>
 			// https://pdfobject.com/
-			{% for medicalHistoryDoc in medicalHistory.docList %}
+			{% for medicalHistoryDoc in medicalHistory.documentsList %}
 				{% if medicalHistoryDoc.typeDoc.type == "pdf" %}
 					PDFObject.embed("{{ asset ('uploads/clinics/'~medicalHistory.clinic.nameUrl~'/medicalHistory/'~medicalHistory.medicalHistoryNumber~'/'~medicalHistoryDoc.doc ) }}", "#viewerPdf_{{medicalHistoryDoc.id}}");
 				{% endif %}
@@ -686,8 +954,6 @@
 					function remove_tracing_service(rid) {
 						$('.removeclass'+rid).remove();
 					}
-
-
 			</script>
 		<!-- /service Tracing Form -->
 		<!-- RemoveTracingService -->
@@ -700,5 +966,19 @@
 		<script src="{{ asset ('assets/vendors/lightbox/dist/ekko-lightbox.js') }}"></script>
 		<script src="{{ asset ('assets/js/custom/custom-lightbox.js') }}"></script>
 		<!-- Popper.js - Tooltip.js-->
-		<script src="{{ asset ('assets/vendors/popper.js/packages/tooltip/tests/functional/tooltip.js') }}"></script>	
+		<script src="{{ asset ('assets/vendors/popper.js/packages/tooltip/tests/functional/tooltip.js') }}"></script>
+	<script data-sample="reasonConsultation">
+		CKEDITOR.replace( 'tracing_tracing', {
+    		customConfig: "{{ asset ('assets/js/custom/ckeditor_config_medical_history.js') }}"
+		});
+		{% for tracingDay in medicalHistory.tracingList %}
+			{# Renombro la variable ...#}
+				{% set tracing_edit = 'tracing_edit_'~tracingDay.id %}
+			{# Renombro la variable ...#}
+			CKEDITOR.replace( {{tracing_edit}}, {
+		    	customConfig: "{{ asset ('assets/js/custom/ckeditor_config_medical_history.js') }}"
+			});
+		{% endfor %}
+	</script>
+	<script src="{{ asset ('assets/js/custom/medicalHistory.js') }}"></script>
 {% endblock %}

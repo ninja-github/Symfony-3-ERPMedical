@@ -110,6 +110,38 @@ BackendBundle\Entity\UserPermission:
                 default: '0'
             column: clinic_remove
     # /CLINIC #########################################################
+    # CLINICDOC #######################################################
+        clinicDocList:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: clinic_doc_list
+        clinicDocView:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: clinic_doc_view
+        clinicDocCreate:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: clinic_doc_create
+        clinicDocEdit:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: clinic_doc_edit
+        clinicDocRemove:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: clinic_doc_remove
+    # /CLINIC #########################################################
     # MEDICAL HISTORY #################################################
         medicalHistoryList:
             type: boolean
@@ -365,38 +397,44 @@ BackendBundle\Entity\UserPermission:
             options:
                 default: '0'
             column: report_remove                        
+        reportPdf:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: report_pdf                                    
     # /REPORT #########################################################
     # INVOICE #########################################################
-        invoiceList:
+        invoiceIssuedList:
             type: boolean
             nullable: false
             options:
                 default: '0'
-            column: invoice_list
-        invoiceView:
+            column: invoice_issued_list
+        invoiceIssuedView:
             type: boolean
             nullable: false
             options:
                 default: '0'
-            column: invoice_view
-        invoiceCreate:
+            column: invoice_issued_view
+        invoiceIssuedCreate:
             type: boolean
             nullable: false
             options:
                 default: '0'
-            column: invoice_create
-        invoiceEdit:
+            column: invoice_issued_create
+        invoiceIssuedEdit:
             type: boolean
             nullable: false
             options:
                 default: '0'
-            column: invoice_edit
-        invoiceRemove:
+            column: invoice_issued_edit
+        invoiceIssuedRemove:
             type: boolean
             nullable: false
             options:
                 default: '0'
-            column: invoice_remove
+            column: invoice_issued_remove
     # /INVOICE ########################################################
     # SERVICE #########################################################
         serviceList:
@@ -525,6 +563,18 @@ BackendBundle\Entity\UserPermission:
             options:
                 default: '0'
             column: tracing_service_remove
+        tracingServiceChangeCountableStatus:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: tracing_service_change_countable_status 
+        tracingServiceChangeConsolidatedStatus:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: tracing_service_change_consolidated_status                                 
     # /TRACING SERVICE ################################################
     # ADMIN ###########################################################
         adminSectionAccess:

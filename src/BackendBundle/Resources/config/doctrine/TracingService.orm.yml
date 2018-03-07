@@ -1,6 +1,7 @@
 BackendBundle\Entity\TracingService:
     type: entity
     table: tracing_service
+    repositoryClass: BackendBundle\Repository\TracingServiceRepository    
     indexes:
         tracing:
             columns:
@@ -8,9 +9,12 @@ BackendBundle\Entity\TracingService:
         service:
             columns:
                 - service
-        invoice:
+        invoice_issued:
             columns:
-                - invoice                
+                - invoice_issued
+        parent:
+            columns:
+                - parent
         user_registerer:
             columns:
                 - user_registerer
@@ -38,38 +42,63 @@ BackendBundle\Entity\TracingService:
             nullable: true
             precision: 10
             scale: 0
+        discount:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0  
+        countable:
+            type: boolean
+            nullable: false
+            options:
+                default: '1'
+        consolidated:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'                                      
         registrationDate:
             type: datetime
             nullable: false
             column: registration_date
         modificationDate:
             type: datetime
-            nullable: false
+            nullable: true
             column: modification_date
 # manyToOne ###########################################################
     manyToOne:
-        # referencia ManyToOne de la Entidad # Tracing #         
+        # referencia ManyToOne de la Entidad # Tracing #
         tracing:
             targetEntity: Tracing
             cascade: {  }
             fetch: LAZY
             mappedBy: null
-            # inversedBy # hace referencia si a la relación OneToMany de la entidad # Tracing #               
+            # inversedBy # hace referencia si a la relación OneToMany de la entidad # Tracing #
             inversedBy: tracingServiceList
             joinColumns:
                 tracing:
                     referencedColumnName: id
             orphanRemoval: false
-        invoice:
-            targetEntity: Invoice
+        invoiceIssued:
+            targetEntity: InvoiceIssued
             cascade: {  }
             fetch: LAZY
             mappedBy: null
             inversedBy: null
             joinColumns:
-                invoice:
+                invoice_issued:
                     referencedColumnName: id
-            orphanRemoval: false           
+            orphanRemoval: false                   
+        parent:
+            targetEntity: TracingService
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: children
+            joinColumns:
+                parent:
+                    referencedColumnName: id
+            orphanRemoval: false            
         service:
             targetEntity: Service
             cascade: {  }
@@ -92,6 +121,7 @@ BackendBundle\Entity\TracingService:
             orphanRemoval: false
         userModifier:
             targetEntity: User
+            nullable: true
             cascade: {  }
             fetch: LAZY
             mappedBy: null
@@ -100,5 +130,17 @@ BackendBundle\Entity\TracingService:
                 user_modifier:
                     referencedColumnName: id
             orphanRemoval: false
-# /manyToOne ##########################################################             
+# /manyToOne ##########################################################
+    oneToMany:
+        # la eliminaremos cuando convirtamos
+        children:
+            targetEntity: TracingService
+            mappedBy: parent
+        # la eliminaremos cuando convirtamos
+        paymentList:
+            targetEntity: Payment
+            mappedBy: tracingService 
+        invoiceServiceList:
+            targetEntity: InvoiceService
+            mappedBy: tracingService                        
     lifecycleCallbacks: {  }

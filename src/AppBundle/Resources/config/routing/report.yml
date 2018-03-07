@@ -13,4 +13,8 @@ report_view:
 # ROUTING PARA EDITAR UN INFORME
 report_edit:
     path: /{clinicNameUrl}/medicalhistory/{medicalHistoryNumber}/report/{registrationDate}/edit/
-    defaults: { _controller: AppBundle:Report:reportEdit }        
+    defaults: { _controller: AppBundle:Report:reportEdit }
+# ROUTING PARA GENERAR UN INFORME EN PDF
+report_pdf:
+    path: /{clinicNameUrl}/medicalhistory/{medicalHistoryNumber}/report/{registrationDate}/pdf/
+    defaults: { _controller: AppBundle:Report:reportPdf }  

@@ -27,3 +27,15 @@ medical_history_pdf:
 medical_history_search:
     path: /searchmedicalhistory
     defaults: { _controller: AppBundle:MedicalHistory:searchMedicalHistory }
+# MÉTODO AJAX PARA CAMBIAR ESTADO HISTORIA ACTUALIZADA / NO ACTUALIZADA
+change_updated_status_medical_history:
+    path: /changeUpdatedMedicalHistory
+    defaults: { _controller: AppBundle:MedicalHistory:changeUpdatedMedicalHistory }
+# MÉTODO AJAX PARA AÑADIR O ELIMINAR RETRASOS O CITAS ANULADAS
+add_late_medical_history:
+    path: /addLateMedicalHistory
+    defaults: { _controller: AppBundle:MedicalHistory:addLateMedicalHistory } 
+# MÉTODO AJAX PARA AÑADIR O ELIMINAR RETRASOS O CITAS ANULADAS
+remove_late_medical_history:
+    path: /removeLateMedicalHistory
+    defaults: { _controller: AppBundle:MedicalHistory:removeLateMedicalHistory }    

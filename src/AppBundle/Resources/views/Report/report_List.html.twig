@@ -11,7 +11,7 @@
 	<link href="{{ asset ('assets/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
 	<link href="{{ asset ('assets/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
 	<link href="{{ asset ('assets/vendors/ionicons.com/2.0.1/css/ionicons.min.css') }}" rel="stylesheet">
- {% endblock %}
+{% endblock %}
 {% block content %}
 <!-- page content -->
 	<div class="right_col" role="main">
@@ -23,15 +23,16 @@
 						<h3 style="display:inline-block;">Listado de Informes</h3>
 					</div>
 					<div class="x_content">
-						<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+						<table id="datatable-buttons-reportList" class="table table-striped table-bordered" cellspacing="0" style="width:100%;">
 							<thead>
 								<tr>
-									<th style="text-align: center;">Informe</th>
+									<th style="text-align:center; width:60px;">Fecha</th>
+									<th style="text-align:center; width:15px;"><i class="fa fa-file-pdf-o"></i></th>
 									<th>Nombre</th>
-									<th>DNI</th>
-									<th>Móvil</th>
-									<th>Fijo</th>
-									<th style="text-align: center;"><i class="ionicons ion-male" style="text-align: center;"></i> / <i class="ionicons ion-female" style="text-align: center;"></i></th>
+									<th style="text-align:center; width:60px;">DNI</th>
+									<th style="text-align:center; width:60px;">Móvil</th>
+									<th style="text-align:center; width:60px;">Fijo</th>
+									<th style="text-align:center; width:30px;"><i class="ionicons ion-male" style="text-align: center;"></i> / <i class="ionicons ion-female" style="text-align: center;"></i></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -42,8 +43,10 @@
 										{% set medicalHistoryNumber = report.medicalHistory.medicalHistoryNumber %}	
 									{# ................................................................... DEFINO VARIABLES #}
 									<tr  {% if report.medicalHistory.patientRisk != NULL %} class="danger"{% endif %}>
-										<td><a href="{{ path("report_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber, 'registrationDate': registrationDate } ) }}">{{report.medicalHistory.medicalHistoryNumber}} / {{registrationDate}}</a></td>
-										<td><a href="{{ path("report_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber, 'registrationDate': registrationDate } ) }}">{{report.medicalHistory.surname | title}}, {{report.medicalHistory.name | title}}</a></td>
+										<td style="text-align:center;"><a href="{{ path("report_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber, 'registrationDate': registrationDate } ) }}">{{registrationDate}}</a></td>
+										<td style="text-align:center;"><a href="{{ path("report_pdf", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber, 'registrationDate': registrationDate } ) }}"><i class="fa fa-file-pdf-o"></i></a>
+										</td>
+										<td><a href="{{ path("report_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber, 'registrationDate': registrationDate } ) }}">{{report.medicalHistory.medicalHistoryNumber}} - {{report.medicalHistory.surname | title}}, {{report.medicalHistory.name | title}}</a></td>
 										<td><a href="{{ path("report_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber, 'registrationDate': registrationDate } ) }}">{{report.medicalHistory.dni}}</a></td>
 										<td><a href="{{ path("report_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber, 'registrationDate': registrationDate } ) }}">{{report.medicalHistory.phoneMobile}}</a></td>
 										<td><a href="{{ path("report_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber, 'registrationDate': registrationDate } ) }}">{{report.medicalHistory.phoneHome}}</a></td>
@@ -57,7 +60,7 @@
 											</a>
 										</td>
 									</tr>
-								{% endfor %}
+								{% endfor %}																												
 							</tbody>
 						</table>
 					</div>
@@ -68,18 +71,21 @@
 <!-- /page content -->
 {% endblock %}
 {% block javascriptsFinal %}
-	{{ parent() }}
-	<!-- Datatables -->
-	<script src="{{ asset ('assets/vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-	<script src="{{ asset ('assets/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
-	<script src="{{ asset ('assets/vendors/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
-	<script src="{{ asset ('assets/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js') }}"></script>
-	<script src="{{ asset ('assets/vendors/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
-	<script src="{{ asset ('assets/vendors/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
-	<script src="{{ asset ('assets/vendors/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
-	<script src="{{ asset ('assets/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
-	<script src="{{ asset ('assets/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
-	<script src="{{ asset ('assets/vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
-	<script src="{{ asset ('assets/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script>
-	<script src="{{ asset ('assets/vendors/datatables.net-scroller/js/dataTables.scroller.min.js') }}"></script>
+  {{ parent() }}
+    <!-- Datatables -->
+    <script src="{{ asset ('assets/vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-scroller/js/dataTables.scroller.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/jszip/dist/jszip.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/pdfmake/build/pdfmake.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/pdfmake/build/vfs_fonts.js') }}"></script>
 {% endblock %}

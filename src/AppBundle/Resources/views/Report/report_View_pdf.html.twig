@@ -1,0 +1,164 @@
+<link type="text/css" href="./{{ asset ('assets/vendors/bootstrap-3.3.7/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+<link type="text/css" href="./{{ asset ('assets/vendors/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
+<link type="text/css" href="./{{ asset ('assets/css/custom.css')}}" rel="stylesheet">
+<link type="text/css" href="./{{ asset ('assets/css/custom.pdf.css')}}" rel="stylesheet">
+{% block content %}
+	<!-- page content -->
+	{% set doctor = report.user %}
+	{% set doctorNumber = report.user.userDataDoctor.collegeNumber %}
+	{% set medicalHistory = report.medicalHistory %}	
+	{% set clinicView = report.medicalHistory.clinic %}	
+		<style>
+/*	.clinicLogo img{
+		width:100%;
+		max-width:150px;
+		display: inline;
+		margin: auto 5px;
+	}*/
+	table {
+		border:1px solid #5a738e;
+		margin-bottom:10px;
+	}
+	tr.title td.heading, .namePatient{
+		background-color:#2a3f54;
+		padding:7px;
+		color:white;
+		width:100%;
+	}
+	.titleData{
+		background-color:#2a3f54;
+		padding:7px;
+		color:white;
+		border:1px solid #5a738e;
+	}
+	tr.content td.heading{
+		padding:7px;
+		color:grey;
+		width:100%;
+		border:1px solid #5a738e;
+		min-height:80px;
+	}
+	.contentData{
+		padding:7px;
+		color:grey;
+		min-height:80px;
+		border:1px solid #5a738e;
+	}
+	tr.content td.heading div{
+		min-height:100px;display:block;
+	}
+	.marca-de-agua{
+		background-repeat: no-repeat;
+		background-position: center;
+		width:80%;
+		height:auto;
+		margin:auto;
+	}
+	.marca-de-agua img{
+		padding:0;
+		width: 80%;
+		height: auto;
+		opacity:0.1;
+	}
+</style>
+
+	<page backtop="15mm" backbottom="15mm" backleft="10mm" backright="10mm">
+		<page_header>
+		</page_header>
+		<!-- /page content -->
+			<div class="marca-de-agua">
+				<img alt="" src="./{{ asset ('uploads/clinics/'~medicalHistory.clinic.nameUrl~'/'~medicalHistory.clinic.image) }}">
+			</div>		
+			<div class="right_col" role="main">
+				<div class="clearfix"></div>
+				<div class="row">
+					<!-- Bloque -->
+						<div style="width:300px;">
+							<div class="x_panel" >
+								<!-- Título del Bloque -->							
+									<div class="x_title">
+										<h3 style="display:inline-block;">Informe</h3>
+										<div class="clearfix"></div>
+									</div>
+								<!-- /título del Bloque -->
+								<!-- Contenido del Bloque -->								
+									<div class="x_content">
+										<!-- Datos Paciente -->
+											<div class="col-md-12 col-sm-12 col-xs-12 profile_left">
+												<!-- Datos Doctor-->
+													<h4>PODÓLOGO:</h4>
+													<h3>{{doctor.surnames | upper}},{{doctor.name | upper}} </h3>
+													<ul class="list-unstyled user_data">
+														<li>
+															<h4>Número de Colegiado: {{doctorNumber}}</h4>  
+														</li>
+														<li>
+															<h4>
+																{{clinicView.address}}, {{clinicView.city.cp}} {{clinicView.city.city|upper }} ( {{clinicView.city.province|upper}} )
+															</h4> 
+														</li>
+														<li>
+															<h4>
+																FECHA:&nbsp;{{report.registrationDate | date('d/m/Y')}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+																PACIENTE:&nbsp;
+																<a href="{{ path("medical_history_view", {'clinicNameUrl': clinicView.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber } ) }}">{{medicalHistory.medicalHistoryNumber}} - {{medicalHistory.surname}} {{medicalHistory.name}}
+																</a>
+															</h4> 
+														</li>													
+													</ul>									
+												<!-- /datos Doctor-->
+											</div>
+											<br />
+										<!-- /datos Paciente-->	
+										<!-- Historia Médica -->
+											<div class="col-md-12 col-sm-12 col-xs-12" style="padding-right:0px;">
+												<div class="message_wrapper">
+													{% if report.reasonConsultation != NULL %}
+														<h4 class="heading">RAZÓN DE LA CONSULTA:</h4>
+														<blockquote class="message">{{report.reasonConsultation | raw}}</blockquote>
+													{% endif %}
+													{% if report.diagnostic != NULL %}
+														<h4 class="heading">DIAGNÓSTICO:</h4>
+														<blockquote class="message">{{report.diagnostic | raw}}</blockquote>
+													{% endif %}	
+													{% if report.treatment != NULL %}									
+														<h4 class="heading">TRATAMIENTO:</h4>
+														<blockquote class="message">{{report.treatment | raw}}</blockquote>
+													{% endif %}														
+												</div>
+											</div>
+											<div class="col-md-12 col-sm-12 col-xs-12" style="padding-right:0px;">
+												<div class="message_wrapper">
+													<p>{{clinicView.noteReport}}</p>													
+												</div>
+											</div>										
+										<!-- /historia Médica -->
+										<div class="clearfix"></div>
+										<div class="divider-dashed"></div>
+										<!-- Sección final Bloque (operativa) -->
+											<div class="col-md-12 col-sm-12 col-xs-12" style="padding-right:0px;">
+												<!-- Editar Historia -->
+													<div class="pull-left">
+														<a class="btn btn-success"
+															href="{{ path("report_edit", {'clinicNameUrl': clinicView.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber, 'registrationDate': report.registrationDate | date('Y_m_d')} ) }}">
+															<i class="fa fa-edit m-right-xs"></i>
+															Editar Informe
+														</a>
+													</div>
+												<!-- /editar Historia -->
+											</div>
+										<!-- /sección final Bloque (operativa) -->									
+									</div>
+								<!-- /contenido del Bloque -->
+							</div>
+						</div>
+						<br />
+					<!-- /bloque -->
+				</div>
+			</div>
+		<!-- /page content -->
+		<page_footer>
+		</page_footer>
+	 </page>
+{% endblock %}
+										

@@ -1,0 +1,243 @@
+{# EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig'...................... #}
+	{% extends "AppBundle:Layouts:layout.html.twig"%}
+{# ......................EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig' #}
+{# INCLUIMOS EL JAVASCRIPT QUE VERIFICA SI EL NICK EXISTE............................ #}
+{% block stylesheets %}
+	{# la función parent() carga todo el contenido del bloque anterior #}
+	{{ parent() }}
+	<!-- Datatables -->
+	<link href="{{ asset ('assets/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
+	<link href="{{ asset ('assets/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
+	<link href="{{ asset ('assets/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}" rel="stylesheet">
+	<link href="{{ asset ('assets/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
+	<link href="{{ asset ('assets/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
+	<link href="{{ asset ('assets/vendors/ionicons.com/2.0.1/css/ionicons.min.css') }}" rel="stylesheet">
+		    <script src="{{ asset ('assets/vendors/echarts/dist/echarts.min.js') }}"></script>
+		    	    <!-- Chart.js -->
+    <script src="{{ asset ('assets/vendors/Chart.js/dist/Chart.min.js') }}"></script>
+ {% endblock %}
+{# ............................INCLUIMOS EL JAVASCRIPT QUE VERIFICA SI EL NICK EXISTE #}
+{% block content %}
+	{% set clinicNameUrl = app.request.attributes.get('clinicNameUrl') %}
+	{% if app.request.attributes.get('year') !=null %}
+		{% set yearView = app.request.attributes.get('year') %}
+	{% else %}
+		{% set yearView = accountingOnlyYears[0] %}
+	{% endif %}
+<!-- page content -->
+	<div class="right_col" role="main" style="padding-top:0px;">
+		<div class="clearfix"></div>
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="position:sticky; top:56px; z-index:10;">
+				<div class="x_panel" >
+					{% for year in accountingOnlyYears %}
+						<a class="btn btn-success " href="{{ path("clinic_accounting_year", {'clinicNameUrl': clinicNameUrl, 'year': year} ) }}" {% if yearView == year%} disabled {% endif %}>{{year}}</a>
+					{% endfor %}
+				</div>
+			</div>
+			{% for month in accountingSummary %}
+				{% set dateMonth = month[0].date | date("m") %}
+				{% set dateMonthYear = month[0].date | date("m/Y") %}
+				{% if accountingTotal[dateMonth]['countable'] is not defined %}
+					{% set countable = null %}
+				{% else %}
+					{% set countable = accountingTotal[dateMonth]['countable'] %}
+				{% endif %}
+				{% if accountingTotal[dateMonth]['noCountable'] is defined %}
+					{% set noCountable = accountingTotal[dateMonth]['noCountable'] %}
+				{% else %}			
+					{% set noCountable = 0 %}
+				{% endif %}
+				{% set allAccounting = countable + noCountable %}
+				{% if accountingTotal[dateMonth] is defined %}
+					<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+						<div class="x_panel" style="height: auto;">
+							<div class="x_title">
+								<h3 style="display:inline-block;">{{dateMonthYear}} <small>Total Ingresos = <span id="countable_{{dateMonthYear}}">{{countable|number_format(2, ',', '.')}}</span> € / <span id="allAccounting_{{dateMonthYear}}">{{allAccounting|number_format(2, ',', '.')}}</span> €</small></h3>
+								<ul class="nav navbar-right panel_toolbox">
+									<li><a class="collapse-link"><i class="fa fa-chevron-down"></i></a></li>
+									<li class="dropdown">
+										<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+										<ul class="dropdown-menu" role="menu">
+											<li><a href="#">Settings 1</a></li>
+											<li><a href="#">Settings 2</a></li>
+										</ul>
+									</li>
+									<li><a class="close-link"><i class="fa fa-close"></i></a></li>
+								</ul>
+							<div class="clearfix"></div>
+						</div>
+						<div class="x_content" style="display:none;">
+							<canvas id="mybarChart_{{dateMonthYear}}" style="height:200px;"></canvas>
+							<script>
+								{% set length  = accountingTotalForDay[dateMonth]|length  %}
+								var ctx = document.getElementById("mybarChart_{{dateMonthYear}}");
+								ctx.height = 100;
+								var mybarChart = new Chart(ctx, {
+									type: 'bar',
+									data: {
+										labels: [{% for day, dataDaysOfMonth in accountingTotalForDay[dateMonth] %}"{{(day)}}",{% endfor %}{% if length  < 15 %}{% for i in range(length ,20) %},{% endfor %}{% endif %}],
+										datasets: [{
+											label: '€ ingresados',
+											backgroundColor: "#26B99A",
+											data: [{% for day, dataDaysOfMonth in accountingTotalForDay[dateMonth] %}{{(dataDaysOfMonth)}},{% endfor %}]
+										}]
+									},
+									options: {
+										maintainAspectRatio: true,
+										scales: {
+											yAxes: [{
+												ticks: {
+													beginAtZero: true
+													}
+												}]
+											}
+										}
+									});
+							</script>
+							<table id="datatable-buttons-{{dateMonth}}" class="table table-striped table-bordered bulk_action" style="width:100%;">
+								<thead>
+									<tr>
+										<th style="text-align: center; width:60px;">Fecha</th>
+										<th style="text-align: center; ">NºHª</th>
+										<th style="text-align: center; width:50px;"><i class="fa fa-euro m-right-xs"></i></th>
+										<th style="text-align: center; width:60px;">
+											<i class="fa fa-money m-right-xs"></i> / <i class="fa fa-cc-visa m-right-xs"></i>
+										</th>
+										<th style="text-align: center;">Fact.</th>
+										<th style="text-align: center; width:60px;">
+											<i class="fa fa-check m-right-xs" id="tracingServiceConsolidated({{dateMonthYear}})" onclick="noConsolidated(this.id)"></i> 
+											/ 
+											<i class="fa fa-times m-right-xs" id="tracingServiceNoConsolidated({{dateMonthYear}})" onclick="consolidated(this.id)"></i>
+										</th>
+										<th style="text-align: center; width:30px;"><i class="fa fa-bank m-right-xs"></i></th>										
+									</tr>
+								</thead>
+								<tbody>
+									{% for tracing in month %}
+										{% for payment in tracing.paymentList %}
+											{% set consolidated = payment.consolidated %}
+											{% set medicalHistory = payment.tracing.medicalHistory %}
+											{% set service = payment.service %}
+											{% set countable = payment.countable %}
+											<tr style="{% if consolidated == true %} background-color: rgba(63,83,103, 0.2); {% endif %}padding:2px 7px;"  id="payment_{{payment.id}}">
+												<td style="text-align: center; padding:2px 7px;"><a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}">{{tracing.date | date("d/m/Y")}}</a></td>
+												<td style="text-align: center; padding:2px 7px;"><a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}">{{medicalHistory.medicalHistoryNumber}}</a></td>
+												<td style="text-align: right; padding:2px 7px;"><a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}">{{payment.payment|number_format(2, ',', '.') }} €</a></td>
+												<td style="text-align: center; padding:2px 7px;">
+													<a href="{{ path("medical_history_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'medicalHistoryNumber': medicalHistory.medicalHistoryNumber} ) }}">
+														{% if service.name == "PAGO EFECTIVO" %}
+															<i class="fa fa-money m-right-xs"></i>
+														{% elseif service.name == "PAGO TARJETA" %}
+															<i class="fa fa-cc-visa m-right-xs"></i>
+														{% endif %}
+													</a>
+												</td>
+												<td style="text-align: center; padding:2px 7px;">
+													{% if payment.invoiceIssued != null %}
+														{% set invoiceNumber = payment.invoiceIssued.invoiceNumber %}
+														<a href="{{ path("invoice_issued_view", {'clinicNameUrl': medicalHistory.clinic.nameUrl, 'invoiceIssuedNumber': invoiceNumber} ) }}">{{invoiceNumber}}</a>
+													{% endif %}
+												</td>
+												<td style="text-align: center; padding:2px 7px;" id="consolidatedState{{payment.id}}">
+													{% if consolidated == true %}
+														<i class="fa fa-times m-right-xs" onclick="change_consolidated_state({{payment.id}})" id="consolidatedState_{{payment.id}}" style ="cursor: pointer;"></i>
+													{% elseif consolidated == false %}
+														<i class="fa fa-check m-right-xs" onclick="change_consolidated_state({{payment.id}})" id="consolidatedState_{{payment.id}}" style ="cursor: pointer;"></i>
+													{% endif %}
+												</td>
+												<td style="text-align:center; padding:2px 7px;"><input type="checkbox" id="countableState_{{payment.id}}" class="icheckbox_flat-green checked" 
+													{% if countable == true %}
+														checked
+													{% endif %}
+													{% if consolidated == true or (payment.service.name == "PAGO TARJETA")  %} 
+														disabled
+													{% endif %}
+													{# método javascript para cambiar el estado contable del cobro #}
+														onchange="change_countable_state({{payment.id}})">
+													{# método javascript para cambiar el estado contable del cobro #}
+												</td>																							
+											</tr>
+										{% endfor %}
+									{% endfor %}
+								</tbody>
+							</table>
+							{% set invoiceIssuedExist = false %}
+							{% for invoiceIssued in invoiceIssuedList %}
+								{% set registrationDate = invoiceIssued.registrationDate %}
+								{% set invoiceIssuedNumber = invoiceIssued.invoiceNumber %}
+								{% if registrationDate|date('m/Y') == dateMonthYear and invoiceIssued.medicalHistory == null and invoiceIssued.business != null %}
+									{% set invoiceIssuedExist = true %}
+								{% endif %}
+							{% endfor %}
+							{% if invoiceIssuedExist == true %}
+								<table id="datatable-buttons-{{dateMonth}}" class="table table-striped table-bordered bulk_action" style="width:100%;">
+									<thead>
+										<tr>
+											<th style="text-align: center; width:60px;">Fecha</th>
+											<th style="text-align: center;">Empresa</th>
+											<th style="text-align: center;">Fact.</th>
+											<th style="text-align: center;"><i class="fa fa-euro m-right-xs"></i></th>										
+										</tr>
+									</thead>
+									<tbody>
+										{% for invoiceIssued in invoiceIssuedList %}
+											{% set registrationDate = invoiceIssued.registrationDate %}
+											{% set invoiceIssuedNumber = invoiceIssued.invoiceNumber %}
+											{% if registrationDate|date('m/Y') == dateMonthYear and invoiceIssued.medicalHistory == null %}
+												{% for invoiceService in invoiceIssued.invoiceServiceList %}
+													<tr>
+														<td style="text-align: center;">{{invoiceIssued.registrationDate|date('d/m/Y')}}</td>
+														<td>{{invoiceIssued.business.name}}</td>
+														<td style="text-align: center;"><a href="{{ path("invoice_issued_view", {'clinicNameUrl': invoiceIssued.clinic.nameUrl, 'invoiceIssuedNumber': invoiceIssuedNumber} ) }}">FA_{{invoiceIssued.invoiceNumber}}</a></td>
+														<td style="text-align: right;">
+															<a href="{{ path("invoice_issued_view", {'clinicNameUrl': invoiceIssued.clinic.nameUrl, 'invoiceIssuedNumber': invoiceIssuedNumber} ) }}">
+																{{invoiceService.price|number_format(2, ',', '.') }} €
+															</a>
+														</td>
+													</tr>
+												{% endfor %}
+											{% endif %}
+										{% endfor %}
+									</tbody>
+								</table>
+							{% endif %}
+						</div>
+					</div>
+					</div>
+				{% endif %}	
+			{% endfor %}
+		</div>			
+	</div>
+<!-- /page content -->									
+<!-- /page content -->
+{% endblock %}
+{% block javascriptsFinal %}
+  {{ parent() }}
+    <!-- Datatables -->
+    <script src="{{ asset ('assets/vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/datatables.net-scroller/js/dataTables.scroller.min.js') }}"></script>
+    <!-- genera excel a partir de los datos de la tabla -->
+    <script src="{{ asset ('assets/vendors/jszip/dist/jszip.min.js') }}"></script>
+    <!-- genera pdf a partir de los datos de la tabla -->
+    <script src="{{ asset ('assets/vendors/pdfmake/build/pdfmake.min.js') }}"></script>
+    <script src="{{ asset ('assets/vendors/pdfmake/build/vfs_fonts.js') }}"></script>
+	<!-- switchery Checkbox -->
+	<script src="{{ asset ('assets/vendors/switchery/dist/switchery.min.js') }}"></script>  
+	<!-- Countable / no countable status Tracing Service --------------------------------------------------------------------------------- -->
+	<script src="{{ asset ('assets/js/custom/tracingService.js') }}"></script>
+	<!-- Graphics Data ------------------------------------------------------------------------------------------------------------------- -->
+	    <!-- ECharts -->
+	    <script src="{{ asset ('assets/vendors/echarts/dist/echarts.min.js') }}"></script>
+	    <script src="{{ asset ('assets/vendors/echarts/map/js/world.js') }}"></script>
+{% endblock %}

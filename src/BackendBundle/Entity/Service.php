@@ -1,14 +1,9 @@
 <?php
+// LIBRERIA JS PARA GESTION DEL ORDEN DE SERVICIOS
+// https://johnny.github.io/jquery-sortable/
 /* Namespace **************************************************************************************************/
 	namespace BackendBundle\Entity;
 /* Añadimos el VALIDADOR **************************************************************************************/
-/*
- * Definimos el sistema de validación de los datos en las entidades dentro de "app\config\config.yml"
- * y la gestionamos en "src\AppBundle\Resources\config\validation.yml",
- * cada entidad deberá llamar a "use Symfony\Component\Validator\Constraints as Assert;"
- * VER src\BackendBundle\Entity\User.php
- */
-	use Symfony\Component\Validator\Constraints as Assert;
 	use Doctrine\Common\Collections\ArrayCollection;
 /**************************************************************************************************************/
 class Service {
@@ -21,10 +16,25 @@ class Service {
 	private $id;
 	public function getId() { return $this->id; }
 /**************************************************************************************************************/
-/* $service ***************************************************************************************************/
-	private $service; 
-	public function setService($service) { $this->service = $service; return $this; }
-	public function getService() { return $this->service; }     
+/* $name ***************************************************************************************************/
+	private $name; 
+	public function setName($name) { $this->name = $name; return $this; }
+	public function getName() { return $this->name; }     
+/**************************************************************************************************************/
+/* $typeService ***********************************************************************************************/
+	private $typeService = '0'; 
+	public function setTypeService($typeService) { $this->typeService = $typeService; return $this; }
+	public function getTypeService() { return $this->typeService; }     
+/**************************************************************************************************************/
+/* $parent ****************************************************************************************************/
+	private $parent;
+	public function setParent(\BackendBundle\Entity\Service $parent = null) { $this->parent = $parent; return $this; } 
+	public function getParent() { return $this->parent; } 	
+/**************************************************************************************************************/
+/* $weight ****************************************************************************************************/
+	private $weight = '1'; 
+	public function setWeight($weight) { $this->weight = $weight; return $this; }
+	public function getWeight() { return $this->weight; }     
 /**************************************************************************************************************/
 	private $description; 
 	public function setDescription($description) { $this->description = $description; return $this; } 
@@ -49,10 +59,6 @@ class Service {
 	private $state = '1'; 
 	public function setState($state) { $this->state = $state; return $this; } 
 	public function getState() { return $this->state; } 
-/**************************************************************************************************************/
-	private $parent;
-	public function setParent(\BackendBundle\Entity\Service $parent = null) { $this->parent = $parent; return $this; } 
-	public function getParent() { return $this->parent; } 
 /**************************************************************************************************************/
 	private $clinic; 
 	public function setClinic(\BackendBundle\Entity\Clinic $clinic = null) { $this->clinic = $clinic; return $this; }

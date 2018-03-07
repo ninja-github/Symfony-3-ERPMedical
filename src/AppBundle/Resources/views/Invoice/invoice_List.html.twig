@@ -11,71 +11,433 @@
 	<link href="{{ asset ('assets/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
 	<link href="{{ asset ('assets/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
 	<link href="{{ asset ('assets/vendors/ionicons.com/2.0.1/css/ionicons.min.css') }}" rel="stylesheet">
- {% endblock %}
+	<style>
+		.pdfobject-container {
+			height: 500px;
+		}
+		.pdfobject {
+			border: 1px solid #666;
+		}
+		.bootstrap-datetimepicker-widget table td, .bootstrap-datetimepicker-widget table th {
+			text-align: center;
+			border-radius: 0px;
+			background-color:  #2B6D8D;
+			color:#fff;
+	 		/*https://www.jquery-az.com/bootstrap-datetimepicker-managing-with-date-and-time-in-bootstrap/*/
+		}
+		/* */
+		.label__checkbox {
+		  display: none;
+		}
+
+		.label__check {
+		  display: inline-block;
+		  border-radius: 50%;
+		  border: 5px solid rgba(0,0,0,0.1);
+		  background: white;
+		  vertical-align: middle;
+		  margin-right: 20px;
+		  width: 2em;
+		  height: 2em;
+		  cursor: pointer;
+		  display: flex;
+		  align-items: center;
+		  justify-content: center;
+		  transition: border .3s ease;
+		  
+		  i.icon {
+		    opacity: 0.2;
+		    font-size: ~'calc(1rem + 1vw)';
+		    color: transparent;
+		    transition: opacity .3s .1s ease;
+		    -webkit-text-stroke: 3px rgba(0,0,0,.5);
+		  }
+		  
+		  &:hover {
+		    border: 5px solid rgba(0,0,0,0.2);
+		  }
+		}
+
+		.label__checkbox:checked + .label__text .label__check {
+		  animation: check .5s cubic-bezier(0.895, 0.030, 0.685, 0.220) forwards;
+		  
+		  .icon {
+		    opacity: 1;
+		    transform: scale(0);
+		    color: white;
+		    -webkit-text-stroke: 0;
+		    animation: icon .3s cubic-bezier(1.000, 0.008, 0.565, 1.650) .1s 1 forwards;
+		  }
+		}
+
+		.center {
+		  position: absolute;
+		  top: 50%; left: 50%;
+		  transform: translate(-50%,-50%);
+		}
+
+		@keyframes icon {
+		  from {
+		    opacity: 0;
+		    transform: scale(0.3);
+		  }
+		  to {
+		    opacity: 1;
+		    transform: scale(1)
+		  }
+		}
+
+		@keyframes check {
+		  0% {
+		    width: 1.5em;
+		    height: 1.5em;
+		    border-width: 5px;
+		  }
+		  10% {
+		    width: 1.5em;
+		    height: 1.5em;
+		    opacity: 0.1;
+		    background: rgba(0,0,0,0.2);
+		    border-width: 5px;
+		  }
+		  12% {
+		    width: 1.5em;
+		    height: 1.5em;
+		    opacity: 0.4;
+		    background: rgba(0,0,0,0.1);
+		    border-width: 5px;
+		  }
+		  50% {
+		    width: 2em;
+		    height: 2em;
+		    background: #26B99A;
+		    border: 5px;
+		    opacity: 0.6;
+		  }
+		  100% {
+		    width: 2em;
+		    height: 2em;
+		    background: #26B99A;
+		    border: 5px;
+		    opacity: 1;
+		  }
+		}
+				/**/
+	</style>	
+{% endblock %}
 {% block content %}
-<!-- page content -->
-	<div class="right_col" role="main">
-		<div class="clearfix"></div>
-		<div class="row">
-			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-				<div class="x_panel" >
-					<div class="x_title">
-						<h3 style="display:inline-block;">Listado de Facturas</h3>
+	<!-- page content -->
+		{# CARGO LAS VARIABLES DE LA URL DE ENTRADA ................................................................. #}
+			{% set routeParams = app.request.attributes.get('_route_params') %}
+			{% set clinicNameUrl = routeParams.clinicNameUrl %}
+			{% if routeParams.year is not defined  %}
+				{% set yearView = "now"|date("Y") %}
+			{% else %}
+				{% set yearView = routeParams.year %}
+			{% endif %}
+		{# ................................................................. CARGO LAS VARIABLES DE LA URL DE ENTRADA #}
+		<div class="right_col" role="main">
+			<div class="clearfix"></div>
+			<div class="row">
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="position:sticky; top:56px; z-index:10;">
+					<div class="x_panel" >
+						{% for year in yearList %}
+							<a class="btn btn-success " href="{{ path("invoice_list_year", {'clinicNameUrl': clinicNameUrl, 'year': year} ) }}" {% if year == yearView %} disabled {% endif %}>{{year}}</a>
+						{% endfor %}
 					</div>
-					<div class="x_content">
-						<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
-							<thead>
-								<tr>
-									<th colspan="2">NºFª</th>
-									<th>Facturado a:</th>
-									<th>Fecha</th>
-									<th>Cuantía</th>
-								</tr>
-							</thead>
-							<tbody>
-								{% for invoice in invoiceList %}
-									{# DEFINO VARIABLES ................................................................... #}
-										{% set invoiceNumber = invoice.invoiceNumber %}
-										{% set registrationDate = invoice.registrationDate | date("d/m/Y") %}
-										{% if invoice.medicalHistory != NULL %}
-											{% set clinicNameUrl = invoice.medicalHistory.clinic.nameUrl %}	
-										{% endif %}
-										{% if invoice.business != NULL %}
-											{% set clinicNameUrl = invoice.business.clinic.nameUrl %}
-										{% endif %}	
-									{# ................................................................... DEFINO VARIABLES #}
-									<tr>
-										<td><a href="{{ path("invoice_view", {'clinicNameUrl': clinicNameUrl, 'invoiceNumber': invoiceNumber } ) }}">FA_{{invoice.invoiceNumber}}</a>
-										</td>
-										<td><a href="{{ path("invoice_view", {'clinicNameUrl': clinicNameUrl, 'invoiceNumber': invoiceNumber } ) }}"><i class="fa fa-file-pdf-o"></i></a>
-										</td>										
-										<td>
-											<a href="{{ path("invoice_view", {'clinicNameUrl': clinicNameUrl, 'invoiceNumber': invoiceNumber } ) }}">
-												{% if invoice.medicalHistory != NULL %}
-													{{invoice.medicalHistory.medicalHistoryNumber}} - {{invoice.medicalHistory.surname}}, {{invoice.medicalHistory.name}}
-												{% if invoice.business != NULL and invoice.medicalHistory != NULL %}
-													( {{invoice.business.businessName}} )
+				</div>
+				{# FACTURAS SALIENTES ................................................................. #}
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<div class="x_panel" >
+							<div class="x_title">
+								<h3 style="display:inline-block;">Listado de Facturas <span> Salientes</span></h3>
+							</div>
+							<div class="x_content">
+								<table id="datatable-buttons-invoiceIssuedList" class="table table-striped table-bordered" cellspacing="0" width="100%">
+									<thead>
+										<tr>
+											<th style="width:50px;">NºFª</th>
+											<th style="width:15px;"><i class="fa fa-file-pdf-o"></i></th>
+											<th>Facturado a:</th>
+											<th style="width:70px;">Fecha</th>
+											<th style="width:50px;">Base</th>
+											<th style="width:50px;">IVA</th>
+											<th style="width:50px;">IRPF</th>
+											<th style="width:50px;">Total</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for invoiceIssued in invoiceIssuedList %}
+											{# DEFINO VARIABLES ................................................................... #}
+												{% set invoiceNumber = invoiceIssued.invoiceNumber %}
+												{% set registrationDate = invoiceIssued.registrationDate | date("d/m/Y") %}
+												{% if invoiceIssued.medicalHistory != NULL %}
+													{% set clinicNameUrl = invoiceIssued.medicalHistory.clinic.nameUrl %}
 												{% endif %}
+												{% if invoiceIssued.business != NULL %}
+													{% set clinicNameUrl = invoiceIssued.business.clinic.nameUrl %}
 												{% endif %}
-												{% if invoice.business != NULL and invoice.medicalHistory == NULL %}
-													{{invoice.business.businessName}}
-												{% endif %}
-											</a></td>										
-										<td><a href="{{ path("invoice_view", {'clinicNameUrl': clinicNameUrl, 'invoiceNumber': invoiceNumber } ) }}">{{registrationDate}}</a></td>
-										<td><a href="{{ path("invoice_view", {'clinicNameUrl': clinicNameUrl, 'invoiceNumber': invoiceNumber } ) }}">{{registrationDate}}</a></td>
-									</tr>
-								{% endfor %}
-							</tbody>
-						</table>
+												{% set numberService = 1 %}
+												{% set taxBase = 0 %}
+												{% set taxTotal = 0 %}
+												{% for invoiceService in invoiceIssued.invoiceServiceList %}
+													{% set taxService = invoiceService.price * invoiceService.typeTaxService.percent / 100 %}
+													{% set taxBase = taxBase + invoiceService.price %}
+													{% set taxTotal = taxTotal + taxService %}
+												{% endfor %}
+												{% set irpf = - (taxBase * invoiceIssued.typeTaxInvoice.percent / 100) |number_format(2, '.', ',') %}
+												{% set total = taxBase + taxTotal - irpf %}					
+											{# ................................................................... DEFINO VARIABLES #}
+											<tr>
+												<td class="text-center"><a href="{{ path("invoice_issued_view", {'clinicNameUrl': clinicNameUrl, 'invoiceIssuedNumber': invoiceNumber } ) }}">FA_{{invoiceIssued.invoiceNumber}}</a>
+												</td>
+												<td class="text-center"><a href="{{ path("invoice_issued_view", {'clinicNameUrl': clinicNameUrl, 'invoiceIssuedNumber': invoiceNumber } ) }}"><i class="fa fa-file-pdf-o"></i></a>
+												</td>
+												<td class="text-left">
+													<a href="{{ path("invoice_issued_view", {'clinicNameUrl': clinicNameUrl, 'invoiceIssuedNumber': invoiceNumber } ) }}">
+														{% if invoiceIssued.medicalHistory != NULL %}
+															{{invoiceIssued.medicalHistory.medicalHistoryNumber}} - {{invoiceIssued.medicalHistory.surname}}, {{invoiceIssued.medicalHistory.name}}
+														{% if invoiceIssued.business != NULL and invoiceIssued.medicalHistory != NULL %}
+															( {{invoiceIssued.business.name}} )
+														{% endif %}
+														{% endif %}
+														{% if invoiceIssued.business != NULL and invoiceIssued.medicalHistory == NULL %}
+															{{invoiceIssued.business.name}}
+														{% endif %}
+
+													</a>
+												</td>
+												<td class="text-center"><a href="{{ path("invoice_issued_view", {'clinicNameUrl': clinicNameUrl, 'invoiceIssuedNumber': invoiceNumber } ) }}">{{registrationDate}}</a></td>
+												<td class="text-right">
+													{% if taxBase != 0 %}
+														<a href="{{ path("invoice_issued_view", {'clinicNameUrl': clinicNameUrl, 'invoiceIssuedNumber': invoiceNumber } ) }}">{{taxBase |number_format(2, ',', '.')}} €</a>
+													{% endif %}
+												</td>
+												<td class="text-right">
+													{% if taxTotal != 0 %}
+														<a href="{{ path("invoice_issued_view", {'clinicNameUrl': clinicNameUrl, 'invoiceIssuedNumber': invoiceNumber } ) }}">{{taxTotal |number_format(2, ',', '.')}} €</a>
+													{% endif %}
+												</td>
+												<td class="text-right">
+													{% if irpf != 0 %}
+														<a href="{{ path("invoice_issued_view", {'clinicNameUrl': clinicNameUrl, 'invoiceIssuedNumber': invoiceNumber } ) }}">{{irpf |number_format(2, ',', '.')}} €</a>
+													{% endif %}
+												</td>
+												<td class="text-right">
+													{% if total != 0 %}
+														<a href="{{ path("invoice_issued_view", {'clinicNameUrl': clinicNameUrl, 'invoiceIssuedNumber': invoiceNumber } ) }}">{{total |number_format(2, ',', '.')}} €</a>
+													{% endif %}
+												</td>										
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
+				{# ................................................................. FACTURAS SALIENTES #}
+				{# FACTURAS ENTRANTES ................................................................. #}
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<div class="x_panel" >
+							<div class="x_title">
+								<h3 style="display:inline-block;">Listado de Facturas <span> Entrantes</span></h3>
+								<div style="display:block;margin-top:4px;" class="pull-right">
+									<div data-toggle="modal" data-target="#add_invoice_received" class="btn btn-success">
+										<i class="fa fa-plus-square m-right-xs"></i>
+									</div>
+								</div>						
+							</div>
+							<div class="x_content">
+								<table id="datatable-buttons-invoiceReceivedList" class="table table-striped table-bordered" cellspacing="0" width="100%">
+									<thead>
+										<tr>
+											<th style="width:70px;">Fecha</th>
+											<th style="width:90px;">NºFª</th>
+											<th style="width:15px;"><i class="fa fa-file-pdf-o"></i></th>									
+											<th>Empresa</th>
+											<th style="width:50px;">Base</th>
+											<th style="width:50px;">IVA</th>
+											<th style="width:50px;">IRPF</th>
+											<th style="width:50px;">RE</th>
+											<th style="width:50px;">Total</th>									
+										</tr>
+									</thead>
+									<tbody>
+										{% for invoiceReceived in invoiceReceivedList %}
+											{# DEFINO VARIABLES ................................................................... #}
+												{% set documents = invoiceReceived.documents %}
+												{% set invoiceNumber = invoiceReceived.invoiceNumber %}
+												{% set taxBase = invoiceReceived.taxBase %}
+												{% set iva = invoiceReceived.iva %}
+												{% set irpf = invoiceReceived.irpf %}
+												{% set re = invoiceReceived.re %}
+												{% set total = taxBase +  iva - irpf + re %}
+												{% set business = invoiceReceived.business %}
+												{% set registrationDate = invoiceReceived.registrationDate | date("d/m/Y") %}
+											{# ................................................................... DEFINO VARIABLES #}
+											<tr>
+												<td class="text-center"><span class='hide' style="display:none;">YYYYMMDD</span>{{registrationDate}}</td>
+												<td class="text-center">{{invoiceNumber}}</td>
+												<td class="text-center">
+													{% if invoiceReceived.documents.typeDoc.type == "pdf" %}
+														<a data-toggle="modal" data-target="#viewPdf_{{documents.id}}"><i class="fa fa-file-pdf-o"></i></a>
+													{% elseif invoiceReceived.documents.typeDoc.type == "jpg" %}
+														<a data-toggle="modal" data-target="#viewJpg_{{documents.id}}"><i class="fa fa-file-jpg-o"></i></a>
+													{% endif %}
+												</td>	
+												<td class="text-left">{{business.name}}</td>	
+												<td class="text-right">{% if taxBase != null %}{{ taxBase|number_format(2, ',', '.') }} €{% endif %}</td>	
+												<td class="text-right">{% if iva != null %}{{ iva|number_format(2, ',', '.') }} €{% endif %}</td>
+												<td class="text-right">{% if irpf != null %}{{ irpf|number_format(2, ',', '.') }} €{% endif %}</td>
+												<td class="text-right">{% if re != null %}{{ re|number_format(2, ',', '.') }} €{% endif %}</td>
+												<td class="text-right">{% if total != null %}{{total |number_format(2, ',', '.') }} €{% endif %}</td>	
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				{# ................................................................. FACTURAS ENTRANTES #}		
+			</div>
+		</div>
+	<!-- /page content -->
+	<!-- Modal - Ver Pdf -->
+		{% for invoiceReceived in invoiceReceivedList %}
+			{# DEFINO VARIABLES ................................................................... #}
+				{% set documents = invoiceReceived.documents %}
+			{# ................................................................... DEFINO VARIABLES #}
+			{% if documents.typeDoc.type == "pdf" %}
+				<div class="modal fade" id="viewPdf_{{documents.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<!-- Modal Header -->
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">
+										<span aria-hidden="true">&times;</span>
+										<span class="sr-only">Close</span>
+									</button>
+									<h4 class="modal-title" id="myModalLabel">Visualizador pdf</h4>
+								</div>
+							<!-- Modal Header -->
+							<!-- Modal Body -->
+								<div class="modal-body">
+									<div class="row control-label form-horizontal form-label-left">
+										<div class="col-md-12 col-sm-12 col-xs-12 pull-left">
+											<div id="viewerPdf_{{invoiceReceived.id}}">
+											<!-- Modal Body -->
+											</div>
+										</div>
+									</div>
+								</div>
+							<!-- Modal Body -->
+							<!-- Modal Footer -->
+								<div class="modal-footer"></div>
+							<!-- Modal Footer -->
+						</div>
+					</div>
+				</div>
+			{% endif %}
+		{% endfor %}
+	<!-- /modal - Ver Pdf -->
+	<!-- Modal - Nuevo Documento (FACTURAS) -->
+		<div class="modal fade" id="add_invoice_received" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<!-- Modal Header -->
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">&times;</span>
+								<span class="sr-only">Close</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">Subir documento</h4>
+						</div>
+					<!-- Modal Header -->
+					<!-- Modal Body -->
+						<div class="modal-body">
+
+							<div class="row control-label form-horizontal form-label-left">
+								{{ form_start(form_invoiceReceivedNew, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
+									{#{{ form_start(form_documents) }}#}
+										<div class="col-md-12 col-sm-12 col-xs-12 pull-left">
+											<div class="form-group">
+												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12" >Factura<span class="required"></span></label>
+												<div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+													<input type="text" id="documents_doc" name="title" required="required" class="form-image form-control" style="margin-bottom:10px">
+												</div>
+												<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">Fecha
+												</label>
+												<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+													{# Script al final de la plantilla que gestiona 'datetimepicker' de Bootstrap #}
+													<div class='input-group date' id='datetimepicker_registrationDate'>
+														{{form_widget(form_invoiceReceivedNew.registrationDate)}}
+														<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+														</span>
+													</div>
+												</div>
+												<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">Proveedor<span class="required"></span></label>
+												<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">{{form_widget(form_invoiceReceivedNew.business)}}</div>
+											</div>
+											<div class="form-group">											
+												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12">BI<span class="required"></span></label>
+												<div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">{{form_widget(form_invoiceReceivedNew.taxBase)}}</div>
+												<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">IVA<span class="required"></span></label>
+												<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">{{form_widget(form_invoiceReceivedNew.iva)}}</div>
+												<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">RE<span class="required"></span></label>
+												<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">{{form_widget(form_invoiceReceivedNew.re)}}</div>
+												<div class="clearfix"></div>
+											</div>
+											<div class="form-group">											
+												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12">Documento<span class="required"></span></label>
+												<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form_invoiceReceivedNew.invoiceNumber)}}</div>
+												<div class="clearfix"></div>
+											</div>											
+											<div class="form-group">
+												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12">Nota<span class="required"></span></label>
+												<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form_invoiceReceivedNew.note)}}</div>	
+												<div class="clearfix"></div>
+											</div>
+											<div class="clearfix"></div>
+											<div class="divider-dashed"></div>
+											{{form_widget(form_invoiceReceivedNew.add, { 'label': 'Añadir Documento' }) }}
+										</div>
+									{#}{ form_end(form_documents)}}#}
+								{{ form_end(form_invoiceReceivedNew)}}
+		            		</div>
+		            	</div>
+					<!-- Modal Body -->
+					<!-- Modal Footer -->
+						{#<div class="modal-footer"></div>#}
+					<!-- Modal Footer -->
 				</div>
 			</div>
 		</div>
-	</div>
-<!-- /page content -->
+	<!-- /modal - Nuevo Documento (FACTURAS) -->	
 {% endblock %}
 {% block javascriptsFinal %}
 	{{ parent() }}
+	<!-- moment.js -->
+	<!-- Analice, valide, manipule y muestre fechas y horas en JavaScript.-->
+    <script src="{{ asset ('assets/vendors/moment/min/moment.min.js') }}"></script>
+    <!-- locale -->
+    <script src="{{ asset ('assets/vendors/fullcalendar/locale/es.js') }}"></script>
+	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.3/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript">
+		// El selector JQuery hace referencia a todos los id con 'datetimepicker'
+		$('[id ^= datetimepicker]').datetimepicker({
+		//$('#datetimepicker_birthday').datetimepicker({
+			format: 'DD/MM/YYYY',
+			locale:'es',
+			pickTime: false,
+			icons: {
+		//		time: "fa fa-clock-o",
+				date: "fa fa-calendar",
+		//		up: "fa fa-arrow-up",
+		//		down: "fa fa-arrow-down"
+			}
+		});
+	</script>	
 	<!-- Datatables -->
 	<script src="{{ asset ('assets/vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
 	<script src="{{ asset ('assets/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
@@ -89,4 +451,16 @@
 	<script src="{{ asset ('assets/vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
 	<script src="{{ asset ('assets/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script>
 	<script src="{{ asset ('assets/vendors/datatables.net-scroller/js/dataTables.scroller.min.js') }}"></script>
+<!---------------------------------------------- PRUEBA PDF ------------------- -->
+		<!-- pdfObject -->
+		<script src="{{ asset ('assets/vendors/pdfObject/pdfobject.js') }}"></script>
+		<script>
+			// https://pdfobject.com/
+			{% for invoiceReceived in invoiceReceivedList %}
+				{% if invoiceReceived.documents.typeDoc.type == "pdf" %}
+					PDFObject.embed("{{ asset ('uploads/clinics/'~invoiceReceived.clinic.nameUrl~'/documents/invoice_received/'~invoiceReceived.business.nameUrl~'/'~invoiceReceived.documents.doc ) }}", "#viewerPdf_{{invoiceReceived.id}}");
+				{% endif %}
+			{% endfor %}
+		</script>
+<!---------------------------------------------- PRUEBA PDF ------------------- -->	
 {% endblock %}

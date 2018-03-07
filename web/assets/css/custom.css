@@ -1170,6 +1170,9 @@ legend {
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px
 }
+.dt-buttons, .btn-group{
+    max-width: 160px;
+}
 table.tile h3,
 table.tile h4,
 table.tile span {

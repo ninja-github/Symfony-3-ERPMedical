@@ -9,6 +9,7 @@
 	use Symfony\Component\HttpFoundation\Session\Session;
 /* Añadimos las ENTIDADES que usaremos ************************************************************************/
 	use BackendBundle\Entity\UserSession;        // Da acceso a la Entidad Historia Médica
+	use BackendBundle\Entity\Payment;        	// Da acceso a la Entidad Historia Médica
 /**************************************************************************************************************/
 class HomeController extends Controller {
 /* CONSTRUCTOR ************************************************************************************************/
@@ -34,6 +35,7 @@ class HomeController extends Controller {
 		/* EXTRAE PERMISOS DEL USUARIO  ***********************************************************************/
 		$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userlogged);
 		/******************************************************************************************************/
+		/* Correccion tablas **********************************************************************************/
 		$clinicUser_repo = $em->getRepository("BackendBundle:ClinicUser");
 		$idUserlogged = $userlogged->getId();
 		$clinicUserlogged = $clinicUser_repo->getDataClinicUserSession($idUserlogged);

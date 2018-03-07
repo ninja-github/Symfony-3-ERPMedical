@@ -25,7 +25,7 @@ $(document).ready(function(){
 					}
 				}
 			};
-			 console.log(response);
+			// console.log(response);
 			$("#medicalHistoryDataComplete").easyAutocomplete(options);
 			// eliminamos el atributo style que genera automáticamente el plugin
 			$('div.easy-autocomplete').removeAttr('style');

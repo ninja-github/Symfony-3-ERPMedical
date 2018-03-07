@@ -594,6 +594,13 @@ BackendBundle\Entity\UserPermissionDefinition:
             options:
                 fixed: false
             column: tracing_service_remove
+        tracingServiceChangeCountableStatus:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+            column: tracing_service_change_countable_status              
     # /TRACING SERVICE ################################################
     # ADMIN ###########################################################
         adminSectionAccess:

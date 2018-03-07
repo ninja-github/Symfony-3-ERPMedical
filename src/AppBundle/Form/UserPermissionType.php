@@ -33,6 +33,16 @@ class UserPermissionType extends AbstractType {
 			))
 		/******************************************************************************************************/			
 		/* USER ***********************************************************************************************/
+			->add('userList', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('userView', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
 			->add('userCreate', CheckboxType::class, array(
 				'required'=>true,
 				'value'=>true,
@@ -60,6 +70,11 @@ class UserPermissionType extends AbstractType {
 			))
 		/******************************************************************************************************/
 		/* CLINIC *********************************************************************************************/
+			->add('clinicList', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
 			->add('clinicViewOther', CheckboxType::class, array(
 				'required'=>true,
 				'value'=>true,
@@ -82,6 +97,16 @@ class UserPermissionType extends AbstractType {
 			))
 		/******************************************************************************************************/
 		/* MEDICAL HISTORY ************************************************************************************/
+			->add('medicalHistoryList', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('medicalHistoryView', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))			
 			->add('medicalHistoryCreate', CheckboxType::class, array(
 				'required'=>true,
 				'value'=>true,
@@ -119,6 +144,16 @@ class UserPermissionType extends AbstractType {
 			))
 		/******************************************************************************************************/
 		/* MEDICAL HISTORY DOC ********************************************************************************/
+			->add('medicalHistoryDocList', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('medicalHistoryDocView', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
 			->add('medicalHistoryDocCreate', CheckboxType::class, array(
 				'required'=>true,
 				'value'=>true,
@@ -156,6 +191,16 @@ class UserPermissionType extends AbstractType {
 			))
 		/******************************************************************************************************/
 		/* ORTHOPODOLOGY HISTORY ******************************************************************************/
+			->add('orthopodologyHistoryList', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('orthopodologyHistoryView', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
 			->add('orthopodologyHistoryCreate', CheckboxType::class, array(
 				'required'=>true,
 				'value'=>true,
@@ -193,6 +238,16 @@ class UserPermissionType extends AbstractType {
 			))
 		/******************************************************************************************************/
 		/* ORTHOPODOLOGY HISTORY DOC **************************************************************************/
+			->add('orthopodologyHistoryDocList', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('orthopodologyHistoryDocView', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))			
 			->add('orthopodologyHistoryDocCreate', CheckboxType::class, array(
 				'required'=>true,
 				'value'=>true,
@@ -230,6 +285,16 @@ class UserPermissionType extends AbstractType {
 			))
 		/******************************************************************************************************/
 		/* TRACING ********************************************************************************************/
+			->add('tracingList', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('tracingView', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))			
 			->add('tracingCreate', CheckboxType::class, array(
 				'required'=>true,
 				'value'=>true,

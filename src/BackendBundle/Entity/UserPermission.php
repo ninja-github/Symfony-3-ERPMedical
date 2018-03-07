@@ -89,6 +89,33 @@ class UserPermission {
 		public function getClinicRemove() { return $this->clinicRemove; }
 	/**********************************************************************************************************/
 /**************************************************************************************************************/
+/* CLINICDOC *****************************************************************************************************/
+	/* clinicDocList *******************************************************************************************/		
+		private $clinicDocList = '0';
+		public function setClinicDocList($clinicDocList) { $this->clinicDocList = $clinicDocList; return $this; } 
+		public function getClinicDocList() { return $this->clinicDocList; } 
+	/**********************************************************************************************************/
+	/* clinicDocCreate *******************************************************************************************/		
+		private $clinicDocView = '0';
+		public function setClinicDocView($clinicDocView) { $this->clinicDocView = $clinicDocView; return $this; } 
+		public function getClinicDocView() { return $this->clinicDocView; } 
+	/**********************************************************************************************************/
+	/* clinicDocCreate *******************************************************************************************/
+		private $clinicDocCreate = '0';
+		public function setClinicDocCreate($clinicDocCreate) { $this->clinicDocCreate = $clinicDocCreate; return $this; }
+		public function getClinicDocCreate() { return $this->clinicDocCreate; }
+	/**********************************************************************************************************/
+	/* clinicDocEdit *********************************************************************************************/
+		private $clinicDocEdit = '0';
+		public function setClinicDocEdit($clinicDocEdit) { $this->clinicDocEdit = $clinicDocEdit; return $this; }
+		public function getClinicDocEdit() { return $this->clinicDocEdit; }
+	/**********************************************************************************************************/
+	/* clinicDocRemove *******************************************************************************************/
+		private $clinicDocRemove = '0';
+		public function setClinicDocRemove($clinicDocRemove) { $this->clinicDocRemove = $clinicDocRemove; return $this; }
+		public function getClinicDocRemove() { return $this->clinicDocRemove; }
+	/**********************************************************************************************************/
+/**************************************************************************************************************/
 /* MEDICALHISTORY *********************************************************************************************/
 	/* medicalHistoryList ***********************************************************************************/		
 		private $medicalHistoryList = '0';
@@ -302,33 +329,38 @@ class UserPermission {
 		private $reportRemove = '0';
 		public function setReportRemove($reportRemove) { $this->reportRemove = $reportRemove; return $this; }
 		public function getReportRemove() { return $this->reportRemove; }
-	/**********************************************************************************************************/	
+	/**********************************************************************************************************/
+	/* reportRemove ******************************************************************************************/
+		private $reportPdf = '0';
+		public function setReportPdf($reportPdf) { $this->reportPdf = $reportPdf; return $this; }
+		public function getReportPdf() { return $this->reportPdf; }
+	/**********************************************************************************************************/		
 /**************************************************************************************************************/
 /* INVOICE ****************************************************************************************************/
 	/* invoiceList ******************************************************************************************/
-		private $invoiceList = '0';
-		public function setInvoiceList($invoiceList) { $this->invoiceList = $invoiceList; return $this; }
-		public function getInvoiceList() { return $this->invoiceList; }
+		private $invoiceIssuedList = '0';
+		public function setInvoiceIssuedList($invoiceIssuedList) { $this->invoiceIssuedList = $invoiceIssuedList; return $this; }
+		public function getInvoiceIssuedList() { return $this->invoiceIssuedList; }
 	/**********************************************************************************************************/
 	/* invoiceView ******************************************************************************************/
-		private $invoiceView = '0';
-		public function setInvoiceView($invoiceView) { $this->invoiceView = $invoiceView; return $this; }
-		public function getInvoiceView() { return $this->invoiceView; }
+		private $invoiceIssuedView = '0';
+		public function setInvoiceIssuedView($invoiceIssuedView) { $this->invoiceIssuedView = $invoiceIssuedView; return $this; }
+		public function getInvoiceIssuedView() { return $this->invoiceIssuedView; }
 	/**********************************************************************************************************/	
 	/* invoiceCreate ******************************************************************************************/
-		private $invoiceCreate = '0';
-		public function setInvoiceCreate($invoiceCreate) { $this->invoiceCreate = $invoiceCreate; return $this; }
-		public function getInvoiceCreate() { return $this->invoiceCreate; }
+		private $invoiceIssuedCreate = '0';
+		public function setInvoiceIssuedCreate($invoiceIssuedCreate) { $this->invoiceIssuedCreate = $invoiceIssuedCreate; return $this; }
+		public function getInvoiceIssuedCreate() { return $this->invoiceIssuedCreate; }
 	/**********************************************************************************************************/
 	/* invoiceEdit ********************************************************************************************/
-		private $invoiceEdit = '0';
-		public function setInvoiceEdit($invoiceEdit) { $this->invoiceEdit = $invoiceEdit; return $this; }
-		public function getInvoiceEdit() { return $this->invoiceEdit; }
+		private $invoiceIssuedEdit = '0';
+		public function setInvoiceIssuedEdit($invoiceIssuedEdit) { $this->invoiceIssuedEdit = $invoiceIssuedEdit; return $this; }
+		public function getInvoiceIssuedEdit() { return $this->invoiceIssuedEdit; }
 	/**********************************************************************************************************/
 	/* invoiceRemove ******************************************************************************************/
-		private $invoiceRemove = '0';
-		public function setInvoiceRemove($invoiceRemove) { $this->invoiceRemove = $invoiceRemove; return $this; }
-		public function getInvoiceRemove() { return $this->invoiceRemove; }
+		private $invoiceIssuedRemove = '0';
+		public function setInvoiceIssuedRemove($invoiceIssuedRemove) { $this->invoiceIssuedRemove = $invoiceIssuedRemove; return $this; }
+		public function getInvoiceIssuedRemove() { return $this->invoiceIssuedRemove; }
 	/**********************************************************************************************************/	
 /**************************************************************************************************************/
 /* SERVICE ****************************************************************************************************/
@@ -436,6 +468,16 @@ class UserPermission {
 		public function setTracingServiceRemove($tracingServiceRemove) { $this->tracingServiceRemove = $tracingServiceRemove; return $this; }
 		public function getTracingServiceRemove() { return $this->tracingServiceRemove; }
 	/**********************************************************************************************************/
+	/* tracingServiceChangeCountableStatus ***********************************************************************************/
+		private $tracingServiceChangeCountableStatus = '0';
+		public function setTracingServiceChangeCountableStatus($tracingServiceChangeCountableStatus) { $this->tracingServiceChangeCountableStatus = $tracingServiceChangeCountableStatus; return $this; }
+		public function getTracingServiceChangeCountableStatus() { return $this->tracingServiceChangeCountableStatus; }
+	/**********************************************************************************************************/
+	/* tracingServiceChangeConsolidatedStatus ***********************************************************************************/
+		private $tracingServiceChangeConsolidatedStatus = '0';
+		public function setTracingServiceChangeConsolidatedStatus($tracingServiceChangeConsolidatedStatus) { $this->tracingServiceChangeConsolidatedStatus = $tracingServiceChangeConsolidatedStatus; return $this; }
+		public function getTracingServiceChangeConsolidatedStatus() { return $this->tracingServiceChangeConsolidatedStatus; }
+	/**********************************************************************************************************/		
 /**************************************************************************************************************/
 /* ADMIN ******************************************************************************************************/
 	/* adminSectionAccess**************************************************************************************/

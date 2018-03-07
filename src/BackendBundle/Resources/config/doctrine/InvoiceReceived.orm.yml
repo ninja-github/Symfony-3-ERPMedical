@@ -1,0 +1,126 @@
+BackendBundle\Entity\InvoiceReceived:
+    type: entity
+    # repository ######################################################
+    repositoryClass: BackendBundle\Repository\InvoiceReceivedRepository    
+    table: invoice_received
+# indexes #############################################################
+    indexes:
+        clinic:
+            columns:
+                - clinic        
+        documents:
+            columns:
+                - documents
+        user_registerer:
+            columns:
+                - user_registerer
+        business:
+            columns:
+                - business
+# /indexes ############################################################
+# uniqueConstraints####################################################
+# /uniqueConstraints###################################################
+# id ##################################################################
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+# /id #################################################################
+# fields ##############################################################
+    fields:
+        invoiceNumber:
+            type: string
+            nullable: false
+            length: 7
+            options:
+                fixed: false
+            column: invoice_number
+        taxBase:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            column: tax_base            
+        iva:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0 
+        irpf:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0             
+        re:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0  
+        paidOut:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: paid_out                                                             
+        note:
+            type: text
+            nullable: false
+            length: 65535
+            options:
+                fixed: false
+        registrationDate:
+            type: datetime
+            nullable: true
+            column: registration_date
+# /fields #############################################################
+# manyToOne ###########################################################
+    manyToOne:
+        clinic:
+            targetEntity: Clinic
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: invoiceReceivedList
+            joinColumns:
+                clinic:
+                    referencedColumnName: id
+            orphanRemoval: false        
+        documents:
+            targetEntity: Documents
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                documents:
+                    referencedColumnName: id
+            orphanRemoval: false
+        business:
+            targetEntity: Business
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                business:
+                    referencedColumnName: id
+            orphanRemoval: false
+        userRegisterer:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user_registerer:
+                    referencedColumnName: id
+            orphanRemoval: false
+# /manyToOne ##########################################################
+# oneToMany ###########################################################
+# /oneToMany ##########################################################
+    lifecycleCallbacks: {  }

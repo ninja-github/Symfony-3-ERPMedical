@@ -6,3 +6,8 @@ clinic_create:
 clinic_view:
     path: /clinic/{clinicNameUrl}
     defaults: { _controller: AppBundle:Clinic:clinicView }
+# ROUTING VER DOCUMENTOS CLÍNICA
+clinic_doc_list:
+    path: /clinic/{clinicNameUrl}/documents
+    defaults: { _controller: AppBundle:ClinicDoc:clinicDocList }
+

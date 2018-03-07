@@ -31,12 +31,32 @@ class Clinic {
 	public function addServicesList(\BackendBundle\Entity\Service $servicesList) { $this->servicesList[] = $servicesList; return $this; } 
 	public function removeServicesList(\BackendBundle\Entity\Service $servicesList) { $this->servicesList->removeElement($servicesList); }
 /**************************************************************************************************************/
+/* Listamos Documentos asociados a la clínica *****************************************************************/	
+	private $documentsList;
+	public function getDocumentsList() { return $this->documentsList; }
+	public function addDocumentsList(\BackendBundle\Entity\Documents $documentsList) { $this->documentsList[] = $documentsList; return $this; } 
+	public function removeDocumentsList(\BackendBundle\Entity\Documents $documentsList) { $this->documentsList->removeElement($documentsList); }
+/**************************************************************************************************************/
+/* Listamos Facturas asociadas a la clínica *******************************************************************/	
+	private $invoiceIssuedList;
+	public function getInvoiceIssuedList() { return $this->invoiceIssuedList; }
+	public function addInvoiceIssuedList(\BackendBundle\Entity\InvoiceIssued $invoiceIssuedList) { $this->invoiceIssuedList[] = $invoiceIssuedList; return $this; } 
+	public function removeInvoiceIssuedList(\BackendBundle\Entity\InvoiceIssued $invoiceIssuedList) { $this->invoiceIssuedList->removeElement($invoiceIssuedList); }
+/**************************************************************************************************************/
+/* Listamos Facturas asociadas a la clínica *******************************************************************/	
+	private $invoiceReceivedList;
+	public function getInvoiceReceivedList() { return $this->invoiceReceivedList; }
+	public function addInvoiceReceivedList(\BackendBundle\Entity\InvoiceReceived $invoiceReceivedList) { $this->invoiceReceivedList[] = $invoiceReceivedList; return $this; } 
+	public function removeInvoiceReceivedList(\BackendBundle\Entity\InvoiceReceived $invoiceIssuedList) { $this->invoiceReceivedList->removeElement($invoiceReceivedList); }
+/**************************************************************************************************************/
 /* CONSTRUCTOR ************************************************************************************************/
 	// Un ArrayCollection es una implementación de colección que se ajusta a la matriz PHP normal.    
 	public function __construct() {	
 		$this->medicalHistoryList = new ArrayCollection(); 
 		$this->businessList = new ArrayCollection(); 		
-		$this->servicesList = new ArrayCollection(); 
+		$this->servicesList = new ArrayCollection();
+		$this->documentsList = new ArrayCollection(); 
+		$this->invoiceIssuedList = new ArrayCollection(); 		
 	}
 /* Id de la Tabla *********************************************************************************************/
 	private $id;

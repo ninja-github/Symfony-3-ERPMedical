@@ -51,141 +51,150 @@ class OrthopodologyHistoryType extends AbstractType {
 			));
 		}
 		$builder
+			->add('shoeSize', TextType::class, array(
+				'required'=>false,
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
+			->add('height', TextType::class, array(
+				'required'=>false,
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
+			->add('weight', TextType::class, array(
+				'required'=>false,
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))								
 			->add('reasonConsultation', TextareaType::class, array(
 				'required'=>false,
 				'attr'=>array('class'=>'form-control', 'style' => 'margin-bottom:13px;margin-top:3px;')))
 			->add('background', TextareaType::class, array(
 				'required'=>false,
 				'attr'=>array('class'=>'form-control', 'style' => 'margin-bottom:13px')))
-			->add('articularExplorationRotaryPatternExternalLeft', NumberType::class, array(
+			->add('articularExplorationRotaryPatternExternalLeft', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
-			->add('articularExplorationRotaryPatternExternalRight', NumberType::class, array(
+				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px; text-align:center;')))
+			->add('articularExplorationRotaryPatternExternalRight', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
-			->add('articularExplorationRotaryPatternInternalLeft', NumberType::class, array(
+				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px; text-align:center;')))
+			->add('articularExplorationRotaryPatternInternalLeft', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
-			->add('articularExplorationRotaryPatternInternalRight', NumberType::class, array(
+				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px; text-align:center;')))
+			->add('articularExplorationRotaryPatternInternalRight', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
-			->add('articularExplorationHipLeft', NumberType::class, array(
+				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px; text-align:center;')))
+			->add('articularExplorationHipLeft', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
-			->add('articularExplorationHipRight', NumberType::class, array(
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
+			->add('articularExplorationHipRight', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
-			->add('articularExplorationKneeLeft', NumberType::class, array(
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
+			->add('articularExplorationKneeLeft', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
-			->add('articularExplorationKneeRight', NumberType::class, array(
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
+			->add('articularExplorationKneeRight', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
-        	->add('articularExplorationAnkleLeft', NumberType::class, array(
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
+        	->add('articularExplorationAnkleLeft', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
-        	->add('articularExplorationAnkleRight', NumberType::class, array(
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
+        	->add('articularExplorationAnkleRight', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('articularExplorationRetroPieLeft', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 100px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('articularExplorationRetroPieRight', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 100px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('articularExplorationBeforeFootLeft', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 100px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('articularExplorationBeforeFootRight', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 100px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('articularExplorationFirstRadioLeft', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('articularExplorationFirstRadioRight', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('articularExplorationFifthRadioLeft', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('articularExplorationFifthRadioRight', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px;')))
 			->add('articularExplorationCentralRadiosLeft', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('articularExplorationCentralRadiosRight', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('articularExplorationFirstFingerLeft', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('articularExplorationFirstFingerRight', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('articularExplorationSmallerFingersLeft', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('articularExplorationSmallerFingersRight', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('torsionsFemoralLeft', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('torsionsFemoralRight', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('torsionsGenusLeft', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('torsionsGenusRight', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('torsionsAngleQLeft', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('torsionsAngleQRight', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('torsionsTibialLeft', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('torsionsTibialRight', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('torsionsHelbingLeft', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('torsionsHelbingRight', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('dissimmetry', TextareaType::class, array(
 				'required'=>false,
 				'attr'=>array('class'=>'form-control', 'style' => 'margin-bottom:13px')))
 			->add('muscularExplorationDorsalFlexionLeft', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('muscularExplorationDorsalFlexionRight', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('muscularExplorationPlantarFlexionLeft', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('muscularExplorationPlantarFlexionRight', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('muscularExplorationEversionLeft', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('muscularExplorationEversionRight', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('muscularExplorationReversalLeft', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('muscularExplorationReversalRight', TextType::class, array(
 				'required'=>false,
-				'attr'=>array('style' => 'margin-right:6px;width: 30px; border: 0px;')))
+				'attr'=>array('style' => 'margin-right:6px;width: 100%; border: 0px; text-align:center;')))
 			->add('dinamicExploration', TextareaType::class, array(
 				'required'=>false,
 				'attr'=>array('class'=>'form-control', 'style' => 'margin-bottom:13px')))
@@ -207,7 +216,7 @@ class OrthopodologyHistoryType extends AbstractType {
 					'class' => 'BackendBundle:User',
 					'choice_label' => 'user',
 					'query_builder' => function($er) use( $clinicNameUrl, $userLoggedId ) {
-						return $er->getUserListOfClinic($clinicNameUrl, $userLoggedId);
+						return $er->getUserDoctorListOfClinic($clinicNameUrl, $userLoggedId);
                 	},
 					'label' => 'userName',
 					'expanded' => false,		// Muestra todas las opciones (radio buttons O checkboxes)
@@ -231,7 +240,7 @@ class OrthopodologyHistoryType extends AbstractType {
 					'class' => 'BackendBundle:User',
 					'choice_label' => 'user',
 					'query_builder' => function($er) use( $clinicNameUrl, $userLoggedId ) {
-						return $er->getUserListOfClinic($clinicNameUrl, $userLoggedId);
+						return $er->getUserDoctorListOfClinic($clinicNameUrl, $userLoggedId);
                 	},
 					'label' => 'userName',
 					'expanded'     => false,       // Muestra todas las opciones (radio buttons O checkboxes)
@@ -246,7 +255,8 @@ class OrthopodologyHistoryType extends AbstractType {
 					'widget' => 'single_text',
 					'format'=>'dd/MM/yyyy',
 					'html5' => false,
-					'attr'=>array('class' => 'form-control')
+					'attr'=>array('class' => 'form-control'),
+					'data' => new \DateTime("now")
 				));
 			}
 		$builder

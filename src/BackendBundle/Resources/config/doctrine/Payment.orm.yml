@@ -1,0 +1,110 @@
+BackendBundle\Entity\Payment:
+    type: entity
+    table: payment
+    repositoryClass: BackendBundle\Repository\PaymentRepository    
+    indexes:
+        tracing:
+            columns:
+                - tracing
+        tracing_service:
+            columns:
+                - tracing_service
+        service:
+            columns:
+                - service
+        user:
+            columns:
+                - user
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        description:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+        payment:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+        countable:
+            type: boolean
+            nullable: false
+            options:
+                default: '1'
+        consolidated:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+        date:
+            type: datetime
+            nullable: false
+            column: date                                                     
+# manyToOne ###########################################################
+    manyToOne:
+        # referencia ManyToOne de la Entidad # InvoiceIssued #
+        invoiceIssued:
+            targetEntity: InvoiceIssued
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                invoice_issued:
+                    referencedColumnName: id
+            orphanRemoval: false        
+        # referencia ManyToOne de la Entidad # Tracing #
+        tracing:
+            targetEntity: Tracing
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            # inversedBy # hace referencia si a la relación OneToMany de la entidad # Tracing #
+            inversedBy: paymentList
+            joinColumns:
+                tracing:
+                    referencedColumnName: id
+            orphanRemoval: false
+        tracingService:
+            targetEntity: TracingService
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            # inversedBy # hace referencia si a la relación OneToMany de la entidad # Tracing #
+            inversedBy: paymentList
+            joinColumns:
+                tracing_service:
+                    referencedColumnName: id
+            orphanRemoval: false                              
+        service:
+            targetEntity: Service
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                service:
+                    referencedColumnName: id
+            orphanRemoval: false
+        user:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                user:
+                    referencedColumnName: id
+            orphanRemoval: false
+# /manyToOne ##########################################################
+    lifecycleCallbacks: {  }

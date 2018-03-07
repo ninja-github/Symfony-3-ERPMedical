@@ -17,6 +17,14 @@ AppBundle\Entity\User:
             - Email:
                 message: 'El email {{ value }} no es válido.'
                 checkMX: true
+AppBundle\Entity\InvoiceIssued:
+    properties:
+        invoiceNumber:
+            - NotBlank: ~
+            - File:
+                maxSize: 2048k
+                mimeTypes: [application/pdf, application/x-pdf, image/bmp, image/jp2, image/png]
+                mimeTypesMessage: Por favor suba un documento en formato y tamaño correcto.              
 ###########################################################################################################
 # El password no es necesario indicarlo, ya que solo queremos que no sea
 # blanco y por defecto el formulario inspecciona eso.

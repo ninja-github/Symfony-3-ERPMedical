@@ -1,0 +1,16 @@
+# MÉTODO AJAX PARA BUSCAR COINCIDENCIAS EN CIUDAD
+remove_payment:
+    path: /removepayment
+    defaults: { _controller: AppBundle:Payment:removePayment }
+# MÉTODO AJAX PARA CAMBIAR LA CONTABIDAD SERVICE TRACING
+send_payment_tracing_service:
+    path: /sendnewpaymenttracingservice
+    defaults: { _controller: AppBundle:Payment:addPaymentTracingService }    
+# MÉTODO AJAX PARA CAMBIAR ESTADO CONTABLE SERVICE TRACING
+change_countable_state_payment:
+    path: /changecountablepayment
+    defaults: { _controller: AppBundle:Payment:changeCountableStatePayment }
+# MÉTODO AJAX PARA CAMBIAR ESTADO CONSOLIDADO SERVICE TRACING
+change_consolidated_state_payment:
+    path: /changeconsolidatedpayment
+    defaults: { _controller: AppBundle:Payment:changeConsolidatedTracingService }

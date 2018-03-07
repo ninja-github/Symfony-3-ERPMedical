@@ -18,10 +18,10 @@ class MedicalHistory {
 	public function getMedicalHistoryDataComplete() { return (string)$this->medicalHistoryNumber.' - '.$this->name.' '.$this->surname; }
 /**************************************************************************************************************/
 /* Listamos Documentos asociados a la Historia Médica *********************************************************/
-	private $docList;
-	public function getDocList() { return $this->docList; }
-	public function addDocList(\BackendBundle\Entity\MedicalHistoryDoc $docList) { $this->docList[] = $docList; return $this; } 
-	public function removeDocList(\BackendBundle\Entity\MedicalHistoryDoc $docList) { $this->docList->removeElement($docList); } 	
+    private $documentsList;
+    public function getDocumentsList() { return $this->documentsList; }
+    public function addDocumentsList(\BackendBundle\Entity\Documents $documentsList) { $this->documentsList[] = $documentsList; return $this; } 
+    public function removeDocumentsList(\BackendBundle\Entity\Documents $documentsList) { $this->documentsList->removeElement($documentsList); }  	
 /**************************************************************************************************************/
 /* Listamos Seguimientos asociados a la Historia Médica *******************************************************/
 	private $tracingList;
@@ -39,7 +39,7 @@ class MedicalHistory {
 	//Un ArrayCollection es una implementación de colección que se ajusta a la matriz PHP normal.
 	public function __construct() {
 		$this->medicalHistoryDataComplete = new ArrayCollection();
-		$this->docList = new ArrayCollection();
+		$this->documentsList = new ArrayCollection();
 		$this->tracingList = new ArrayCollection();
 		$this->orthopodologyHistoryList = new ArrayCollection();
     }
@@ -55,6 +55,16 @@ class MedicalHistory {
 	private $medicalHistoryNumber;
 	public function setMedicalHistoryNumber($medicalHistoryNumber) { $this->medicalHistoryNumber = $medicalHistoryNumber; return $this; }
 	public function getMedicalHistoryNumber() { return $this->medicalHistoryNumber; }
+/**************************************************************************************************************/
+/* $updated ***************************************************************************************************/
+	private $updated = '0'; 
+	public function setUpdated($updated) { $this->updated = $updated; return $this; }
+	public function getUpdated() { return $this->updated; }     
+/**************************************************************************************************************/
+/* $late ******************************************************************************************************/
+	private $late; 
+	public function setLate($late) { $this->late = $late; return $this; }
+	public function getLate() { return $this->late; }     
 /**************************************************************************************************************/
 /* name *******************************************************************************************************/
 	private $name;
@@ -110,6 +120,11 @@ class MedicalHistory {
 	private $city;
     public function setCity(\BackendBundle\Entity\AddressCity $city = null) { $this->city = $city; return $this; }
     public function getCity() { return $this->city; }
+/**************************************************************************************************************/
+/* city *******************************************************************************************************/
+	private $insuranceCarrier;
+    public function setInsuranceCarrier($insuranceCarrier) { $this->insuranceCarrier = $insuranceCarrier; return $this; }
+    public function getInsuranceCarrier() { return $this->insuranceCarrier; }
 /**************************************************************************************************************/
 /* height *****************************************************************************************************/
 	private $height;

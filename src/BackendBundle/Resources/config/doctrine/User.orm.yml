@@ -3,6 +3,9 @@ BackendBundle\Entity\User:
     repositoryClass: BackendBundle\Repository\UserRepository
     table: user
     indexes:
+        city:
+            columns:
+                - city        
         type_sex:
             columns:
                 - gender
@@ -53,6 +56,12 @@ BackendBundle\Entity\User:
             length: 100
             options:
                 fixed: false
+        dni:
+            type: string
+            nullable: true
+            length: 10
+            options:
+                fixed: false                
         password:
             type: string
             nullable: false
@@ -65,6 +74,12 @@ BackendBundle\Entity\User:
             length: 255
             options:
                 fixed: false
+        address:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false                
         role:
             type: json_array
             nullable: false
@@ -86,6 +101,16 @@ BackendBundle\Entity\User:
             nullable: true
             column: modification_date
     manyToOne:
+        city:
+            targetEntity: AddressCity
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                city:
+                    referencedColumnName: id
+            orphanRemoval: false        
         gender:
             targetEntity: TypeGender
             cascade: {  }

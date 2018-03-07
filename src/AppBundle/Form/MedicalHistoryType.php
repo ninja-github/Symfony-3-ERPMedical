@@ -41,10 +41,10 @@ class MedicalHistoryType extends AbstractType {
 		$userLoggedId = $options['attr']['userLoggedId'];
 		$builder
 			->add('name', TextType::class, array(
-				'required'=>false,
+				'required'=>true,
 				'attr'=>array('class'=>'form-control', 'style' => 'margin-bottom:13px')))
 			->add('surname', TextType::class, array(
-				'required'=>false,
+				'required'=>true,
 				'attr'=>array('class'=>'form-control', 'style' => 'margin-bottom:13px')))
 			->add('nickname', TextType::class, array(
 				'required'=>false,
@@ -134,14 +134,17 @@ class MedicalHistoryType extends AbstractType {
 				'attr'=>array('class'=>'form-control', 'style' => 'margin-bottom:13px')))
 			->add('note', TextareaType::class, array(
 				'required'=>false,
-				'attr'=>array('class'=>'form-control', 'style' => 'margin-bottom:13px')));
+				'attr'=>array('class'=>'form-control', 'style' => 'margin-bottom:13px')))
+			->add('insuranceCarrier', TextType::class, array(
+				'required'=>false,
+				'attr'=>array('class'=>'form-control', 'style' => 'margin-bottom:13px')));			
 			if($permissionLoggedUser->getMedicalHistoryUserRegistererEdit() == true){
 				$builder
 				->add('userRegisterer', EntityType::class,array(
 					'class' => 'BackendBundle:User',
 					'choice_label' => 'user',
 					'query_builder' => function($er) use( $clinicNameUrl, $userLoggedId ) {
-						return $er->getUserListOfClinic($clinicNameUrl, $userLoggedId);
+						return $er->getUserDoctorListOfClinic($clinicNameUrl, $userLoggedId);
                 	},
                 	'label' => 'userName',
 					'expanded' => false,		// Muestra todas las opciones (radio buttons O checkboxes)
@@ -165,7 +168,7 @@ class MedicalHistoryType extends AbstractType {
 					'class' => 'BackendBundle:User',
 					'choice_label' => 'user',
 					'query_builder' => function($er) use( $clinicNameUrl, $userLoggedId ) {
-						return $er->getUserListOfClinic($clinicNameUrl, $userLoggedId);
+						return $er->getUserDoctorListOfClinic($clinicNameUrl, $userLoggedId);
                 	},
                 	'label' => 'userName',
 					'expanded'     => false,       // Muestra todas las opciones (radio buttons O checkboxes)
@@ -180,7 +183,8 @@ class MedicalHistoryType extends AbstractType {
 					'widget' => 'single_text',
 					'format'=>'dd/MM/yyyy',
 					'html5' => false,
-					'attr'=>array('class' => 'form-control')
+					'attr'=>array('class' => 'form-control'),
+					'data' => new \DateTime("now")
 				));
 			}
 			$builder

@@ -3,9 +3,9 @@ BackendBundle\Entity\Service:
     repositoryClass: BackendBundle\Repository\ServiceRepository
     table: service
     indexes:
-        type_tax:
+        type_tax_service:
             columns:
-                - type_tax
+                - type_tax_service
         user_registerer:
             columns:
                 - user_registerer
@@ -31,12 +31,22 @@ BackendBundle\Entity\Service:
             generator:
                 strategy: IDENTITY
     fields:
-        service:
+        name:
             type: string
             nullable: false
             length: 150
             options:
                 fixed: false
+        typeService:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'  
+        weight:
+            type: integer
+            nullable: false
+            options:
+                default: '1'                                
         description:
             type: string
             nullable: true

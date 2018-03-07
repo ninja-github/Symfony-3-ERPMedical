@@ -1,13 +1,17 @@
 BackendBundle\Entity\InvoiceService:
     type: entity
     table: invoice_service
+    repositoryClass: BackendBundle\Repository\InvoiceServiceRepository      
     indexes:
+        type_tax_service:
+            columns:
+                - type_tax_service        
         tracing_service:
             columns:
                 - tracing_service
-        invoice:
+        invoice_issued:
             columns:
-                - invoice
+                - invoice_issued
     id:
         id:
             type: integer
@@ -30,14 +34,14 @@ BackendBundle\Entity\InvoiceService:
             precision: 10
             scale: 0
     manyToOne:
-        invoice:
-            targetEntity: Invoice
+        invoiceIssued:
+            targetEntity: InvoiceIssued
             cascade: {  }
             fetch: LAZY
             mappedBy: null
-            inversedBy: null
+            inversedBy: invoiceServiceList
             joinColumns:
-                invoice:
+                invoice_issued:
                     referencedColumnName: id
             orphanRemoval: false
         tracingService:
@@ -45,9 +49,21 @@ BackendBundle\Entity\InvoiceService:
             cascade: {  }
             fetch: LAZY
             mappedBy: null
-            inversedBy: null
+            inversedBy: invoiceServiceList
             joinColumns:
                 tracing_service:
                     referencedColumnName: id
             orphanRemoval: false
+        typeTaxService:
+            targetEntity: TypeTaxService
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                type_tax_service:
+                    referencedColumnName: id
+            orphanRemoval: false 
+# oneToMany ###########################################################
+# /oneToMany ##########################################################
     lifecycleCallbacks: {  }

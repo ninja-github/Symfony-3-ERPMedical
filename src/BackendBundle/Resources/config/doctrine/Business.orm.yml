@@ -32,13 +32,25 @@ BackendBundle\Entity\Business:
 # /id #################################################################
 # fields ##############################################################                  
     fields:
-        businessName:
+        name:
             type: string
             nullable: false
-            length: 60
+            length: 150
             options:
                 fixed: false
-            column: business_name
+        brand:
+            type: string
+            nullable: false
+            length: 150
+            options:
+                fixed: false                
+        nameUrl:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+            column: name_url
         cif:
             type: string
             nullable: true
@@ -90,6 +102,12 @@ BackendBundle\Entity\Business:
                     referencedColumnName: id
             orphanRemoval: false            
 # /manyToOne ##########################################################
-# oneToMany ########################################################### 
+# oneToMany ###########################################################
+    oneToMany:
+        # docList # no se encuentra dentro de la BD, pero se define en la entidad para listar los elementos
+        documentsList:
+            targetEntity: Documents
+            # mappedBy # hace referencia a la columna de la tabla # MedicalHistoryDoc # dentro de la BD relacionada con la tabla # MedicalHistory #
+            mappedBy: business            
 # /oneToMany ##########################################################             
     lifecycleCallbacks: {  }

@@ -1,0 +1,15 @@
+* TUTORIAL GENERAL 
+https://soloelectronicos.com/2014/12/07/enviar-mensajes-whatsapp-mediante-php-usando-whatsapi-2-de-2/
+http://blog.vetbossel.in/send-whatsapp-messages-php/
+
+* Obtener ID : 
+https://www.quora.com/How-can-I-find-my-WhatsApp-ID
+https://github.com/mgp25/WART
+ID Mi móvil: %df%8c%13%e0%03%9b%ads%b8%1bh%cb%14%d8%1fz%17%c0%02%25
+Sonia 34650430564
+password : 506152
+id : %0b%60%00%0d%c1%ea%265%dc%e0%ba%fb%0e%c8%93%cdf%3e%0d%c7
+
+* Github api
+https://github.com/mgp25/Chat-API
+https://github.com/venomous0x/WhatsAPI
