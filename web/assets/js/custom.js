@@ -99,10 +99,12 @@ var setContentHeight = function () {
         }
     });
 
+// CLICK MENÚ TOGGLE ///////////////////////////////////////////////////////////////////////////
 // toggle small or large menu 
+var numberOfClickMenuToggle = 0;
+var logo_clinic = document.getElementById('logo_clinic');
 $MENU_TOGGLE.on('click', function() {
 		console.log('clicked - menu toggle');
-		
 		if ($BODY.hasClass('nav-md')) {
 			$SIDEBAR_MENU.find('li.active ul').hide();
 			$SIDEBAR_MENU.find('li.active').addClass('active-sm').removeClass('active');

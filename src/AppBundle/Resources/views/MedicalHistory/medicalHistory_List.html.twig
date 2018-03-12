@@ -28,24 +28,16 @@
 							<thead>
 								<tr>
 									<th style="text-align: center; width:10px;">Nºhª</th>
-									<th style="text-align: center; width:10px;">
-										<i class="fa fa-clock-o m-right-xs"></i>
-									</th>
-									<th style="text-align: center; width:10px;">
-										<i class="fa fa-check-circle m-right-xs"></i>
-									</th>
-									<th style="text-align: center; width:10px;">
-										<i class="fa fa-money m-right-xs">
-									</th>
-									<th style="text-align: center; width:10px;">
-										<i class="fa fa-exclamation-triangle"></i>
-									</th>																		
 									<th>Nombre</th>
 									<th style="text-align: center ;width:45px;">DNI</th>
 									<th style="text-align: center; width:45px;">Móvil</th>
 									<th style="text-align: center; width:45px;">Fijo</th>
 									<th>Ciudad</th>
 									<th style="text-align: center; width:35px;"><i class="ionicons ion-male"></i> / <i class="ionicons ion-female"></i></th>
+									<th style="text-align: center; width:10px;"><i class="fa fa-clock-o m-right-xs"></i></th>
+									<th style="text-align: center; width:10px;"><i class="fa fa-check-circle m-right-xs"></i></th>
+									<th style="text-align: center; width:10px;"><i class="fa fa-money m-right-xs"></th>
+									<th style="text-align: center; width:10px;"><i class="fa fa-exclamation-triangle"></i></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -66,6 +58,23 @@
 									{# ................................................................... DEFINO VARIABLES #}
 									<tr {% if medicalHistory.patientRisk != NULL %} class="danger"{% endif %}>
 										<td style="text-align: center;"><a href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber} ) }}">{{medicalHistory.medicalHistoryNumber}}</a></td>
+										<td><a href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber':medicalHistoryNumber} ) }}">{{medicalHistory.surname| title}}, {{medicalHistory.name| title}}</a></td>
+										<td style="text-align: center;"><a href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber} ) }}">{{medicalHistory.dni}}</a></td>
+										<td style="text-align: center;"><a href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber} ) }}">{{medicalHistory.phoneMobile}}</a></td>
+										<td style="text-align: center;"><a href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber} ) }}">{{medicalHistory.phoneHome}}</a></td>
+										<td>
+											<a href="{{ path('medical_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber} ) }}">
+											{% if city != null %} {{city.city}} ( {{city.province.province}} ){% endif %}</a>
+										</td>													
+										<td style="text-align: center;">
+											<a href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber} ) }}">
+												{% if medicalHistory.gender == "Hombre" %}
+													<i class="ionicons ion-male"></i>
+												{% elseif medicalHistory.gender == "Mujer" %}
+													<i class="ionicons ion-female" ></i>
+												{% endif %}
+											</a>
+										</td>
 										<td style="text-align: center;">
 											{% if medicalHistory.late != NULL %}
 												{{medicalHistory.late}} <i class="fa fa-clock-o m-right-xs"></i>
@@ -85,24 +94,7 @@
 											{% if medicalHistory.patientRisk != NULL %}
 												<i class="fa fa-exclamation-triangle"></i>
 											{% endif %}
-										</td>
-										<td><a href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber':medicalHistoryNumber} ) }}">{{medicalHistory.surname| title}}, {{medicalHistory.name| title}}</a></td>
-										<td style="text-align: center;"><a href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber} ) }}">{{medicalHistory.dni}}</a></td>
-										<td style="text-align: center;"><a href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber} ) }}">{{medicalHistory.phoneMobile}}</a></td>
-										<td style="text-align: center;"><a href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber} ) }}">{{medicalHistory.phoneHome}}</a></td>
-										<td>
-											<a href="{{ path('medical_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber} ) }}">
-											{% if city != null %} {{city.city}} ( {{city.province.province}} ){% endif %}</a>
-										</td>													
-										<td style="text-align: center;">
-											<a href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber} ) }}">
-												{% if medicalHistory.gender == "Hombre" %}
-													<i class="ionicons ion-male"></i>
-												{% elseif medicalHistory.gender == "Mujer" %}
-													<i class="ionicons ion-female" ></i>
-												{% endif %}
-											</a>
-										</td>
+										</td>										
 									</tr>
 								{#}	
 								{% endif %}

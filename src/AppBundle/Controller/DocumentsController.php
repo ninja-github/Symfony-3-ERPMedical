@@ -1,5 +1,5 @@
 <?php
-/* Indicamos el namespace del Bundle                     ******************************************************/
+/* Indicamos el namespace del Bundle **************************************************************************/
 	namespace AppBundle\Controller;
 /* COMPONENTES BÁSICOS DEL CONTROLADOR ************************************************************************/
 	use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -22,6 +22,7 @@ class DocumentsController extends Controller{
 		/* CARGA INICIAL **************************************************************************************/
 			$em = $this->getDoctrine()->getManager();
 			$userLogged = $this->getUser();	// extraemos el usuario de la sessión
+        /******************************************************************************************************/			
 		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
 			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userLogged, $request);
 		/******************************************************************************************************/
@@ -85,6 +86,7 @@ class DocumentsController extends Controller{
 		/* CARGA INICIAL **************************************************************************************/
 			$em = $this->getDoctrine()->getManager();
 			$userLogged = $this->getUser();	// extraemos el usuario de la sessión
+        /******************************************************************************************************/			
 		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
 			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userLogged, $request);
 		/******************************************************************************************************/

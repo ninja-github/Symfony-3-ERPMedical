@@ -68,18 +68,15 @@ class InvoiceReceivedType extends AbstractType {
 				'data_class'=>null, // campo independiente
 				'multiple'=>false,
 				'attr'=>array('class'=>'form-image form-control', "style" => "margin-bottom:10px")
-			));
-			if($permissionLoggedUser->getMedicalHistoryRegistrationDateEdit() == true){
-				$builder
-				->add('registrationDate', DateType::class, array(
+			))
+			->add('registrationDate', DateType::class, array(
 					'required'=>false,
 					'widget' => 'single_text',
 					'format'=>'dd/MM/yyyy',
 					'html5' => false,
-					'attr'=>array('class' => 'form-control')
-				));
-			}
-		$builder	
+					'attr'=>array('class' => 'form-control'),
+					'data' => new \DateTime("now")
+				))
 			->add('add',SubmitType::class, array(
 				'attr'=>array('class'=>'form-submit btn btn-success')));			
 	   }

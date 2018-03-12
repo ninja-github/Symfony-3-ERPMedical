@@ -1,5 +1,5 @@
 <?php
-/* Indicamos el namespace del Bundle                     ******************************************************/
+/* Indicamos el namespace del Bundle **************************************************************************/
 	namespace AppBundle\Controller;
 /* COMPONENTES BÁSICOS DEL CONTROLADOR ************************************************************************/
 	use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -10,7 +10,7 @@
 	use Symfony\Component\HttpFoundation\Response;  		// Permite usar el método Response, usado en AJAX
 	use Symfony\Component\HttpFoundation\Session\Session; 	// Permite usar sesiones, usado en FLASHBAG
 /* Añadimos las ENTIDADES que usaremos ************************************************************************/
-	use BackendBundle\Entity\AddressCity;        	// Da acceso a la Entidad AddressCity
+	use BackendBundle\Entity\AddressCity;        			// Da acceso a la Entidad AddressCity
 /* Incluimos la clase del Controlador *************************************************************************/
 class AddressCityController extends Controller {
 /* OBJETO SESSIÓN - Para activar las sesiones inicializamos la variable e incluimos en ella el objeto Session()
@@ -20,40 +20,58 @@ class AddressCityController extends Controller {
 /**************************************************************************************************************/
 /* MÉTODO AJAX BUSCAR CIUDAD **********************************************************************************/
 	public function searchCityAction(Request $request) {
-		// Guardamos dentro de la variable $cityInformation el dato que nos llega por POST
-		$cityInformation = $request->get('cityInformation');
-		// Busco dentro de la BD el dato
-		$em = $this->getDoctrine()->getManager();
-		$addressCity_repo = $em->getRepository('BackendBundle:AddressCity');
-		$result = $addressCity_repo->searchCity($cityInformation);
-		return new Response(json_encode($result)); // codificamos la respuesta en JSON
-	}
+		/* CARGA INICIAL **************************************************************************************/
+			$em = $this->getDoctrine()->getManager();
+		/******************************************************************************************************/
+        /* CARGO LOS REPOSITORIOS  ****************************************************************************/		
+			$addressCity_repo = $em->getRepository('BackendBundle:AddressCity');
+		/******************************************************************************************************/
+        /******************************************************************************************************/
+        /* REALIZO LAS CONSULTAS NECESARIAS A LA BD MEDIANTE LOS REPOSITORIOS *********************************/					
+			// Guardamos dentro de la variable $cityInformation el dato que nos llega por POST
+			$cityInformation = $request->get('cityInformation');
+			// Busco dentro de la BD el dato
+			$result = $addressCity_repo->searchCity($cityInformation);
+        /******************************************************************************************************/			
+        /* RETORNO EL RESULTADO *******************************************************************************/ 			
+			return new Response(json_encode($result)); // codificamos la respuesta en JSON
+        /******************************************************************************************************/
+		}
 /**************************************************************************************************************/
 /* MÉTODO PARA LISTAR CIUDADES ********************************************************************************/
 	public function addressCityListAction(Request $request) {
-		$em = $this->getDoctrine()->getManager();
-		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
-		$user = $this->getUser();	// extraemos el usuario de la sessión
-		$userSession_repo = $em->getRepository("BackendBundle:UserSession");
-		$setUserInformation = $userSession_repo->setUserInformation($user, $request);
-		/* EXTRAE PERMISOS DEL USUARIO  ***********************************************************************/
-		$userName = $user->getUserName();
-		$userPermission_repo = $em->getRepository("BackendBundle:UserPermission");
-		$userPermission = $userPermission_repo->getUserPermission($userName);
+		/* CARGA INICIAL **************************************************************************************/
+			$em = $this->getDoctrine()->getManager();
 		/******************************************************************************************************/
-		$addressCity_repo = $em->getRepository("BackendBundle:AddressCity");
-		$addressCity = $addressCity_repo->findBy( array(), array('cp' => 'ASC'));
-		$paginator = $this->get('knp_paginator');
-    	$pagination = $paginator->paginate(
-      									$addressCity,
-      									$request->query->getInt('page',1),
-      									10);
-		return $this->render('AppBundle:Admin:addressCity_List.html.twig',
-			array(
-				'userPermission'=>$userPermission,
-				'addressCityPagination'=>$pagination,
-			)
-		);
+		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
+			$user = $this->getUser();	// extraemos el usuario de la sessión
+			$userSession_repo = $em->getRepository("BackendBundle:UserSession");
+			$setUserInformation = $userSession_repo->setUserInformation($user, $request);
+        /******************************************************************************************************/			
+		/* EXTRAE PERMISOS DEL USUARIO  ***********************************************************************/
+			$userName = $user->getUserName();
+			$userPermission_repo = $em->getRepository("BackendBundle:UserPermission");
+			$userPermission = $userPermission_repo->getUserPermission($userName);
+        /******************************************************************************************************/
+        /* CARGO LOS REPOSITORIOS  ****************************************************************************/
+			$addressCity_repo = $em->getRepository("BackendBundle:AddressCity");
+        /******************************************************************************************************/
+        /* REALIZO LAS CONSULTAS NECESARIAS A LA BD MEDIANTE LOS REPOSITORIOS *********************************/			
+			$addressCity = $addressCity_repo->findBy( array(), array('cp' => 'ASC'));
+			$paginator = $this->get('knp_paginator');
+			$pagination = $paginator->paginate(
+											$addressCity,
+											$request->query->getInt('page',1),
+											10);
+        /******************************************************************************************************/			
+        /* CARGAMOS LA VISTA CON SUS VARIABLES ****************************************************************/ 											
+			return $this->render('AppBundle:Admin:addressCity_List.html.twig',
+				array(
+					'userPermission'=>$userPermission,
+					'addressCityPagination'=>$pagination,
+				)
+			);
+        /******************************************************************************************************/
 	}
 /**************************************************************************************************************/
 }

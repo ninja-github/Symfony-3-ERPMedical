@@ -1,5 +1,5 @@
 <?php
-/* Indicamos el namespace del Bundle                     ******************************************************/
+/* Indicamos el namespace del Bundle **************************************************************************/
 	namespace AppBundle\Controller;
 /* COMPONENTES BÁSICOS DEL CONTROLADOR ************************************************************************/
 	use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -21,17 +21,22 @@ class AdminController extends Controller {
 		/* CARGA INICIAL **************************************************************************************/
 			$em = $this->getDoctrine()->getManager();
 			$userlogged = $this->getUser();	// extraemos el usuario de la sessión
+        /******************************************************************************************************/			
 		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
 			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userlogged, $request);
+        /******************************************************************************************************/			
 		/* EXTRAE PERMISOS DEL USUARIO  ***********************************************************************/
 			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userlogged);
+        /******************************************************************************************************/			
 		/* PERMISO ACCESO *************************************************************************************/
+			$permissionDenied = false;	
 			if($permissionLoggedUser->getAdminGeneralDataAccess() == false){ 
 				$status = ['type'=>'danger','description'=>'No tiene permisos suficientes para acceder a la zona de Administración General.'];
 					// generamos los mensajes FLASH (necesario activar las sesiones)
-				$this->session->getFlashBag()->add("status", $status);				
-				return $this->redirectToRoute('homepage');
+				$this->session->getFlashBag()->add("status", $status);
+				$permissionDenied = true;			
 			}
+			if ($permissionDenied == true){ return $this->redirectToRoute('homepage'); }
 		/******************************************************************************************************/
 		/* CARGO LOS REPOSITORIOS  ****************************************************************************/
 			$clinic_repo = $em->getRepository("BackendBundle:Clinic");

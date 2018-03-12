@@ -87,7 +87,7 @@ class MedicalHistoryRepository extends \Doctrine\ORM\EntityRepository {
 	public function getTotalNumberMedicalHistoriesQuery ( $clinicNameUrl ){
 		$em=$this->getEntityManager();
 		$query = $this->createQueryBuilder('mh')
-//			->select('mh')
+	//		->select('mh')
 			->innerJoin('mh.clinic', 'cl', 'cl.id = mh.clinic')
 			->where('cl.nameUrl=:clinicNameUrl')
 			->setParameter('clinicNameUrl', $clinicNameUrl)
@@ -100,16 +100,40 @@ class MedicalHistoryRepository extends \Doctrine\ORM\EntityRepository {
 	public function getRatioGenderQuery ( $clinicNameUrl ){
 		$genderStadisticsMedicalHistories = array();
 		$em=$this->getEntityManager();
-		$typeGender_repo = $em->getRepository("BackendBundle:TypeGender");
-		$countTypeGender = count($typeGender_repo->findAll());
-		$medicalHistory = $this->createQueryBuilder('mh')
+		//$typeGender_repo = $em->getRepository("BackendBundle:TypeGender");
+		//$countTypeGender = count($typeGender_repo->findAll());
+		$medicalHistoryList = $this->createQueryBuilder('mh')
 					->select('mh')
 					->innerJoin('mh.clinic', 'cl', 'cl.id = mh.clinic')
 					->where('cl.nameUrl=:clinicNameUrl')
 					->setParameter('clinicNameUrl', $clinicNameUrl)
 					->getQuery()
 					->getResult();
-		$countMedicalHistory = count($medicalHistory);
+		//$countMedicalHistory = count($medicalHistoryList);
+		$typeGender_repo = $em->getRepository("BackendBundle:TypeGender");
+		$TypeGenderList = $typeGender_repo->findAll();
+		$genderStadisticsMedicalHistories = array();
+		foreach($TypeGenderList as $key=>$value){
+			$i = $key + 1 ;
+			$genderStadisticsMedicalHistories[$i]['number'] = 0 ;
+			$genderStadisticsMedicalHistories[$i]['gender'] = $value->getType();
+			$genderStadisticsMedicalHistories[$i]['percent'] = 0 ;
+		}
+		$genderStadisticsMedicalHistories[0]['number'] = 0 ;
+		$genderStadisticsMedicalHistories[0]['gender'] = null ;
+		$genderStadisticsMedicalHistories[0]['percent'] = 0 ;
+		foreach($medicalHistoryList as $key=>$value){
+			$isGender = $value->getGender();
+			if ($isGender != null){
+				$i = $value->getGender()->getId();
+				$genderStadisticsMedicalHistories[$i]['number']++;
+				$genderStadisticsMedicalHistories[$i]['percent'] = ( $genderStadisticsMedicalHistories[$i]['number'] / ($key+1) ) * 100 ;
+			}else{
+				$genderStadisticsMedicalHistories[0]['number']++;
+				$genderStadisticsMedicalHistories[0]['percent'] = ( $genderStadisticsMedicalHistories[0]['number'] / ($key+1) ) * 100;
+			}
+		}
+		/*
 		for( $i=1 ; $i < $countTypeGender+1; $i++ ){
 			$gender = $typeGender_repo->findOneById($i)->getType();
 			$userTypeGender = $this->createQueryBuilder('mh')
@@ -123,12 +147,13 @@ class MedicalHistoryRepository extends \Doctrine\ORM\EntityRepository {
 					->getResult();
 			$genderStadisticsMedicalHistories[$i]['number'] = count($userTypeGender);
 			$genderStadisticsMedicalHistories[$i]['gender'] = $gender;
-			if($countMedicalHistory != 0 ){
+			if( $countMedicalHistory != 0 ){
 				$genderStadisticsMedicalHistories[$i]['percent'] = round ((count($userTypeGender) / $countMedicalHistory)*100);
 			}else{
 				$genderStadisticsMedicalHistories[$i]['percent'] = 0;
 			}
 		}
+		*/
 		return $genderStadisticsMedicalHistories;
 	}
 /*************************************************************************************************/
@@ -157,23 +182,27 @@ class MedicalHistoryRepository extends \Doctrine\ORM\EntityRepository {
 /* OBTIENE DATOS DE LA CLÍNICA HISTORIA MÍNIMA Y MÁXIMA ******************************************/
 	public function getMedicalHistoryPerMonthQuery( $clinicNameUrl ){
 		$todayMonth = date("m");
-		$max_min = ['min'=>'ASC', 'max'=>'DESC'];
-		foreach ($max_min as $type => $value){
-			$query = $this->createQueryBuilder('mh')
-						->select('mh.registrationDate')
-						->innerJoin('mh.clinic', 'cl', 'cl.id = mh.clinic')
-						->where('cl.nameUrl=:clinicNameUrl')
-						->orderBy('mh.registrationDate', $value)
-						->setParameter('clinicNameUrl', $clinicNameUrl)
-						->setMaxResults(1)
-						->getQuery()
-						->getResult();
-			$max_minDate[$type] = $query[0]['registrationDate'];
-		}
-		$dateStart = $max_minDate['min'];
-		$dateEnd = $max_minDate['max'];
+		$medicalHistoryList = $this->createQueryBuilder('mh')
+					->innerJoin('mh.clinic', 'cl', 'cl.id = mh.clinic')
+					->where('cl.nameUrl=:clinicNameUrl')
+					->orderBy('mh.registrationDate', 'ASC')
+					->setParameter('clinicNameUrl', $clinicNameUrl)
+					->getQuery()
+					->getResult();
+		$newMedicalHistoryPerMonth = array();
+		foreach($medicalHistoryList as $key=>$value){
+			$registrationDate = $value->getRegistrationDate();
+			if($registrationDate != null){
+				$year = $registrationDate->format('Y');
+				$month = $registrationDate->format('n');
+				if(!isset ($newMedicalHistoryPerMonth[$year][$month])){
+					$newMedicalHistoryPerMonth[$year][$month] = 0;
+				}
+				$newMedicalHistoryPerMonth[$year][$month] ++ ;
+			}
 
-		return $dateStart;
+		}
+		return $newMedicalHistoryPerMonth;
 	}
 /*************************************************************************************************/
 /* OBTIENE DATOS DE LA CLÍNICA HISTORIA MÍNIMA Y MÁXIMA ******************************************/

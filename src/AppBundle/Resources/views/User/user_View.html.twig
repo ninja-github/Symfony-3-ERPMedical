@@ -955,7 +955,83 @@
 															</div>															
 														</div>
 													</div>
-												<!-- /estudios Orhopodológicos -->		
+												<!-- /estudios Orhopodológicos -->
+												<!-- Report -->
+													<div class="accordion" id="accordion_report" role="tablist" aria-multiselectable="true">
+														<div class="panel">
+															<a class="panel-heading collapsed" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapse_report" aria-expanded="false" aria-controls="collapseOne">
+																<h4 class="panel-title">Informes</h4>
+															</a>
+															<div id="collapse_report" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+																<div class="panel-body">
+																	<table>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.reportList == true %}
+																					{{form_widget (formUserPermission.reportList, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.reportList, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.reportList}}
+																			</td>
+																		</tr>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.reportView == true %}
+																					{{form_widget (formUserPermission.reportView, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.reportView, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.reportView}}
+																			</td>
+																		</tr>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.reportCreate == true %}
+																					{{form_widget (formUserPermission.reportCreate, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.reportCreate, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.reportCreate}}
+																			</td>
+																		</tr>																		
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.reportEdit == true %}
+																					{{form_widget (formUserPermission.reportEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.reportEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.reportEdit}}
+																			</td>
+																		</tr>	
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.reportRemove == true %}
+																					{{form_widget (formUserPermission.reportRemove, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.reportRemove, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.reportRemove}}
+																			</td>
+																		</tr>
+																	</table>
+																</div>	
+																<div class="clearfix"></div>																	
+															</div>															
+														</div>
+													</div>
+												<!-- /report -->														
 												<!-- Tracing -->
 													<div class="accordion" id="accordion_tracing" role="tablist" aria-multiselectable="true">
 														<div class="panel">
@@ -1032,48 +1108,584 @@
 														</div>
 													</div>
 												<!-- /tracing -->
+												<!-- TracingService -->
+													<div class="accordion" id="accordion_tracingService" role="tablist" aria-multiselectable="true">
+														<div class="panel">
+															<a class="panel-heading collapsed" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapse_tracingService" aria-expanded="false" aria-controls="collapseOne">
+																<h4 class="panel-title">Servicios realizados</h4>
+															</a>
+															<div id="collapse_tracingService" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+																<div class="panel-body">
+																	<table>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.tracingServiceList == true %}
+																					{{form_widget (formUserPermission.tracingServiceList, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.tracingServiceList, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.tracingServiceList}}
+																			</td>
+																		</tr>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.tracingServiceView == true %}
+																					{{form_widget (formUserPermission.tracingServiceView, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.tracingServiceView, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.tracingServiceView}}
+																			</td>
+																		</tr>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.tracingServiceCreate == true %}
+																					{{form_widget (formUserPermission.tracingServiceCreate, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.tracingServiceCreate, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.tracingServiceCreate}}
+																			</td>
+																		</tr>																		
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.tracingServiceEdit == true %}
+																					{{form_widget (formUserPermission.tracingServiceEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.tracingServiceEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.tracingServiceEdit}}
+																			</td>
+																		</tr>	
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.tracingServiceRemove == true %}
+																					{{form_widget (formUserPermission.tracingServiceRemove, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.tracingServiceRemove, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.tracingServiceRemove}}
+																			</td>
+																		</tr>
+																	</table>
+																</div>	
+																<div class="clearfix"></div>																	
+															</div>															
+														</div>
+													</div>
+												<!-- /tracingService -->
+												<!-- Payment -->
+													<div class="accordion" id="accordion_payment" role="tablist" aria-multiselectable="true">
+														<div class="panel">
+															<a class="panel-heading collapsed" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapse_payment" aria-expanded="false" aria-controls="collapseOne">
+																<h4 class="panel-title">Pagos</h4>
+															</a>
+															<div id="collapse_payment" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+																<div class="panel-body">
+																	<table>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.paymentList == true %}
+																					{{form_widget (formUserPermission.paymentList, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.paymentList, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.paymentList}}
+																			</td>
+																		</tr>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.paymentView == true %}
+																					{{form_widget (formUserPermission.paymentView, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.paymentView, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.paymentView}}
+																			</td>
+																		</tr>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.paymentCreate == true %}
+																					{{form_widget (formUserPermission.paymentCreate, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.paymentCreate, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.paymentCreate}}
+																			</td>
+																		</tr>																		
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.paymentEdit == true %}
+																					{{form_widget (formUserPermission.paymentEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.paymentEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.paymentEdit}}
+																			</td>
+																		</tr>	
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.paymentRemove == true %}
+																					{{form_widget (formUserPermission.paymentRemove, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.paymentRemove, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.paymentRemove}}
+																			</td>
+																		</tr>
+																	</table>
+																	<!-- Subsalto -->
+																		<div class="clearfix"></div><div class="divider-dashed"></div>
+																	<!-- /subsalto -->
+																	<table>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.paymentChangeConsolidatedState == true %}
+																					{{form_widget (formUserPermission.paymentChangeConsolidatedState, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.paymentChangeConsolidatedState, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.paymentChangeConsolidatedState}}
+																			</td>
+																		</tr>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.paymentChangeCountableState == true %}
+																					{{form_widget (formUserPermission.paymentChangeCountableState, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.paymentChangeCountableState, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.paymentChangeCountableState}}
+																			</td>
+																		</tr>																		
+																	</table>
+																</div>	
+																<div class="clearfix"></div>																	
+															</div>															
+														</div>
+													</div>
+												<!-- /payment -->
+												<!-- Accounting -->
+													<div class="accordion" id="accordion_accounting" role="tablist" aria-multiselectable="true">
+														<div class="panel">
+															<a class="panel-heading collapsed" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapse_accounting" aria-expanded="false" aria-controls="collapseOne">
+																<h4 class="panel-title">Contabilidad</h4>
+															</a>
+															<div id="collapse_accounting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+																<div class="panel-body">
+																	<table>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.accountingList == true %}
+																					{{form_widget (formUserPermission.accountingList, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.accountingList, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.accountingList}}
+																			</td>
+																		</tr>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.accountingViewTotal == true %}
+																					{{form_widget (formUserPermission.accountingViewTotal, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.accountingViewTotal, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.accountingViewTotal}}
+																			</td>
+																		</tr>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.accountingViewGraphic == true %}
+																					{{form_widget (formUserPermission.accountingViewGraphic, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.accountingViewGraphic, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.accountingViewGraphic}}
+																			</td>
+																		</tr>																		
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.accountingCreate == true %}
+																					{{form_widget (formUserPermission.accountingCreate, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.accountingCreate, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.accountingCreate}}
+																			</td>
+																		</tr>																		
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.accountingEdit == true %}
+																					{{form_widget (formUserPermission.accountingEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.accountingEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.accountingEdit}}
+																			</td>
+																		</tr>	
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.accountingRemove == true %}
+																					{{form_widget (formUserPermission.accountingRemove, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.accountingRemove, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.accountingRemove}}
+																			</td>
+																		</tr>
+																	</table>
+																</div>	
+																<div class="clearfix"></div>																	
+															</div>															
+														</div>
+													</div>
+												<!-- /accounting -->
+												<!-- invoice Issued -->
+													<div class="accordion" id="accordion_invoice_issued" role="tablist" aria-multiselectable="true">
+														<div class="panel">
+															<a class="panel-heading collapsed" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapse_invoice_issued" aria-expanded="false" aria-controls="collapseOne">
+																<h4 class="panel-title">Facturas Emitidas</h4>
+															</a>
+															<div id="collapse_invoice_issued" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+																<div class="panel-body">
+																	<table>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.invoiceIssuedList == true %}
+																					{{form_widget (formUserPermission.invoiceIssuedList, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.invoiceIssuedList, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.invoiceIssuedList}}
+																			</td>
+																		</tr>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.invoiceIssuedView == true %}
+																					{{form_widget (formUserPermission.invoiceIssuedView, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.invoiceIssuedView, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.invoiceIssuedView}}
+																			</td>
+																		</tr>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.invoiceIssuedCreate == true %}
+																					{{form_widget (formUserPermission.invoiceIssuedCreate, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.invoiceIssuedCreate, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.invoiceIssuedCreate}}
+																			</td>
+																		</tr>																		
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.invoiceIssuedEdit == true %}
+																					{{form_widget (formUserPermission.invoiceIssuedEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.invoiceIssuedEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.invoiceIssuedEdit}}
+																			</td>
+																		</tr>	
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.invoiceIssuedRemove == true %}
+																					{{form_widget (formUserPermission.invoiceIssuedRemove, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.invoiceIssuedRemove, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.invoiceIssuedRemove}}
+																			</td>
+																		</tr>
+																	</table>
+																</div>	
+																<div class="clearfix"></div>																	
+															</div>															
+														</div>
+													</div>
+												<!-- /invoice Issued-->																								
+												<!-- invoice Received -->
+													<div class="accordion" id="accordion_invoice_received" role="tablist" aria-multiselectable="true">
+														<div class="panel">
+															<a class="panel-heading collapsed" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapse_invoice_received" aria-expanded="false" aria-controls="collapseOne">
+																<h4 class="panel-title">Facturas Recibidas</h4>
+															</a>
+															<div id="collapse_invoice_received" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+																<div class="panel-body">
+																	<table>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.invoiceReceivedList == true %}
+																					{{form_widget (formUserPermission.invoiceReceivedList, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.invoiceReceivedList, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.invoiceReceivedList}}
+																			</td>
+																		</tr>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.invoiceReceivedView == true %}
+																					{{form_widget (formUserPermission.invoiceReceivedView, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.invoiceReceivedView, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.invoiceReceivedView}}
+																			</td>
+																		</tr>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.invoiceReceivedCreate == true %}
+																					{{form_widget (formUserPermission.invoiceReceivedCreate, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.invoiceReceivedCreate, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.invoiceReceivedCreate}}
+																			</td>
+																		</tr>																		
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.invoiceReceivedEdit == true %}
+																					{{form_widget (formUserPermission.invoiceReceivedEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.invoiceReceivedEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.invoiceReceivedEdit}}
+																			</td>
+																		</tr>	
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.invoiceReceivedRemove == true %}
+																					{{form_widget (formUserPermission.invoiceReceivedRemove, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.invoiceReceivedRemove, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.invoiceReceivedRemove}}
+																			</td>
+																		</tr>
+																	</table>
+																</div>	
+																<div class="clearfix"></div>																	
+															</div>															
+														</div>
+													</div>
+												<!-- /invoice Received-->												
+												<!-- Schedule -->
+													<div class="accordion" id="accordion_schedule" role="tablist" aria-multiselectable="true">
+														<div class="panel">
+															<a class="panel-heading collapsed" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapse_schedule" aria-expanded="false" aria-controls="collapseOne">
+																<h4 class="panel-title">Calendario</h4>
+															</a>
+															<div id="collapse_schedule" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+																<div class="panel-body">
+																	<table>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.scheduleList == true %}
+																					{{form_widget (formUserPermission.scheduleList, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.scheduleList, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.scheduleList}}
+																			</td>
+																		</tr>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.scheduleView == true %}
+																					{{form_widget (formUserPermission.scheduleView, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.scheduleView, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.scheduleView}}
+																			</td>
+																		</tr>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.scheduleCreate == true %}
+																					{{form_widget (formUserPermission.scheduleCreate, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.scheduleCreate, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.scheduleCreate}}
+																			</td>
+																		</tr>																		
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.scheduleEdit == true %}
+																					{{form_widget (formUserPermission.scheduleEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.scheduleEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.scheduleEdit}}
+																			</td>
+																		</tr>	
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.scheduleRemove == true %}
+																					{{form_widget (formUserPermission.scheduleRemove, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.scheduleRemove, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.scheduleRemove}}
+																			</td>
+																		</tr>
+																	</table>
+																</div>	
+																<div class="clearfix"></div>																	
+															</div>															
+														</div>
+													</div>
+												<!-- /schedule -->																																				
 												<!-- Service -->
-													<!-- SubTítulo -->
-														<div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
-															<h4 style="display:inline-block;">Servicios</h4>
+													<div class="accordion" id="accordion_service" role="tablist" aria-multiselectable="true">
+														<div class="panel">
+															<a class="panel-heading collapsed" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapse_service" aria-expanded="false" aria-controls="collapseOne">
+																<h4 class="panel-title">Servicios</h4>
+															</a>
+															<div id="collapse_service" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+																<div class="panel-body">
+																	<table>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.serviceList == true %}
+																					{{form_widget (formUserPermission.serviceList, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.serviceList, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.serviceList}}
+																			</td>
+																		</tr>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.serviceView == true %}
+																					{{form_widget (formUserPermission.serviceView, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.serviceView, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.serviceView}}
+																			</td>
+																		</tr>
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.serviceCreate == true %}
+																					{{form_widget (formUserPermission.serviceCreate, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.serviceCreate, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.serviceCreate}}
+																			</td>
+																		</tr>																																				
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.serviceEdit == true %}
+																					{{form_widget (formUserPermission.serviceEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.serviceEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.serviceEdit}}
+																			</td>
+																		</tr>																																				
+																		<tr>
+																			<td style="vertical-align:top;">
+																				{% if userPermission.serviceRemove == true %}
+																					{{form_widget (formUserPermission.serviceRemove, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
+																				{% else %}
+																					{{form_widget (formUserPermission.serviceRemove, {'attr': {'style' : 'display:none','value' : 0}} ) }}
+																				{% endif %}
+																			</td>
+																			<td style="padding-left:5px;">
+																				{{permissionDescription.serviceRemove}}
+																			</td>
+																		</tr>
+																	</table>
+																</div>	
+																<div class="clearfix"></div>																	
+															</div>															
 														</div>
-													<!-- /subTítulo -->
-													<!-- Contenido -->
-														<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
-															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
-																{% if userPermission.serviceCreate == true %}
-																	{{form_widget (formUserPermission.serviceCreate, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
-																{% else %}
-																	{{form_widget (formUserPermission.serviceCreate, {'attr': {'style' : 'display:none','value' : 0}} ) }}
-																{% endif %}
-																<label>	 Crear <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.serviceCreate}}"></i></sup></label>
-															</div>
-															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
-																{% if userPermission.serviceEdit == true %}
-																	{{form_widget (formUserPermission.serviceEdit, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
-																{% else %}
-																	{{form_widget (formUserPermission.serviceEdit, {'attr': {'style' : 'display:none','value' : 0}} ) }}
-																{% endif %}
-																<label>  Editar <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.serviceEdit}}"></i></sup></label>
-															</div>
-															<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-bottom:5px;">
-																{% if userPermission.serviceRemove == true %}
-																	{{form_widget (formUserPermission.serviceRemove, {'attr': {'checked style' : 'display:none','value' : 1}} ) }}
-																{% else %}
-																	{{form_widget (formUserPermission.serviceRemove, {'attr': {'style' : 'display:none','value' : 0}} ) }}
-																{% endif %}
-																<label>  Eliminar <sup><i class="fa fa-info-circle m-right-xs" data-toggle="tooltip" data-placement="top" title="{{permissionDescription.serviceRemove}}"></i></sup></label>
-															</div>
-														</div>
-													<!-- /contenido -->
-													<!-- Subsalto Final -->
-														<div class="clearfix"></div>
-														<div class="divider-dashed"></div>
-													<!-- /subsalto Final -->
-												<!-- /tracing -->																			
-												<div>
-													{{form_widget(formUserPermission.Editar)}}
-												</div>
+													</div>
+												<!-- /Service -->
+												<!-- Edit Form (submit) -->																		
+													<div>
+														{{form_widget(formUserPermission.Editar)}}
+													</div>
+												<!-- /Edit Form (submit) -->
 											</div>
 										</div>
 									{{ form_end(formUserPermission) }}

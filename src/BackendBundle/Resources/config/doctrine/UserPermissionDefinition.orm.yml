@@ -410,43 +410,80 @@ BackendBundle\Entity\UserPermissionDefinition:
                 fixed: false
             column: report_remove                        
     # /REPORT #########################################################
-    # INVOICE #########################################################
-        invoiceList:
+    # INVOICE ISSUED ##################################################
+        invoiceIssuedList:
             type: string
             nullable: true
             length: 255
             options:
                 fixed: false
-            column: invoice_list
-        invoiceView:
+            column: invoice_issued_list
+        invoiceIssuedView:
             type: string
             nullable: true
             length: 255
             options:
                 fixed: false
-            column: invoice_view
-        invoiceCreate:
+            column: invoice_issued_view
+        invoiceIssuedCreate:
             type: string
             nullable: true
             length: 255
             options:
                 fixed: false
-            column: invoice_create
-        invoiceEdit:
+            column: invoice_issued_create
+        invoiceIssuedEdit:
             type: string
             nullable: true
             length: 255
             options:
                 fixed: false
-            column: invoice_edit
-        invoiceRemove:
+            column: invoice_issued_edit
+        invoiceIssuedRemove:
             type: string
             nullable: true
             length: 255
             options:
                 fixed: false
-            column: invoice_remove
-    # /INVOICE ########################################################
+            column: invoice_issued_remove
+    # /INVOICE ISSUED #################################################
+    # INVOICE RECEIVED ################################################
+        invoiceReceivedList:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: invoice_received_list
+        invoiceReceivedView:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: invoice_received_view
+        invoiceReceivedCreate:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: invoice_received_create
+        invoiceReceivedEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: invoice_received_edit
+        invoiceReceivedRemove:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: invoice_received_remove
+    # /INVOICE RECEIVED ###############################################    
     # SERVICE #########################################################
         serviceList:
             type: string
@@ -593,15 +630,103 @@ BackendBundle\Entity\UserPermissionDefinition:
             length: 255
             options:
                 fixed: false
-            column: tracing_service_remove
-        tracingServiceChangeCountableStatus:
+            column: tracing_service_remove              
+    # /TRACING SERVICE ################################################
+    # PAYMENT #########################################################
+        paymentList:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: payment_list
+        paymentView:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: payment_view
+        paymentCreate:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: payment_create
+        paymentEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: payment_edit
+        paymentRemove:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: payment_remove
+        paymentChangeCountableState:
             type: string
             nullable: true
             length: 100
             options:
                 fixed: false
-            column: tracing_service_change_countable_status              
-    # /TRACING SERVICE ################################################
+            column: payment_change_countable_state
+        paymentChangeConsolidatedState:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+            column: payment_change_consolidated_state                          
+    # /PAYMENT ######################################################## 
+    # ACCOUNTING ######################################################
+        accountingList:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: accounting_list
+        accountingViewTotal:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: accounting_view_total
+        accountingViewGraphic:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: accounting_view_graphic           
+        accountingCreate:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: accounting_create
+        accountingEdit:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: accounting_edit
+        accountingRemove:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: accounting_remove                         
+    # /ACCOUNTING #####################################################        
     # ADMIN ###########################################################
         adminSectionAccess:
             type: string

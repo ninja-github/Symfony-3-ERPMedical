@@ -35,20 +35,28 @@
 				<div class="col-md-3 left_col menu_fixed mCustomScrollbar _mCS_1 mCS-autoHide">
 					<div class="left_col scroll-view">
 						<div class="navbar nav_title" style="border: 0;">
-							<a href="{{ path("homepage")}}" class="site_title">
+							<a href="{{ path("homepage")}}" class="site_title" style="text-align: center; margin:0px;padding:10px 10px 20px 10px;">
+								<style>
+									#logo_clinic{
+										//width:30px;
+										width:30px;
+										height:30px;
+										text-align:center;
+									}
+								</style>
 								{# IMAGEN DE USUARIO SI EXISTIESE O NO UN REGISTRO.......................................................... #}
 									{% if app.user.image == null %}
 										<i class="fa fa-paw"></i>
 									{% else %}
-										<img src="{{ asset ('uploads/clinics/'~ClinicsUser.nameUrl~'/'~ClinicsUser.image) }}" alt="..." class="img-circle" style="width:25px;"/>
+										<img id="logo_clinic" src="{{ asset ('uploads/clinics/'~ClinicsUser.nameUrl~'/'~ClinicsUser.image) }}" alt="..." class="img-circle"/>
 									{% endif %}
 								{# ..........................................................IMAGEN DE USUARIO SI EXISTIESE O NO UN REGISTRO #}
-								<span>{{ClinicsUser.name}}</span>
+								<span style="font-size:20px;">{{ClinicsUser.name}}</span>
 							</a>
 						</div>
 						<div class="clearfix"></div>
 						<!-- menu profile quick info -->
-							<div class="profile clearfix">
+							<div class="profile clearfix" style="position:relative;top:5px;">
 								<div class="profile_pic">
 									{# IMAGEN DE USUARIO SI EXISTIESE O NO UN REGISTRO.......................................................... #}
 										{% if app.user.image == null %}
@@ -117,67 +125,82 @@
 												</li>
 											{% endif %}
 										{# ................................................................................... ESTUDIO ORTOPODOLÓGICO #}
-										{% if permissionLoggedUser.reportList == true or permissionLoggedUser.reportCreate == true %}
+										{# REPORT ....................................................................................................#}
+											{% if permissionLoggedUser.reportList == true or permissionLoggedUser.reportCreate == true %}
+												<li>
+													<a><i class="fa fa-file-text-o"></i>Informes<span class="fa fa-chevron-down"></span></a>
+													<ul class="nav child_menu">
+														{% if permissionLoggedUser.reportList == true %}
+															<li>
+																<a href="{{ path("report_list", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">Listado
+																</a>
+															</li>
+														{% endif %}
+														{% if permissionLoggedUser.reportCreate == true %}
+															<li>
+																<a href="{{ path("report_create", {clinicNameUrl:ClinicsUser.nameUrl,medicalHistoryNumber:"without_MedicalHistoryNumber" } ) }}">
+																	Nueva Informe
+																</a>
+															</li>
+														{% endif %}
+													</ul>
+												</li>
+											{% endif %}
+										{#.................................................................................................... REPORT #}
+										{# ACCOUNTING ................................................................................................#}
+											{% if permissionLoggedUser.invoiceIssuedList == true 
+											or permissionLoggedUser.invoiceReceivedList == true 
+											or permissionLoggedUser.accountingList == true 
+											or permissionLoggedUser.invoiceIssuedCreate == true %}
+												<li>
+													<a><i class="fa fa-bank"></i>Contabilidad<span class="fa fa-chevron-down"></span></a>
+													<ul class="nav child_menu">
+														{% if permissionLoggedUser.accountingList == true %}
+															<li>
+																<a href="{{ path("clinic_accounting", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">Contabilidad</a>
+															</li>
+														{% endif %}
+														{% if permissionLoggedUser.invoiceIssuedList == true or permissionLoggedUser.invoiceReceivedList == true %}
+															<li>
+																<a href="{{ path("invoice_list", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">Listado Facturas
+																</a>
+															</li>
+														{% endif %}
+														{#}
+														{% if permissionLoggedUser.invoiceIssuedCreate == true %}
+															<li>
+																<a href="{{ path("invoice_create", {clinicNameUrl:ClinicsUser.nameUrl,medicalHistoryNumber:"without_MedicalHistoryNumber" } ) }}">
+																	Nueva Factura
+																</a>
+															</li>
+														{% endif %}
+														#}
+													</ul>
+												</li>
+											{% endif %}
+										{#................................................................................................ ACCOUNTING #}
+										{# SCHEDULE ..................................................................................................#}
+											{% if permissionLoggedUser.scheduleList == true %}
 											<li>
-												<a><i class="fa fa-file-text-o"></i>Informes<span class="fa fa-chevron-down"></span></a>
-												<ul class="nav child_menu">
-													{% if permissionLoggedUser.reportList == true %}
-														<li>
-															<a href="{{ path("report_list", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">Listado
-															</a>
-														</li>
-													{% endif %}
-													{% if permissionLoggedUser.reportCreate == true %}
-														<li>
-															<a href="{{ path("report_create", {clinicNameUrl:ClinicsUser.nameUrl,medicalHistoryNumber:"without_MedicalHistoryNumber" } ) }}">
-																Nueva Informe
-															</a>
-														</li>
-													{% endif %}
-												</ul>
-											</li>
-										{% endif %}
-										{% if permissionLoggedUser.invoiceIssuedList == true or permissionLoggedUser.invoiceIssuedCreate == true %}
-											<li>
-												<a><i class="fa fa-bank"></i>Contabilidad<span class="fa fa-chevron-down"></span></a>
-												<ul class="nav child_menu">
-													<li>
-														<a href="{{ path("clinic_accounting", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">Contabilidad</a>
-													</li>
-													{% if permissionLoggedUser.invoiceIssuedList == true %}
-														<li>
-															<a href="{{ path("invoice_list", {clinicNameUrl:ClinicsUser.nameUrl} ) }}">Listado Facturas
-															</a>
-														</li>
-													{% endif %}
-													{#}
-													{% if permissionLoggedUser.invoiceIssuedCreate == true %}
-														<li>
-															<a href="{{ path("invoice_issued_create", {clinicNameUrl:ClinicsUser.nameUrl,medicalHistoryNumber:"without_MedicalHistoryNumber" } ) }}">
-																Nueva Factura
-															</a>
-														</li>
-													{% endif %}
-													#}
-												</ul>
-											</li>
-										{% endif %}
-										<li>
-											<a href="{{ path("schedule_home", {clinicNameUrl:ClinicsUser.nameUrl,userName:app.user.userName}) }}">
-												<i class="fa fa-calendar"></i>
-												Agenda
-												<span class="fa fa-chevron-down"></span>
-											</a>
-										</li>
-										{% if permissionLoggedUser.adminSectionAccess == true %}
-											<li>
-												<a href="{{ path("admin_home") }}">
-													<i class="fa fa-wrench"></i>
-													Administración
+												<a href="{{ path("schedule_home", {clinicNameUrl:ClinicsUser.nameUrl,userName:app.user.userName}) }}">
+													<i class="fa fa-calendar"></i>
+													Agenda
 													<span class="fa fa-chevron-down"></span>
 												</a>
 											</li>
-										{% endif %}
+											{% endif %}
+										{#.................................................................................................. SCHEDULE #}
+										{# ADMIN .................................................................................................... #}																					
+											{% if permissionLoggedUser.adminSectionAccess == true %}
+												<li>
+													<a href="{{ path("admin_home") }}">
+														<i class="fa fa-wrench"></i>
+														Administración
+														<span class="fa fa-chevron-down"></span>
+													</a>
+												</li>
+											{% endif %}
+										{#.................................................................................................... ADMIN #}										
 									</ul>
 								</div>
 							</div>
@@ -276,24 +299,24 @@
 	{# MOSTRAMOS LOS FLASHBAG...................................................... #}
 		<div class="container">
 			<div id="status" style="position: fixed;bottom: 30px;z-index: 200;right: 10px;">
-				{% for message in app.session.flashbag().get('status') %}
-						<div class="alert alert-{{message['type']}} alert-dismissible fade in"  role="alert">
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close">	<span aria-hidden="true">×</span>
+					{% for key, message in app.session.flashbag().get('status') %}
+						<div id = "alert_message_{{key}}" class="alert alert-{{message['type']}} alert-dismissible fade in"  role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">×</span>
 							</button>
 							{{message['description']}}
 						</div>
+						<script>
+							{% set time = 3000 * key %}
+							window.setTimeout(function() {
+								$("#alert_message_{{key}}").fadeTo(500, 0).slideUp(500, function(){
+								$(this).remove();
+								});
+							}, {{time}});
+						</script>						
 				{% endfor %}
 			</div>
 		</div>
-		{% if app.session.flashbag().get('status')|length != 0 %}
-			<script>
-				window.setTimeout(function() {
-					$(".alert").fadeTo(500, 0).slideUp(500, function(){
-					$(this).remove();
-					});
-				}, 3000);
-			</script>
-		{% endif %}
         <div class="clearfix"></div>
 	{# ......................................................MOSTRAMOS LOS FLASHBAG #}
 {% block content %}

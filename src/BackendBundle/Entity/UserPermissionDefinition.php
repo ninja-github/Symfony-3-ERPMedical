@@ -285,33 +285,6 @@ class UserPermissionDefinition {
 		public function getReportRemove() { return $this->reportRemove; }
 	/**********************************************************************************************************/
 /**************************************************************************************************************/
-/* INVOICE ****************************************************************************************************/
-	/* invoiceList ******************************************************************************************/
-		private $invoiceList;
-		public function setInvoiceList($invoiceList) { $this->invoiceList = $invoiceList; return $this; }
-		public function getInvoiceList() { return $this->invoiceList; }
-	/**********************************************************************************************************/
-	/* invoiceView ******************************************************************************************/
-		private $invoiceView;
-		public function setInvoiceView($invoiceView) { $this->invoiceView = $invoiceView; return $this; }
-		public function getInvoiceView() { return $this->invoiceView; }
-	/**********************************************************************************************************/	
-	/* invoiceCreate ******************************************************************************************/
-		private $invoiceCreate;
-		public function setInvoiceCreate($invoiceCreate) { $this->invoiceCreate = $invoiceCreate; return $this; }
-		public function getInvoiceCreate() { return $this->invoiceCreate; }
-	/**********************************************************************************************************/
-	/* invoiceEdit ********************************************************************************************/
-		private $invoiceEdit;
-		public function setInvoiceEdit($invoiceEdit) { $this->invoiceEdit = $invoiceEdit; return $this; }
-		public function getInvoiceEdit() { return $this->invoiceEdit; }
-	/**********************************************************************************************************/
-	/* invoiceRemove ******************************************************************************************/
-		private $invoiceRemove;
-		public function setInvoiceRemove($invoiceRemove) { $this->invoiceRemove = $invoiceRemove; return $this; }
-		public function getInvoiceRemove() { return $this->invoiceRemove; }
-	/**********************************************************************************************************/	
-/**************************************************************************************************************/
 /* SERVICE ****************************************************************************************************/
 		private $serviceList;
 		public function setServiceList($serviceList) { $this->serviceList = $serviceList; return $this; } 
@@ -402,12 +375,131 @@ class UserPermissionDefinition {
 		public function setTracingServiceRemove($tracingServiceRemove) { $this->tracingServiceRemove = $tracingServiceRemove; return $this; }
 		public function getTracingServiceRemove() { return $this->tracingServiceRemove; }
 	/**********************************************************************************************************/
-	/* tracingServiceChangeCountableStatus ***********************************************************************************/
-		private $tracingServiceChangeCountableStatus;
-		public function setTracingServiceChangeCountableStatus($tracingServiceChangeCountableStatus) { $this->tracingServiceChangeCountableStatus = $tracingServiceChangeCountableStatus; return $this; }
-		public function getTracingServiceChangeCountableStatus() { return $this->tracingServiceChangeCountableStatus; }
-	/**********************************************************************************************************/	
 /**************************************************************************************************************/
+/* PAYMENT ****************************************************************************************************/
+	/* paymentList ********************************************************************************************/
+		private $paymentList;
+		public function setPaymentList($paymentList) { $this->paymentList = $paymentList; return $this; }
+		public function getPaymentList() { return $this->paymentList; }
+	/**********************************************************************************************************/
+	/* paymentView *************************************************************************************/
+		private $paymentView;
+		public function setPaymentView($paymentView) { $this->paymentView = $paymentView; return $this; }
+		public function getPaymentView() { return $this->paymentView; }
+	/**********************************************************************************************************/
+	/* paymentCreate ******************************************************************************************/
+		private $paymentCreate;
+		public function setPaymentCreate($paymentCreate) { $this->paymentCreate = $paymentCreate; return $this; }
+		public function getPaymentCreate() { return $this->paymentCreate; }
+	/**********************************************************************************************************/
+	/* paymentEdit ********************************************************************************************/
+		private $paymentEdit;
+		public function setPaymentEdit($paymentEdit) { $this->paymentEdit = $paymentEdit; return $this; }
+		public function getPaymentEdit() { return $this->paymentEdit; }
+	/**********************************************************************************************************/
+	/* paymentRemove ******************************************************************************************/
+		private $paymentRemove;
+		public function setPaymentRemove($paymentRemove) { $this->paymentRemove = $paymentRemove; return $this; }
+		public function getPaymentRemove() { return $this->paymentRemove; }
+	/**********************************************************************************************************/
+	/* paymentChangeCountableState ****************************************************************************/
+		private $paymentChangeCountableState;
+		public function setPaymentChangeCountableState($paymentChangeCountableState) { $this->paymentChangeCountableState = $paymentChangeCountableState; return $this; }
+		public function getPaymentChangeCountableState() { return $this->paymentChangeCountableState; }
+	/**********************************************************************************************************/
+	/* paymentChangeConsolidatedState *************************************************************************/
+		private $paymentChangeConsolidatedState;
+		public function setPaymentChangeConsolidatedState($paymentChangeConsolidatedState) { $this->paymentChangeConsolidatedState = $paymentChangeConsolidatedState; return $this; }
+		public function getPaymentChangeConsolidatedState() { return $this->paymentChangeConsolidatedState; }
+	/**********************************************************************************************************/		
+/**************************************************************************************************************/
+/* INVOICE ISSUED *********************************************************************************************/
+	/* invoiceIssuedList **************************************************************************************/
+		private $invoiceIssuedList;
+		public function setInvoiceIssuedList($invoiceIssuedList) { $this->invoiceIssuedList = $invoiceIssuedList; return $this; }
+		public function getInvoiceIssuedList() { return $this->invoiceIssuedList; }
+	/**********************************************************************************************************/
+	/* invoiceIssuedView **************************************************************************************/
+		private $invoiceIssuedView;
+		public function setInvoiceIssuedView($invoiceIssuedView) { $this->invoiceIssuedView = $invoiceIssuedView; return $this; }
+		public function getInvoiceIssuedView() { return $this->invoiceIssuedView; }
+	/**********************************************************************************************************/	
+	/* invoiceIssuedCreate ************************************************************************************/
+		private $invoiceIssuedCreate;
+		public function setInvoiceIssuedCreate($invoiceIssuedCreate) { $this->invoiceIssuedCreate = $invoiceIssuedCreate; return $this; }
+		public function getInvoiceIssuedCreate() { return $this->invoiceIssuedCreate; }
+	/**********************************************************************************************************/
+	/* invoiceIssuedEdit **************************************************************************************/
+		private $invoiceIssuedEdit;
+		public function setInvoiceIssuedEdit($invoiceIssuedEdit) { $this->invoiceIssuedEdit = $invoiceIssuedEdit; return $this; }
+		public function getInvoiceIssuedEdit() { return $this->invoiceIssuedEdit; }
+	/**********************************************************************************************************/
+	/* invoiceIssuedRemove ************************************************************************************/
+		private $invoiceIssuedRemove;
+		public function setInvoiceIssuedRemove($invoiceIssuedRemove) { $this->invoiceIssuedRemove = $invoiceIssuedRemove; return $this; }
+		public function getInvoiceIssuedRemove() { return $this->invoiceIssuedRemove; }
+	/**********************************************************************************************************/
+/**************************************************************************************************************/
+/* INVOICE RECEIVED *******************************************************************************************/
+	/* invoiceReceivedList ************************************************************************************/
+		private $invoiceReceivedList;
+		public function setInvoiceReceivedList($invoiceReceivedList) { $this->invoiceReceivedList = $invoiceReceivedList; return $this; }
+		public function getInvoiceReceivedList() { return $this->invoiceReceivedList; }
+	/**********************************************************************************************************/
+	/* invoiceReceivedView ************************************************************************************/
+		private $invoiceReceivedView;
+		public function setInvoiceReceivedView($invoiceReceivedView) { $this->invoiceReceivedView = $invoiceReceivedView; return $this; }
+		public function getInvoiceReceivedView() { return $this->invoiceReceivedView; }
+	/**********************************************************************************************************/	
+	/* invoiceReceivedCreate **********************************************************************************/
+		private $invoiceReceivedCreate;
+		public function setInvoiceReceivedCreate($invoiceReceivedCreate) { $this->invoiceReceivedCreate = $invoiceReceivedCreate; return $this; }
+		public function getInvoiceReceivedCreate() { return $this->invoiceReceivedCreate; }
+	/**********************************************************************************************************/
+	/* invoiceReceivedEdit ************************************************************************************/
+		private $invoiceReceivedEdit;
+		public function setInvoiceReceivedEdit($invoiceReceivedEdit) { $this->invoiceReceivedEdit = $invoiceReceivedEdit; return $this; }
+		public function getInvoiceReceivedEdit() { return $this->invoiceReceivedEdit; }
+	/**********************************************************************************************************/
+	/* invoiceReceivedRemove **********************************************************************************/
+		private $invoiceReceivedRemove;
+		public function setInvoiceReceivedRemove($invoiceReceivedRemove) { $this->invoiceReceivedRemove = $invoiceReceivedRemove; return $this; }
+		public function getInvoiceReceivedRemove() { return $this->invoiceReceivedRemove; }
+	/**********************************************************************************************************/		
+/**************************************************************************************************************/
+/**************************************************************************************************************/
+/* ACCOUNTING *************************************************************************************************/
+	/* accountingList *****************************************************************************************/
+		private $accountingList;
+		public function setAccountingList($accountingList) { $this->accountingList = $accountingList; return $this; }
+		public function getAccountingList() { return $this->accountingList; }
+	/**********************************************************************************************************/
+	/* accountingViewTotal ************************************************************************************/
+		private $accountingViewTotal;
+		public function setAccountingViewTotal($accountingViewTotal) { $this->accountingViewTotal = $accountingViewTotal; return $this; }
+		public function getAccountingViewTotal() { return $this->accountingViewTotal; }
+	/**********************************************************************************************************/
+	/* accountingViewGraphic **********************************************************************************/
+		private $accountingViewGraphic;
+		public function setAccountingViewGraphic($accountingViewGraphic) { $this->accountingViewGraphic = $accountingViewGraphic; return $this; }
+		public function getAccountingViewGraphic() { return $this->accountingViewGraphic; }
+	/**********************************************************************************************************/	
+	/* accountingCreate ***************************************************************************************/
+		private $accountingCreate;
+		public function setAccountingCreate($accountingCreate) { $this->accountingCreate = $accountingCreate; return $this; }
+		public function getAccountingCreate() { return $this->accountingCreate; }
+	/**********************************************************************************************************/
+	/* accountingEdit *****************************************************************************************/
+		private $accountingEdit;
+		public function setAccountingEdit($accountingEdit) { $this->accountingEdit = $accountingEdit; return $this; }
+		public function getAccountingEdit() { return $this->accountingEdit; }
+	/**********************************************************************************************************/
+	/* accountingRemove ***************************************************************************************/
+		private $accountingRemove;
+		public function setAccountingRemove($accountingRemove) { $this->accountingRemove = $accountingRemove; return $this; }
+		public function getAccountingRemove() { return $this->accountingRemove; }
+	/**********************************************************************************************************/		
+	/**************************************************************************************************************/
 /* ADMIN ******************************************************************************************************/
 	/* adminSectionAccess**************************************************************************************/
 		private $adminSectionAccess;

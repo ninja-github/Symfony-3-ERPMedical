@@ -1,5 +1,5 @@
 <?php
-/* Indicamos el namespace del Bundle                     ******************************************************/
+/* Indicamos el namespace del Bundle **************************************************************************/
 	namespace AppBundle\Controller;
 /* COMPONENTES BÁSICOS DEL CONTROLADOR ************************************************************************/
 	use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -37,6 +37,7 @@ class InvoiceController extends Controller{
 			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userlogged);
 		/******************************************************************************************************/
 		/* PERMISO ACCESO *************************************************************************************/
+			$permissionDenied = false;	
 			$clinicView= $em->getRepository("BackendBundle:Clinic")->findOneByNameUrl($clinicNameUrl);
 			$clinicUserCorrect = $em->getRepository("BackendBundle:ClinicUser")->findOneBy(array('clinic'=>$clinicView, 'user'=>$userlogged));
 			// El usuario pertenece a la clínica y no puede ver otras clínicas
@@ -44,15 +45,23 @@ class InvoiceController extends Controller{
 				$status = ['type'=>'danger','description'=>'El usuario pertenece a otra clínica y no tiene acceso.'];
 				// generamos los mensajes FLASH (necesario activar las sesiones)
 				$this->session->getFlashBag()->add("status", $status);
-				return $this->redirectToRoute('homepage');
+				$permissionDenied = true;
 			};
-			// El usuario puede listar informes
+			// El usuario puede listar facturas
 			if( $permissionLoggedUser->getInvoiceIssuedList() == false ){
-				$status = ['type'=>'danger','description'=>'El usuario no puede listar facturas.'];
+				$status = ['type'=>'danger','description'=>'El usuario no puede listar facturas Emitidas.'];
 				// generamos los mensajes FLASH (necesario activar las sesiones)
 				$this->session->getFlashBag()->add("status", $status);
-				return $this->redirectToRoute('homepage');
 			};
+			if( $permissionLoggedUser->getInvoiceReceivedList() == false ){
+				$status = ['type'=>'danger','description'=>'El usuario no puede listar facturas Recibidas.'];
+				// generamos los mensajes FLASH (necesario activar las sesiones)
+				$this->session->getFlashBag()->add("status", $status);
+			};
+			if( $permissionLoggedUser->getInvoiceIssuedList() == false and $permissionLoggedUser->getInvoiceReceivedList() == false ){
+				$permissionDenied = true;
+			}
+			if ($permissionDenied){ return $this->redirectToRoute('homepage'); }
 		/******************************************************************************************************/
 		/* CARGO LOS REPOSITORIOS  ****************************************************************************/
 			$clinic_repo = $em->getRepository("BackendBundle:Clinic");

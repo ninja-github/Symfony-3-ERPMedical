@@ -32,22 +32,17 @@
 							<thead>
 								<tr>
 									<th style="width:20px;">NºHª</th>
-									<th style="text-align: center; width:15px;">
-										<i class="fa fa-check-circle m-right-xs"></i>
-									</th>
-									<th style="text-align: center; width:15px;">
-										<i class="fa fa-money m-right-xs">
-									</th>
-									<th style="text-align: center; width:15px;">
-										<i class="fa fa-exclamation-triangle"></i>
-									</th>	
 									<th>Nombre</th>
 									<th style="width:40px;">DNI</th>
 									<th style="width:40px;">Móvil</th>
 									<th style="width:40px;">Fijo</th>
 									<th>Ciudad</th>
-									<th style="text-align: center;"><i class="ionicons ion-male" style="text-align: center;"></i> / <i class="ionicons ion-female" style="text-align: center;"></i></th>
 									<th>Fecha</th>
+									<th style="text-align: center; width:20px;"><i class="ionicons ion-male" style="text-align: center;"></i> / <i class="ionicons ion-female" style="text-align: center;"></i></th>
+									<th style="text-align: center; width:20px;"><i class="fa fa-check-circle m-right-xs"></i></th>
+									<th style="text-align: center; width:20px;"><i class="fa fa-money m-right-xs"></th>
+									<th style="text-align: center; width:20px;"><i class="fa fa-exclamation-triangle"></i></th>										
+
 								</tr>
 							</thead>
 							<tbody>
@@ -64,21 +59,6 @@
 										<td style="text-align:center;">
 											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">{{orthopodologyHistory.medicalHistory.medicalHistoryNumber}}</a>
 										</td>
-										<td style="text-align: center;">
-											{% if medicalHistory.updated != NULL %}
-												<i class="fa fa-check-circle m-right-xs"></i>
-											{% endif %}
-										</td>
-										<td style="text-align: center;">
-											{% if cost > earnings %}
-												<i class="fa fa-money m-right-xs"></i>
-											{% endif %}
-										</td>
-										<td style="text-align: center;">
-											{% if medicalHistory.patientRisk != NULL %}
-												<i class="fa fa-exclamation-triangle"></i>
-											{% endif %}
-										</td>
 										<td>
 											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">{{orthopodologyHistory.medicalHistory.surname| title}}, {{orthopodologyHistory.medicalHistory.name| title}}</a>
 										</td>
@@ -94,7 +74,10 @@
 										<td>
 											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">
 											{% if city != null %} {{city.city}} ( {{city.province.province}} ){% endif %}</a>
-										</td>										
+										</td>
+										<td style="text-align:center;">
+											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">{{orthopodologyHistory.registrationDate | date("d/m/Y")}}</a>
+										</td>																			
 										<td style="text-align: center;">
 											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">
 												{% if orthopodologyHistory.medicalHistory.gender == "Hombre" %}
@@ -104,9 +87,21 @@
 												{% endif %}
 											</a>
 										</td>
-										<td style="text-align:center;">
-											<a href="{{ path('orthopodology_history_view', {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': orthopodologyHistory.medicalHistory.medicalHistoryNumber, 'registrationDate' : orthopodologyHistory.registrationDate | date('Y_m_d') } ) }}">{{orthopodologyHistory.registrationDate | date("d/m/Y")}}</a>
-										</td>										
+										<td style="text-align: center;">
+											{% if medicalHistory.updated != NULL %}
+												<i class="fa fa-check-circle m-right-xs"></i>
+											{% endif %}
+										</td>
+										<td style="text-align: center;">
+											{% if cost > earnings %}
+												<i class="fa fa-money m-right-xs"></i>
+											{% endif %}
+										</td>
+										<td style="text-align: center;">
+											{% if medicalHistory.patientRisk != NULL %}
+												<i class="fa fa-exclamation-triangle"></i>
+											{% endif %}
+										</td>																				
 									</tr>
 								{% endfor %}
 							</tbody>

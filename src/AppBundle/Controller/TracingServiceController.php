@@ -80,7 +80,12 @@ class TracingServiceController extends Controller{
 					</div>';
 			}
 		}
-		return new Response($response);
+		$result['alert'] = $response;
+		$clinicNameUrl = $tracingService->getTracing()->getMedicalHistory()->getClinic()->getNameUrl();
+		$medicalHistoryNumber = $tracingService->getTracing()->getMedicalHistory()->getMedicalHistoryNumber();
+		$costEarnings = $em->getRepository('BackendBundle:Tracing')->getCostEarnings($clinicNameUrl, $medicalHistoryNumber);
+		$result['accounting_medicalHistory'] = '<i class="fa fa-external-link fa-money"></i> '.$costEarnings["cost"].' € (gastados) / '.$costEarnings["earnings"].' € (pagados)';
+		return new Response(json_encode($result));
 	}
 /**************************************************************************************************************/
 /* MÉTODO AJAX GENERAR INPUT **********************************************************************************/
@@ -147,14 +152,14 @@ class TracingServiceController extends Controller{
 				<select class="select_group form-control" id="tracing_service['.$idTracing.'][service][service]" name="tracing[service][service]">
 					<option value="0"> </option>';
 		foreach($servicesList as $keyServiceParent=>$serviceParent){
-			if ( empty( $serviceParent->getParent() ) && count ($serviceParent->getChildren() ) == 0 ){
+			if ( empty( $serviceParent->getParent() ) && count ($serviceParent->getChildrenList() ) == 0 ){
 					$response = $response.'<option value="'.(string) $serviceParent->getId().'"><p class="text-left">'.(string)$serviceParent->getName().'</p> <p class="text-right">( '.$serviceParent->getMaximumPrice().' € ) </p></option>';
-			}elseif( empty( $serviceParent->getParent() ) && count ($serviceParent->getChildren() ) >= 1 ){
+			}elseif( empty( $serviceParent->getParent() ) && count ($serviceParent->getChildrenList() ) >= 1 ){
 				$response = $response.'<optgroup label="'.$serviceParent->getName().'">';
 				foreach($servicesList as $keyServiceChildren=>$serviceChildren){
-					if( $serviceChildren->getParent()!=null && $serviceParent->getId() == $serviceChildren->getParent()->getId() && count ($serviceChildren->getChildren())==0){
+					if( $serviceChildren->getParent()!=null && $serviceParent->getId() == $serviceChildren->getParent()->getId() && count ($serviceChildren->getChildrenList())==0){
 						$response = $response.'<option value="'.$serviceChildren->getId().'">'.$serviceChildren->getName().' ( '.$serviceChildren->getMaximumPrice().' € ) </option>';
-					}elseif( $serviceChildren->getParent()!=null && $serviceParent->getId() == $serviceChildren->getParent()->getId() && count ($serviceChildren->getChildren())>=1){
+					}elseif( $serviceChildren->getParent()!=null && $serviceParent->getId() == $serviceChildren->getParent()->getId() && count ($serviceChildren->getChildrenList())>=1){
 						if($serviceChildren->getMaximumPrice() == null ){
 							$response = $response.'<optgroup label="'.'&nbsp;&nbsp;&nbsp;&nbsp;'.$serviceChildren->getName().'">';
 							foreach($servicesList as $keyServiceGrandChildren=>$serviceGrandChildren){
@@ -269,7 +274,7 @@ class TracingServiceController extends Controller{
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						<span aria-hidden="true">×</span>
 					</button>
-					El servicio se almacenó correctamente.'.$request->get('valuePayment').'
+					El servicio se almacenó correctamente.
 				</div>';
 		}else{
 			$response =
@@ -282,6 +287,10 @@ class TracingServiceController extends Controller{
 		}
 		$result['alert'] = $response;
 		$result['idTracingService'] = $em->getRepository('BackendBundle:TracingService')->findOneByTracing(['tracing'=>$tracing],['id'=>'DESC'])->getId();
+		$clinicNameUrl = $tracing->getMedicalHistory()->getClinic()->getNameUrl();
+		$medicalHistoryNumber = $tracing->getMedicalHistory()->getMedicalHistoryNumber();
+		$costEarnings = $em->getRepository('BackendBundle:Tracing')->getCostEarnings($clinicNameUrl, $medicalHistoryNumber);
+		$result['accounting_medicalHistory'] = '<i class="fa fa-external-link fa-money"></i> '.$costEarnings["cost"].' € (gastados) / '.$costEarnings["earnings"].' € (pagados)';
 		return new Response(json_encode($result));
 	}
 /**************************************************************************************************************/	

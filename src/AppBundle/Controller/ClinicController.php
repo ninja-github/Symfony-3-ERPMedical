@@ -1,5 +1,5 @@
 <?php
-/* Indicamos el namespace del Bundle                     ******************************************************/
+/* Indicamos el namespace del Bundle **************************************************************************/
 	namespace AppBundle\Controller;
 /* COMPONENTES BÁSICOS DEL CONTROLADOR ************************************************************************/
 	use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -23,8 +23,10 @@ class ClinicController extends Controller {
 		/* CARGA INICIAL **************************************************************************************/
 			$em = $this->getDoctrine()->getManager();
 			$userlogged = $this->getUser();	// extraemos el usuario de la sessión
+        /******************************************************************************************************/			
 		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
 			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userlogged, $request);
+        /******************************************************************************************************/			
 		/* EXTRAE PERMISOS DEL USUARIO  ***********************************************************************/
 			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userlogged);
 		/******************************************************************************************************/
@@ -101,8 +103,10 @@ class ClinicController extends Controller {
 		/* CARGA INICIAL **************************************************************************************/
 			$em = $this->getDoctrine()->getManager();
 			$userlogged = $this->getUser();	// extraemos el usuario de la sessión
+        /******************************************************************************************************/			
 		/* INTRODUCE INFORMACIÓN SESIÓN USUARIO  **************************************************************/
 			$setUserInformation = $em->getRepository("BackendBundle:UserSession")->setUserInformation($userlogged, $request);
+        /******************************************************************************************************/			
 		/* EXTRAE PERMISOS DEL USUARIO  ***********************************************************************/
 			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userlogged);
 		/******************************************************************************************************/
@@ -129,16 +133,17 @@ class ClinicController extends Controller {
 			$addressCity_repo = $em->getRepository("BackendBundle:AddressCity");
 			$clinicUser_repo = $em->getRepository("BackendBundle:ClinicUser");
 			$medicalHistory_repo = $em->getRepository("BackendBundle:MedicalHistory");
+			$service_repo = $em->getRepository("BackendBundle:Service");
 		/******************************************************************************************************/
 		/* REALIZO LAS CONSULTAS NECESARIAS A LA BD MEDIANTE LOS REPOSITORIOS *********************************/
 			$clinic = $clinic_repo->findOneByNameUrl($clinicNameUrl);
 			$addressCity = $addressCity_repo->findOneById($clinic->getCity());
 			$clinicUser = $clinicUser_repo->findByClinic($clinic);
+			$servicesList = $service_repo->findBy(array('clinic'=>$clinic),array('weight'=>'DESC',));
 			// Realizamos las consultas // funciones Repositorio usadas, ver 'src\BackendBundle\Repository'			
 			$medicalHistoryRatioSex = $medicalHistory_repo->getRatioGenderQuery($clinicNameUrl);
-			/* Por terminar... Estadísticas consulta
+			// Por terminar... Estadísticas consulta
 			$newUsersPerMonth = $medicalHistory_repo->getMedicalHistoryPerMonthQuery( $clinicNameUrl );
-			*/
 			$totalUser = $medicalHistory_repo->getTotalNumberMedicalHistoriesQuery( $clinicNameUrl );
 		/* CARGAMOS LA VISTA CON SUS VARIABLES ****************************************************************/ 			
 			return $this->render('AppBundle:Clinic:clinic_View.html.twig',
@@ -148,14 +153,12 @@ class ClinicController extends Controller {
 					'addressCity' => $addressCity,
 					'clinicUser' => $clinicUser,
 					'medicalHistoryRatioSex' => $medicalHistoryRatioSex,
-					/*
+					'servicesList'=>$servicesList,
 					'newUsersPerMonth' => $newUsersPerMonth,
-					*/
 					'totalUser'=>$totalUser
 				)
 			);
 		/******************************************************************************************************/
 	}
-/**************************************************************************************************************/
 /**************************************************************************************************************/
 }

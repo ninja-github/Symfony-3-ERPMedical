@@ -7,11 +7,25 @@
 	use Doctrine\Common\Collections\ArrayCollection;
 /**************************************************************************************************************/
 class Service {
-	private $children;
-	public function getChildren(){return $this->children;}
-    public function addChild(\BackendBundle\Entity\Service $child) { $this->children[] = $child; return $this; } 
-    public function removeChild(\BackendBundle\Entity\Service $child) { $this->children->removeElement($child); }	
-	public function __construct() { $this->children = new ArrayCollection(); }
+/* Listamos Hijos de cada servicio ****************************************************************************/	
+	private $childrenList;
+	public function getChildrenList(){return $this->childrenList;}
+    public function addChild(\BackendBundle\Entity\Service $child) { $this->childrenList[] = $child; return $this; } 
+	public function removeChild(\BackendBundle\Entity\Service $child) { $this->childrenList->removeElement($child); }
+/**************************************************************************************************************/
+/* Listamos Actualizaciones de cada servicio ******************************************************************/	
+	private $updatedList;
+	public function getUpdatedList(){return $this->updatedList;}
+	public function addUpdated(\BackendBundle\Entity\Service $updated) { $this->updatedList[] = $updated; return $this; } 
+	public function removeUpdated(\BackendBundle\Entity\Service $updated) { $this->updatedList->removeElement($updated); }
+/**************************************************************************************************************/
+/* CONSTRUCTOR ************************************************************************************************/
+	// Un ArrayCollection es una implementación de colección que se ajusta a la matriz PHP normal.   		
+	public function __construct() { 
+		$this->childrenList = new ArrayCollection();
+		$this->updatedList = new ArrayCollection();
+	}
+/**************************************************************************************************************/
 /* Id de la Tabla *********************************************************************************************/
 	private $id;
 	public function getId() { return $this->id; }

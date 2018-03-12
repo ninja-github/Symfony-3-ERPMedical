@@ -284,6 +284,60 @@ class UserPermissionType extends AbstractType {
 				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
 			))
 		/******************************************************************************************************/
+		/* REPORT *********************************************************************************************/
+			->add('reportList', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('reportView', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))		
+			->add('reportCreate', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('reportEdit', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('reportRemove', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+		/******************************************************************************************************/
+		/* SERVICE ********************************************************************************************/
+			->add('serviceList', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('serviceView', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))		
+			->add('serviceCreate', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('serviceEdit', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('serviceRemove', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+		/******************************************************************************************************/
 		/* TRACING ********************************************************************************************/
 			->add('tracingList', CheckboxType::class, array(
 				'required'=>true,
@@ -311,23 +365,183 @@ class UserPermissionType extends AbstractType {
 				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
 			))
 		/******************************************************************************************************/
-		/* SERVICE ********************************************************************************************/
-			->add('serviceCreate', CheckboxType::class, array(
+		/* TRACINGSERVICE *************************************************************************************/
+			->add('tracingServiceList', CheckboxType::class, array(
 				'required'=>true,
 				'value'=>true,
 				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
 			))
-			->add('serviceEdit', CheckboxType::class, array(
+			->add('tracingServiceView', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))			
+			->add('tracingServiceCreate', CheckboxType::class, array(
 				'required'=>true,
 				'value'=>true,
 				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
 			))
-			->add('serviceRemove', CheckboxType::class, array(
+			->add('tracingServiceEdit', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('tracingServiceRemove', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+		/******************************************************************************************************/
+		/* PAYMENT ********************************************************************************************/
+			->add('paymentList', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('paymentView', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))			
+			->add('paymentCreate', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('paymentEdit', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('paymentRemove', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('paymentChangeConsolidatedState', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('paymentChangeCountableState', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))						
+		/******************************************************************************************************/		
+		/* INVOICE ISSUED *************************************************************************************/
+			->add('invoiceIssuedList', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('invoiceIssuedView', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))			
+			->add('invoiceIssuedCreate', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('invoiceIssuedEdit', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('invoiceIssuedRemove', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+		/******************************************************************************************************/
+		/* INVOICE RECEIVED ***********************************************************************************/
+			->add('invoiceReceivedList', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('invoiceReceivedView', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))			
+			->add('invoiceReceivedCreate', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('invoiceReceivedEdit', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('invoiceReceivedRemove', CheckboxType::class, array(
 				'required'=>true,
 				'value'=>true,
 				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
 			))
 		/******************************************************************************************************/		
+		/* ACCOUNTING *****************************************************************************************/
+			->add('accountingList', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('accountingViewTotal', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('accountingViewGraphic', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))						
+			->add('accountingCreate', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('accountingEdit', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('accountingRemove', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+		/******************************************************************************************************/		
+		/* SCHEDULE *******************************************************************************************/
+			->add('scheduleList', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('scheduleView', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))		
+			->add('scheduleCreate', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('scheduleEdit', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+			->add('scheduleRemove', CheckboxType::class, array(
+				'required'=>true,
+				'value'=>true,
+				'attr'=>array('class'=>'js-switch', 'style' => 'display:none', 'data-sqitchery'=>true)
+			))
+		/******************************************************************************************************/						
 			->add('Editar',SubmitType::class, array(
 				'attr'=>array('class'=>'form-submit btn btn-success')
 			));

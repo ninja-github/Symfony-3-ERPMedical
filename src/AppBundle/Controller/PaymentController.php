@@ -36,7 +36,7 @@ class PaymentController extends Controller{
 			$permissionLoggedUser = $em->getRepository("BackendBundle:UserPermission")->findOneByUser($userlogged);
 		/******************************************************************************************************/
 		/* PERMISO ACCESO *************************************************************************************/
-			if($permissionLoggedUser->getTracingServiceRemove() == false ){
+			if($permissionLoggedUser->getPaymentRemove() == false ){
 			$response =
 				'<div class="alert alert-danger fade in" role="alert">
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">

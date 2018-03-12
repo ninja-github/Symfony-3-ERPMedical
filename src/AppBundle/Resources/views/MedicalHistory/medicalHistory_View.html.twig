@@ -238,13 +238,19 @@
 														{% endif %}
 													</li>
 													{% if medicalHistory.email != NULL %}
-														<i class="fa fa-external-link user-profile-icon"></i><a href="mailto:{{medicalHistory.email | lower}}">{{medicalHistory.email | lower}}</a><br/>
+														<li>
+															<i class="fa fa-external-link user-profile-icon"></i><a href="mailto:{{medicalHistory.email | lower}}">{{medicalHistory.email | lower}}</a>
+														</li>
 													{% endif %}
 													{% if medicalHistory.insuranceCarrier != NULL %}
-														<i class="fa fa-external-link fa-shield"></i> {{medicalHistory.insuranceCarrier | lower}}<br/>
+														<li>
+															<i class="fa fa-external-link fa-shield"></i> {{medicalHistory.insuranceCarrier | lower}}
+														</li>
 													{% endif %}
 													{% if costEarnings["cost"] >0 or costEarnings["earnings"] >0 %}
-														<i class="fa fa-external-link fa-money"></i> {{costEarnings["cost"]}} € (gastados) / {{costEarnings["earnings"]}} € (pagados)<br/>
+														<li id="accounting_medicalHistory">
+															<i class="fa fa-external-link fa-money"></i> {{costEarnings["cost"]}} € (gastados) / {{costEarnings["earnings"]}} € (pagados)
+														</li>
 													{% endif %}
 												</ul>
 											<!-- /datos Paciente-->

@@ -1,6 +1,6 @@
-{# EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig'...................... #}
+{# EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig'..................................................................................... #}
 	{% extends "AppBundle:Layouts:layout.html.twig"%}
-{# ......................EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig' #}
+{# .....................................................................................EXTENDEMOS LA PLANTILLA 'AppBundle:Layouts:layout.html.twig' #}
 {% block stylesheets %}
 	{# la función parent() carga todo el contenido del bloque anterior #}
 	{{ parent() }}
@@ -127,7 +127,7 @@
 {% endblock %}
 {% block content %}
 	<!-- page content -->
-		{# CARGO LAS VARIABLES DE LA URL DE ENTRADA ................................................................. #}
+		{# CARGO LAS VARIABLES DE LA URL DE ENTRADA ................................................................................................ #}
 			{% set routeParams = app.request.attributes.get('_route_params') %}
 			{% set clinicNameUrl = routeParams.clinicNameUrl %}
 			{% if routeParams.year is not defined  %}
@@ -135,7 +135,7 @@
 			{% else %}
 				{% set yearView = routeParams.year %}
 			{% endif %}
-		{# ................................................................. CARGO LAS VARIABLES DE LA URL DE ENTRADA #}
+		{# ................................................................................................ CARGO LAS VARIABLES DE LA URL DE ENTRADA #}
 		<div class="right_col" role="main">
 			<div class="clearfix"></div>
 			<div class="row">
@@ -146,57 +146,66 @@
 						{% endfor %}
 					</div>
 				</div>
-				{# FACTURAS SALIENTES ................................................................. #}
-					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-						<div class="x_panel" >
-							<div class="x_title">
-								<h3 style="display:inline-block;">Listado de Facturas <span> Salientes</span></h3>
-							</div>
-							<div class="x_content">
-								<table id="datatable-buttons-invoiceIssuedList" class="table table-striped table-bordered" cellspacing="0" width="100%">
-									<thead>
-										<tr>
-											<th style="width:50px;">NºFª</th>
-											<th style="width:15px;"><i class="fa fa-file-pdf-o"></i></th>
-											<th>Facturado a:</th>
-											<th style="width:70px;">Fecha</th>
-											<th style="width:50px;">Base</th>
-											<th style="width:50px;">IVA</th>
-											<th style="width:50px;">IRPF</th>
-											<th style="width:50px;">Total</th>
-										</tr>
-									</thead>
-									<tbody>
-										{% for invoiceIssued in invoiceIssuedList %}
-											{# DEFINO VARIABLES ................................................................... #}
-												{% set invoiceNumber = invoiceIssued.invoiceNumber %}
-												{% set registrationDate = invoiceIssued.registrationDate | date("d/m/Y") %}
-												{% if invoiceIssued.medicalHistory != NULL %}
-													{% set clinicNameUrl = invoiceIssued.medicalHistory.clinic.nameUrl %}
-												{% endif %}
-												{% if invoiceIssued.business != NULL %}
-													{% set clinicNameUrl = invoiceIssued.business.clinic.nameUrl %}
-												{% endif %}
-												{% set numberService = 1 %}
-												{% set taxBase = 0 %}
-												{% set taxTotal = 0 %}
-												{% for invoiceService in invoiceIssued.invoiceServiceList %}
-													{% set taxService = invoiceService.price * invoiceService.typeTaxService.percent / 100 %}
-													{% set taxBase = taxBase + invoiceService.price %}
-													{% set taxTotal = taxTotal + taxService %}
-												{% endfor %}
-												{% set irpf = - (taxBase * invoiceIssued.typeTaxInvoice.percent / 100) |number_format(2, '.', ',') %}
-												{% set total = taxBase + taxTotal - irpf %}					
-											{# ................................................................... DEFINO VARIABLES #}
+				{# FACTURAS SALIENTES .............................................................................................................. #}
+					{% if permissionLoggedUser.invoiceIssuedList == true %}
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<div class="x_panel" >
+								<div class="x_title">
+									<h3 style="display:inline-block;">Listado de Facturas <span> Salientes</span></h3>
+								</div>
+								<div class="x_content">
+									<table id="datatable-buttons-invoiceIssuedList" class="table table-striped table-bordered" cellspacing="0" width="100%">
+										<thead>
 											<tr>
-												<td class="text-center"><a href="{{ path("invoice_issued_view", {'clinicNameUrl': clinicNameUrl, 'invoiceIssuedNumber': invoiceNumber } ) }}">FA_{{invoiceIssued.invoiceNumber}}</a>
-												</td>
-												<td class="text-center"><a href="{{ path("invoice_issued_view", {'clinicNameUrl': clinicNameUrl, 'invoiceIssuedNumber': invoiceNumber } ) }}"><i class="fa fa-file-pdf-o"></i></a>
-												</td>
-												<td class="text-left">
-													<a href="{{ path("invoice_issued_view", {'clinicNameUrl': clinicNameUrl, 'invoiceIssuedNumber': invoiceNumber } ) }}">
+												<th style="width:50px;">NºFª</th>
+												{# PERMISO DE VISUALIZACIÓN DE FACTURAS DE SALIDA ................................................. #}
+													{% if permissionLoggedUser.invoiceIssuedView == true %}
+														<th style="width:15px;"><i class="fa fa-file-pdf-o"></i></th>
+													{% endif %}
+												{# ................................................. PERMISO DE VISUALIZACIÓN DE FACTURAS DE SALIDA #}	
+												<th>Facturado a:</th>
+												<th style="width:70px;">Fecha</th>
+												<th style="width:50px;">Base</th>
+												<th style="width:50px;">IVA</th>
+												<th style="width:50px;">IRPF</th>
+												<th style="width:50px;">Total</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for invoiceIssued in invoiceIssuedList %}
+												{# DEFINO VARIABLES ............................................................................... #}
+													{% set invoiceNumber = invoiceIssued.invoiceNumber %}
+													{% set registrationDate = invoiceIssued.registrationDate | date("d/m/Y") %}
+													{% if invoiceIssued.medicalHistory != NULL %}
+														{% set clinicNameUrl = invoiceIssued.medicalHistory.clinic.nameUrl %}
+													{% endif %}
+													{% if invoiceIssued.business != NULL %}
+														{% set clinicNameUrl = invoiceIssued.business.clinic.nameUrl %}
+													{% endif %}
+													{% set numberService = 1 %}
+													{% set taxBase = 0 %}
+													{% set taxTotal = 0 %}
+													{% for invoiceService in invoiceIssued.invoiceServiceList %}
+														{% set taxService = invoiceService.price * invoiceService.typeTaxService.percent / 100 %}
+														{% set taxBase = taxBase + invoiceService.price %}
+														{% set taxTotal = taxTotal + taxService %}
+													{% endfor %}
+													{% set irpf = - (taxBase * invoiceIssued.typeTaxInvoice.percent / 100) |number_format(2, '.', ',') %}
+													{% set total = taxBase + taxTotal - irpf %}					
+												{# ............................................................................... DEFINO VARIABLES #}
+												<tr>
+													<td class="text-center">FA_{{invoiceIssued.invoiceNumber}}</td>
+													{# PERMISO DE VISUALIZACIÓN DE FACTURAS DE SALIDA ............................................. #}
+														{% if permissionLoggedUser.invoiceIssuedView == true %}
+															<td class="text-center"><a href="{{ path("invoice_issued_view", {'clinicNameUrl': clinicNameUrl, 'invoiceIssuedNumber': invoiceNumber } ) }}"><i class="fa fa-file-pdf-o"></i></a></td>
+														{% endif %}
+													{# ............................................. PERMISO DE VISUALIZACIÓN DE FACTURAS DE SALIDA #}
+													<td class="text-left">
 														{% if invoiceIssued.medicalHistory != NULL %}
-															{{invoiceIssued.medicalHistory.medicalHistoryNumber}} - {{invoiceIssued.medicalHistory.surname}}, {{invoiceIssued.medicalHistory.name}}
+														{% set medicalHistoryNumber = invoiceIssued.medicalHistory.medicalHistoryNumber %}
+															<a href="{{ path("medical_history_view", {'clinicNameUrl': clinicNameUrl, 'medicalHistoryNumber': medicalHistoryNumber } ) }}">
+																{{invoiceIssued.medicalHistory.medicalHistoryNumber}} - {{invoiceIssued.medicalHistory.surname}}, {{invoiceIssued.medicalHistory.name}}
+															</a>
 														{% if invoiceIssued.business != NULL and invoiceIssued.medicalHistory != NULL %}
 															( {{invoiceIssued.business.name}} )
 														{% endif %}
@@ -204,111 +213,155 @@
 														{% if invoiceIssued.business != NULL and invoiceIssued.medicalHistory == NULL %}
 															{{invoiceIssued.business.name}}
 														{% endif %}
-
-													</a>
-												</td>
-												<td class="text-center"><a href="{{ path("invoice_issued_view", {'clinicNameUrl': clinicNameUrl, 'invoiceIssuedNumber': invoiceNumber } ) }}">{{registrationDate}}</a></td>
-												<td class="text-right">
-													{% if taxBase != 0 %}
-														<a href="{{ path("invoice_issued_view", {'clinicNameUrl': clinicNameUrl, 'invoiceIssuedNumber': invoiceNumber } ) }}">{{taxBase |number_format(2, ',', '.')}} €</a>
-													{% endif %}
-												</td>
-												<td class="text-right">
-													{% if taxTotal != 0 %}
-														<a href="{{ path("invoice_issued_view", {'clinicNameUrl': clinicNameUrl, 'invoiceIssuedNumber': invoiceNumber } ) }}">{{taxTotal |number_format(2, ',', '.')}} €</a>
-													{% endif %}
-												</td>
-												<td class="text-right">
-													{% if irpf != 0 %}
-														<a href="{{ path("invoice_issued_view", {'clinicNameUrl': clinicNameUrl, 'invoiceIssuedNumber': invoiceNumber } ) }}">{{irpf |number_format(2, ',', '.')}} €</a>
-													{% endif %}
-												</td>
-												<td class="text-right">
-													{% if total != 0 %}
-														<a href="{{ path("invoice_issued_view", {'clinicNameUrl': clinicNameUrl, 'invoiceIssuedNumber': invoiceNumber } ) }}">{{total |number_format(2, ',', '.')}} €</a>
-													{% endif %}
-												</td>										
-											</tr>
-										{% endfor %}
-									</tbody>
-								</table>
+													</td>
+													<td class="text-center">{{registrationDate}}</td>
+													<td class="text-right">
+														{% if taxBase != 0 %}{{taxBase |number_format(2, ',', '.')}} €{% endif %}
+													</td>
+													<td class="text-right">
+														{% if taxTotal != 0 %}{{taxTotal |number_format(2, ',', '.')}} €{% endif %}
+													</td>
+													<td class="text-right">
+														{% if irpf != 0 %}{{irpf |number_format(2, ',', '.')}} €{% endif %}
+													</td>
+													<td class="text-right">
+														{% if total != 0 %}{{total |number_format(2, ',', '.')}} €{% endif %}
+													</td>										
+												</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
 							</div>
 						</div>
-					</div>
-				{# ................................................................. FACTURAS SALIENTES #}
-				{# FACTURAS ENTRANTES ................................................................. #}
-					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-						<div class="x_panel" >
-							<div class="x_title">
-								<h3 style="display:inline-block;">Listado de Facturas <span> Entrantes</span></h3>
-								<div style="display:block;margin-top:4px;" class="pull-right">
-									<div data-toggle="modal" data-target="#add_invoice_received" class="btn btn-success">
-										<i class="fa fa-plus-square m-right-xs"></i>
-									</div>
-								</div>						
-							</div>
-							<div class="x_content">
-								<table id="datatable-buttons-invoiceReceivedList" class="table table-striped table-bordered" cellspacing="0" width="100%">
-									<thead>
-										<tr>
-											<th style="width:70px;">Fecha</th>
-											<th style="width:90px;">NºFª</th>
-											<th style="width:15px;"><i class="fa fa-file-pdf-o"></i></th>									
-											<th>Empresa</th>
-											<th style="width:50px;">Base</th>
-											<th style="width:50px;">IVA</th>
-											<th style="width:50px;">IRPF</th>
-											<th style="width:50px;">RE</th>
-											<th style="width:50px;">Total</th>									
-										</tr>
-									</thead>
-									<tbody>
-										{% for invoiceReceived in invoiceReceivedList %}
-											{# DEFINO VARIABLES ................................................................... #}
-												{% set documents = invoiceReceived.documents %}
-												{% set invoiceNumber = invoiceReceived.invoiceNumber %}
-												{% set taxBase = invoiceReceived.taxBase %}
-												{% set iva = invoiceReceived.iva %}
-												{% set irpf = invoiceReceived.irpf %}
-												{% set re = invoiceReceived.re %}
-												{% set total = taxBase +  iva - irpf + re %}
-												{% set business = invoiceReceived.business %}
-												{% set registrationDate = invoiceReceived.registrationDate | date("d/m/Y") %}
-											{# ................................................................... DEFINO VARIABLES #}
+					{% endif %}
+				{# .............................................................................................................. FACTURAS SALIENTES #}
+				{# FACTURAS ENTRANTES .............................................................................................................. #}
+					{% if permissionLoggedUser.getInvoiceReceivedList == true %}
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<div class="x_panel" >
+								<div class="x_title">
+									<h3 style="display:inline-block;">Listado de Facturas <span> Entrantes</span></h3>
+									{# PERMISO DE CREACIÓN DE FACTURAS DE ENTRADA NUEVAS ........................................................... #}
+										{% if permissionLoggedUser.invoiceReceivedCreate == true %}										
+											<div style="display:block;margin-top:4px;" class="pull-right">
+												<div data-toggle="modal" data-target="#add_invoice_received" class="btn btn-success">
+													<i class="fa fa-plus-square m-right-xs"></i>
+												</div>
+											</div>	
+										{% endif %}
+									{# ........................................................... PERMISO DE CREACIÓN DE FACTURAS DE ENTRADA NUEVAS #}																									
+								</div>
+								<div class="x_content">
+									<table id="datatable-buttons-invoiceReceivedList" class="table table-striped table-bordered" cellspacing="0" width="100%">
+										<thead>
 											<tr>
-												<td class="text-center"><span class='hide' style="display:none;">YYYYMMDD</span>{{registrationDate}}</td>
-												<td class="text-center">{{invoiceNumber}}</td>
-												<td class="text-center">
-													{% if invoiceReceived.documents.typeDoc.type == "pdf" %}
-														<a data-toggle="modal" data-target="#viewPdf_{{documents.id}}"><i class="fa fa-file-pdf-o"></i></a>
-													{% elseif invoiceReceived.documents.typeDoc.type == "jpg" %}
-														<a data-toggle="modal" data-target="#viewJpg_{{documents.id}}"><i class="fa fa-file-jpg-o"></i></a>
-													{% endif %}
-												</td>	
-												<td class="text-left">{{business.name}}</td>	
-												<td class="text-right">{% if taxBase != null %}{{ taxBase|number_format(2, ',', '.') }} €{% endif %}</td>	
-												<td class="text-right">{% if iva != null %}{{ iva|number_format(2, ',', '.') }} €{% endif %}</td>
-												<td class="text-right">{% if irpf != null %}{{ irpf|number_format(2, ',', '.') }} €{% endif %}</td>
-												<td class="text-right">{% if re != null %}{{ re|number_format(2, ',', '.') }} €{% endif %}</td>
-												<td class="text-right">{% if total != null %}{{total |number_format(2, ',', '.') }} €{% endif %}</td>	
+												<th style="width:90px;">NºFª</th>
+												{# PERMISO DE VISUALIZACIÓN DE FACTURAS DE SALIDA .................................................. #}
+													{% if permissionLoggedUser.invoiceReceivedView == true %}
+														<th style="width:15px;"><i class="fa fa-file-pdf-o"></i></th>
+													{% endif %}	
+												{# .................................................. PERMISO DE VISUALIZACIÓN DE FACTURAS DE SALIDA #}
+												<th>Empresa</th>
+												<th style="width:70px;">Fecha</th>
+												<th style="width:50px;">Base</th>
+												<th style="width:50px;">IVA</th>
+												<th style="width:50px;">IRPF</th>
+												<th style="width:50px;">RE</th>
+												<th style="width:50px;">Total</th>									
 											</tr>
-										{% endfor %}
-									</tbody>
-								</table>
+										</thead>
+										<tbody>
+											{% for invoiceReceived in invoiceReceivedList %}
+												{# DEFINO VARIABLES ................................................................................ #}
+													{% set documents = invoiceReceived.documents %}
+													{% set invoiceNumber = invoiceReceived.invoiceNumber %}
+													{% set taxBase = invoiceReceived.taxBase %}
+													{% set iva = invoiceReceived.iva %}
+													{% set irpf = invoiceReceived.irpf %}
+													{% set re = invoiceReceived.re %}
+													{% set total = taxBase +  iva - irpf + re %}
+													{% set business = invoiceReceived.business %}
+													{% set registrationDate = invoiceReceived.registrationDate | date("d/m/Y") %}
+												{# ................................................................................ DEFINO VARIABLES #}
+												<tr>
+													<td class="text-center">{{invoiceNumber}}</td>
+													{# PERMISO DE VISUALIZACIÓN DE FACTURAS DE SALIDA .............................................. #}
+														{% if permissionLoggedUser.invoiceReceivedView == true %}
+															<td class="text-center">
+																{% if invoiceReceived.documents.typeDoc.type == "pdf" %}
+																	<a data-toggle="modal" data-target="#viewPdf_{{documents.id}}"><i class="fa fa-file-pdf-o"></i></a>
+																{% elseif invoiceReceived.documents.typeDoc.type == "jpg" %}
+																	<a data-toggle="modal" data-target="#viewJpg_{{documents.id}}"><i class="fa fa-file-jpg-o"></i></a>
+																{% endif %}
+															</td>
+														{% endif %}
+													{# .............................................. PERMISO DE VISUALIZACIÓN DE FACTURAS DE SALIDA #}
+													<td class="text-left">{{business.name}}</td>
+													<td class="text-center"><span class='hide' style="display:none;">YYYYMMDD</span>{{registrationDate}}</td>	
+													<td class="text-right">{% if taxBase != null %}{{ taxBase|number_format(2, ',', '.') }} €{% endif %}</td>	
+													<td class="text-right">{% if iva != null %}{{ iva|number_format(2, ',', '.') }} €{% endif %}</td>
+													<td class="text-right">{% if irpf != null %}{{ irpf|number_format(2, ',', '.') }} €{% endif %}</td>
+													<td class="text-right">{% if re != null %}{{ re|number_format(2, ',', '.') }} €{% endif %}</td>
+													<td class="text-right">{% if total != null %}{{total |number_format(2, ',', '.') }} €{% endif %}</td>	
+												</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
 							</div>
 						</div>
-					</div>
-				{# ................................................................. FACTURAS ENTRANTES #}		
+					{% endif %}
+				{# .............................................................................................................. FACTURAS ENTRANTES #}		
 			</div>
 		</div>
 	<!-- /page content -->
-	<!-- Modal - Ver Pdf -->
-		{% for invoiceReceived in invoiceReceivedList %}
-			{# DEFINO VARIABLES ................................................................... #}
-				{% set documents = invoiceReceived.documents %}
-			{# ................................................................... DEFINO VARIABLES #}
-			{% if documents.typeDoc.type == "pdf" %}
-				<div class="modal fade" id="viewPdf_{{documents.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	{# PERMISO DE VISUALIZACIÓN DE FACTURAS DE ENTRADA ............................................................................................. #}
+		{% if permissionLoggedUser.invoiceReceivedView == true %}	
+			<!-- Modal - Ver Pdf -->
+				{% for invoiceReceived in invoiceReceivedList %}
+					{# DEFINO VARIABLES ............................................................................................................ #}
+						{% set documents = invoiceReceived.documents %}
+					{# ............................................................................................................ DEFINO VARIABLES #}
+					{% if documents.typeDoc.type == "pdf" %}
+						<div class="modal fade" id="viewPdf_{{documents.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<div class="modal-dialog modal-lg">
+								<div class="modal-content">
+									<!-- Modal Header -->
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">
+												<span aria-hidden="true">&times;</span>
+												<span class="sr-only">Close</span>
+											</button>
+											<h4 class="modal-title" id="myModalLabel">Visualizador pdf</h4>
+										</div>
+									<!-- Modal Header -->
+									<!-- Modal Body -->
+										<div class="modal-body">
+											<div class="row control-label form-horizontal form-label-left">
+												<div class="col-md-12 col-sm-12 col-xs-12 pull-left">
+													<div id="viewerPdf_{{invoiceReceived.id}}">
+													<!-- Modal Body -->
+													</div>
+												</div>
+											</div>
+										</div>
+									<!-- Modal Body -->
+									<!-- Modal Footer -->
+										<div class="modal-footer"></div>
+									<!-- Modal Footer -->
+								</div>
+							</div>
+						</div>
+					{% endif %}
+				{% endfor %}
+			<!-- /modal - Ver Pdf -->
+		{% endif %}
+	{# ............................................................................................. PERMISO DE VISUALIZACIÓN DE FACTURAS DE ENTRADA #}	
+	{# PERMISO DE CREACIÓN DE FACTURAS DE ENTRADA NUEVAS ........................................................................................... #}
+		{% if permissionLoggedUser.invoiceReceivedCreate == true %}			
+			<!-- Modal - Nuevo Documento (FACTURAS) -->
+				<div class="modal fade" id="add_invoice_received" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-lg">
 						<div class="modal-content">
 							<!-- Modal Header -->
@@ -317,102 +370,71 @@
 										<span aria-hidden="true">&times;</span>
 										<span class="sr-only">Close</span>
 									</button>
-									<h4 class="modal-title" id="myModalLabel">Visualizador pdf</h4>
+									<h4 class="modal-title" id="myModalLabel">Subir documento</h4>
 								</div>
 							<!-- Modal Header -->
 							<!-- Modal Body -->
 								<div class="modal-body">
+
 									<div class="row control-label form-horizontal form-label-left">
-										<div class="col-md-12 col-sm-12 col-xs-12 pull-left">
-											<div id="viewerPdf_{{invoiceReceived.id}}">
-											<!-- Modal Body -->
-											</div>
-										</div>
+										{{ form_start(form_invoiceReceivedNew, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
+											{#{{ form_start(form_documents) }}#}
+												<div class="col-md-12 col-sm-12 col-xs-12 pull-left">
+													<div class="form-group">
+														<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12" >Factura<span class="required"></span></label>
+														<div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+															<input type="text" id="documents_doc" name="title" required="required" class="form-image form-control" style="margin-bottom:10px">
+														</div>
+														<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">Fecha
+														</label>
+														<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+															{# Script al final de la plantilla que gestiona 'datetimepicker' de Bootstrap #}
+															<div class='input-group date' id='datetimepicker_registrationDate'>
+																{{form_widget(form_invoiceReceivedNew.registrationDate)}}
+																<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+																</span>
+															</div>
+														</div>
+														<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">Proveedor<span class="required"></span></label>
+														<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">{{form_widget(form_invoiceReceivedNew.business)}}</div>
+													</div>
+													<div class="form-group">											
+														<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12">BI<span class="required"></span></label>
+														<div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">{{form_widget(form_invoiceReceivedNew.taxBase)}}</div>
+														<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">IVA<span class="required"></span></label>
+														<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">{{form_widget(form_invoiceReceivedNew.iva)}}</div>
+														<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">RE<span class="required"></span></label>
+														<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">{{form_widget(form_invoiceReceivedNew.re)}}</div>
+														<div class="clearfix"></div>
+													</div>
+													<div class="form-group">											
+														<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12">Documento<span class="required"></span></label>
+														<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form_invoiceReceivedNew.invoiceNumber)}}</div>
+														<div class="clearfix"></div>
+													</div>											
+													<div class="form-group">
+														<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12">Nota<span class="required"></span></label>
+														<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form_invoiceReceivedNew.note)}}</div>	
+														<div class="clearfix"></div>
+													</div>
+													<div class="clearfix"></div>
+													<div class="divider-dashed"></div>
+													{{form_widget(form_invoiceReceivedNew.add, { 'label': 'Añadir Documento' }) }}
+												</div>
+											{#}{ form_end(form_documents)}}#}
+										{{ form_end(form_invoiceReceivedNew)}}
 									</div>
 								</div>
 							<!-- Modal Body -->
 							<!-- Modal Footer -->
-								<div class="modal-footer"></div>
+								{#<div class="modal-footer"></div>#}
 							<!-- Modal Footer -->
 						</div>
 					</div>
 				</div>
-			{% endif %}
-		{% endfor %}
-	<!-- /modal - Ver Pdf -->
-	<!-- Modal - Nuevo Documento (FACTURAS) -->
-		<div class="modal fade" id="add_invoice_received" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content">
-					<!-- Modal Header -->
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">
-								<span aria-hidden="true">&times;</span>
-								<span class="sr-only">Close</span>
-							</button>
-							<h4 class="modal-title" id="myModalLabel">Subir documento</h4>
-						</div>
-					<!-- Modal Header -->
-					<!-- Modal Body -->
-						<div class="modal-body">
-
-							<div class="row control-label form-horizontal form-label-left">
-								{{ form_start(form_invoiceReceivedNew, { 'attr':{'class': 'form-horizontal form-label-left' }})}}
-									{#{{ form_start(form_documents) }}#}
-										<div class="col-md-12 col-sm-12 col-xs-12 pull-left">
-											<div class="form-group">
-												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12" >Factura<span class="required"></span></label>
-												<div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
-													<input type="text" id="documents_doc" name="title" required="required" class="form-image form-control" style="margin-bottom:10px">
-												</div>
-												<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">Fecha
-												</label>
-												<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-													{# Script al final de la plantilla que gestiona 'datetimepicker' de Bootstrap #}
-													<div class='input-group date' id='datetimepicker_registrationDate'>
-														{{form_widget(form_invoiceReceivedNew.registrationDate)}}
-														<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
-														</span>
-													</div>
-												</div>
-												<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">Proveedor<span class="required"></span></label>
-												<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">{{form_widget(form_invoiceReceivedNew.business)}}</div>
-											</div>
-											<div class="form-group">											
-												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12">BI<span class="required"></span></label>
-												<div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">{{form_widget(form_invoiceReceivedNew.taxBase)}}</div>
-												<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">IVA<span class="required"></span></label>
-												<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">{{form_widget(form_invoiceReceivedNew.iva)}}</div>
-												<label class="control-label col-lg-1 col-md-2 col-sm-2 col-xs-12">RE<span class="required"></span></label>
-												<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">{{form_widget(form_invoiceReceivedNew.re)}}</div>
-												<div class="clearfix"></div>
-											</div>
-											<div class="form-group">											
-												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12">Documento<span class="required"></span></label>
-												<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form_invoiceReceivedNew.invoiceNumber)}}</div>
-												<div class="clearfix"></div>
-											</div>											
-											<div class="form-group">
-												<label class="control-label col-lg-2 col-md-2 col-sm-2 col-xs-12">Nota<span class="required"></span></label>
-												<div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">{{form_widget(form_invoiceReceivedNew.note)}}</div>	
-												<div class="clearfix"></div>
-											</div>
-											<div class="clearfix"></div>
-											<div class="divider-dashed"></div>
-											{{form_widget(form_invoiceReceivedNew.add, { 'label': 'Añadir Documento' }) }}
-										</div>
-									{#}{ form_end(form_documents)}}#}
-								{{ form_end(form_invoiceReceivedNew)}}
-		            		</div>
-		            	</div>
-					<!-- Modal Body -->
-					<!-- Modal Footer -->
-						{#<div class="modal-footer"></div>#}
-					<!-- Modal Footer -->
-				</div>
-			</div>
-		</div>
-	<!-- /modal - Nuevo Documento (FACTURAS) -->	
+			<!-- /modal - Nuevo Documento (FACTURAS) -->
+		{% endif %}
+	{# ........................................................................................... PERMISO DE CREACIÓN DE FACTURAS DE ENTRADA NUEVAS #}				
 {% endblock %}
 {% block javascriptsFinal %}
 	{{ parent() }}

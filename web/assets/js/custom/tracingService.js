@@ -117,9 +117,14 @@
 				'id' : id
 			},
 			success: function(response){
+				var obj = JSON.parse(response);
 				document.getElementById('remove_tracing_service_'+id).parentNode.remove();
+				// Cambiamos la contabilidad del paciente
+				var accounting_medicalHistory = document.getElementById('accounting_medicalHistory');
+				accounting_medicalHistory.innerHTML = obj['accounting_medicalHistory'];
+				// GENERO EL MENSAJE DE ALERTA				
 				var status = document.getElementById('status');
-				status.innerHTML = response;
+				status.innerHTML = obj['status'];
 				window.setTimeout(function() {
 					$(".alert").fadeTo(500, 0).slideUp(500, function(){
 						$(this).remove();
@@ -186,8 +191,11 @@
 			success: function(response){
 				var obj = JSON.parse(response);
 				//console.log(obj);
+				// Elimino el elemento con id.... 
 				document.getElementById('send_tracing_service('+tracingDay+')').remove();
+				// genero la fila de la tabla <tr></tr>
 				var row = document.createElement('tr');
+				// le añado los atributos
 				row.setAttribute('class', 'even pointer');
 				console.log(valuePaymentType);
 				row.innerHTML = 
@@ -198,10 +206,10 @@
 						+valueDescription+
 					'</td>'+
 					'<td class=" ">'
-						+valuePrice+
+						+valuePrice+ ' €'+
 					'</td>'+
 					'<td class=" ">'
-						+valuePayment+
+						+valuePayment+ ' €'+
 					'</td>'+
 					'<td class=" ">'
 						+textPaymentType+
@@ -211,6 +219,10 @@
 					'</td>';
 				var table = document.getElementById('add_line_tracing_service('+tracingDay+')');
 				table.appendChild(row);
+				// Cambiamos la contabilidad del paciente
+				var accounting_medicalHistory = document.getElementById('accounting_medicalHistory');
+				accounting_medicalHistory.innerHTML = obj['accounting_medicalHistory'];
+				// GENERO EL MENSAJE DE ALERTA
 				var status = document.getElementById('status');
 				status.innerHTML = obj['alert'];
 				window.setTimeout(function() {

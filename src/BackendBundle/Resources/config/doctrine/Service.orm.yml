@@ -84,7 +84,7 @@ BackendBundle\Entity\Service:
             cascade: {  }
             fetch: LAZY
             mappedBy: null
-            inversedBy: children
+            inversedBy: childrenList
             joinColumns:
                 parent:
                     referencedColumnName: id
@@ -104,7 +104,7 @@ BackendBundle\Entity\Service:
             cascade: {  }
             fetch: LAZY
             mappedBy: null
-            inversedBy: null
+            inversedBy: updatedList
             joinColumns:
                 updated_service:
                     referencedColumnName: id
@@ -140,7 +140,10 @@ BackendBundle\Entity\Service:
                     referencedColumnName: id
             orphanRemoval: false
     oneToMany:
-        children:
+        childrenList:
             targetEntity: Service
             mappedBy: parent
+        updatedList:
+            targetEntity: Service
+            mappedBy: updatedService            
     lifecycleCallbacks: {  }

@@ -404,7 +404,7 @@ BackendBundle\Entity\UserPermission:
                 default: '0'
             column: report_pdf                                    
     # /REPORT #########################################################
-    # INVOICE #########################################################
+    # INVOICE ISSUED ##################################################
         invoiceIssuedList:
             type: boolean
             nullable: false
@@ -435,7 +435,39 @@ BackendBundle\Entity\UserPermission:
             options:
                 default: '0'
             column: invoice_issued_remove
-    # /INVOICE ########################################################
+    # /INVOICE ISSUED #################################################
+    # INVOICE RECEIVED ################################################
+        invoiceReceivedList:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: invoice_received_list
+        invoiceReceivedView:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: invoice_received_view
+        invoiceReceivedCreate:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: invoice_received_create
+        invoiceReceivedEdit:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: invoice_received_edit
+        invoiceReceivedRemove:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: invoice_received_remove
+    # /INVOICE ########################################################    
     # SERVICE #########################################################
         serviceList:
             type: boolean
@@ -563,19 +595,89 @@ BackendBundle\Entity\UserPermission:
             options:
                 default: '0'
             column: tracing_service_remove
-        tracingServiceChangeCountableStatus:
-            type: boolean
-            nullable: false
-            options:
-                default: '0'
-            column: tracing_service_change_countable_status 
-        tracingServiceChangeConsolidatedStatus:
-            type: boolean
-            nullable: false
-            options:
-                default: '0'
-            column: tracing_service_change_consolidated_status                                 
     # /TRACING SERVICE ################################################
+    # PAYMENT #########################################################
+        paymentList:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: payment_list
+        paymentView:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: payment_view
+        paymentCreate:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: payment_create
+        paymentEdit:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: payment_edit
+        paymentRemove:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: payment_remove
+        paymentChangeCountableState:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: payment_change_countable_state 
+        paymentChangeConsolidatedState:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: payment_change_consolidated_state                                 
+    # /PAYMENT ########################################################
+    # ACCOUNTING ######################################################
+        accountingList:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: accounting_list
+        accountingViewTotal:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: accounting_view_total
+        accountingViewGraphic:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: accounting_view_graphic            
+        accountingCreate:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: accounting_create
+        accountingEdit:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: accounting_edit
+        accountingRemove:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: accounting_remove                                
+    # /ACCOUNTING #####################################################        
     # ADMIN ###########################################################
         adminSectionAccess:
             type: boolean
