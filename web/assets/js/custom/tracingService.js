@@ -221,7 +221,16 @@
 				table.appendChild(row);
 				// Cambiamos la contabilidad del paciente
 				var accounting_medicalHistory = document.getElementById('accounting_medicalHistory');
-				accounting_medicalHistory.innerHTML = obj['accounting_medicalHistory'];
+				if(accounting_medicalHistory != null){
+					console.log("existen datos anteriores de Antabilidad, los actualizamos")
+					accounting_medicalHistory.innerHTML = obj['accounting_medicalHistory'];
+				}else{
+					var allData_medicalHistory = document.getElementById('allData_medicalHistory');
+					var li = document.createElement('li');
+					li.setAttribute('id', 'accounting_medicalHistory');
+					li.innerHTML = obj['accounting_medicalHistory'];
+					allData_medicalHistory.appendChild(li);
+				}
 				// GENERO EL MENSAJE DE ALERTA
 				var status = document.getElementById('status');
 				status.innerHTML = obj['alert'];

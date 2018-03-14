@@ -58,7 +58,7 @@ class HomeController extends Controller {
 			// Por terminar... Estadísticas consulta
 			$newUsersPerMonth = $medicalHistory_repo->getMedicalHistoryPerMonthQuery( $clinicNameUrl );
 			$totalUser = $medicalHistory_repo->getTotalNumberMedicalHistoriesQuery( $clinicNameUrl );
-			//extraemos el resultado de la $query
+			//extraemos el resultado de la $query //////////////////////////////////////////////////////////////
 			$session = $request->getSession();
 			$session->set('clinicUserlogged', $clinicUserlogged);
 		/******************************************************************************************************/
